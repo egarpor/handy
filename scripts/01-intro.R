@@ -1,20 +1,23 @@
+
+## ------------------------------------------------------------------------
+## Name: 01-intro.R
+## Description: Script for Chapter 1 of "Notes for Predictive Modeling"
+## Link: https://bookdown.org/egarpor/PM-UC3M/
+## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
+## Author: Eduardo García-Portugués
+## ------------------------------------------------------------------------
+
 ## ---- install, eval = FALSE, purl = TRUE---------------------------------
 ## # Installation of required packages
-## packages <- c("MASS", "car", "readxl", "rgl", "nortest", "pca3d", "ISLR",
-##               "pls", "glmnet", "biglm", "leaps", "lme4", "viridis", "ffbase",
-##               "KernSmooth", "np", "locfit", "manipulate", "mice", "VIM",
-##               "nnet", "lubridate")
+## packages <- c("MASS", "car", "readxl", "rgl", "nortest", "pca3d",
+##               "ISLR", "pls", "glmnet", "biglm", "leaps", "lme4",
+##               "viridis", "ffbase", "KernSmooth", "np", "locfit",
+##               "manipulate", "mice", "VIM", "nnet", "lubridate")
 ## install.packages(packages)
 
-## ---- packages-hidden, echo = FALSE, purl = TRUE-------------------------
-packages <- c("MASS", "car", "readxl", "rgl", "nortest", "pca3d", "ISLR", 
-              "pls", "glmnet", "biglm", "leaps", "lme4", "viridis", "ffbase", 
-              "KernSmooth", "np", "locfit", "manipulate", "mice", "VIM", 
-              "nnet", "lubridate")
-
-## ---- library, results = 'hide', warning = FALSE, message = FALSE, purl = TRUE----
-# Load packages
-lapply(packages, library, character.only = TRUE)
+## ---- library, eval = FALSE, purl = TRUE---------------------------------
+## # Load packages
+## lapply(packages, library, character.only = TRUE)
 
 ## ---- speedfuel, out.width = '70%', fig.asp = 1, purl = TRUE-------------
 x <- c(64, 20, 14, 64, 44, 39, 25, 53, 48, 9,
