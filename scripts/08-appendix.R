@@ -65,8 +65,7 @@ summary(lm(Ozone ~ ., data = airquality)) # 129 not included
 summary(lm(Ozone ~ . - Solar.R, data = airquality))
 
 # Notice the difference with
-summary(lm(Ozone ~ ., data = subset(airquality,
-                                    select = -Solar.R)))
+summary(lm(Ozone ~ ., data = subset(airquality, select = -Solar.R)))
 
 # Model selection can be problematic with missing data, since
 # the number of complete cases changes with the addition or
@@ -86,8 +85,7 @@ modBIC <- stepAIC(mod, k = log(nrow(airquality)))
 # Hence using BIC / AIC is not adequate for model selection
 # with missing data.
 AIC(lm(Ozone ~ ., data = airquality))
-AIC(lm(Ozone ~ ., data = subset(airquality,
-                                select = -Solar.R)))
+AIC(lm(Ozone ~ ., data = subset(airquality, select = -Solar.R)))
 
 # Considers only complete cases including Solar.R
 AIC(lm(Ozone ~ . - Solar.R, data = airquality))
@@ -119,19 +117,16 @@ nrow(airqualityNoNA) / nrow(airquality)
 
 # Removing the predictor with many NA's, as we did before
 # We also exclude NA's from other predictors
-airqualityNoSolar.R <- na.exclude(subset(airquality,
-                                         select = -Solar.R))
+airqualityNoSolar.R <- na.exclude(subset(airquality, select = -Solar.R))
 modBIC2 <- stepAIC(lm(Ozone ~ ., data = airqualityNoSolar.R),
-                   k = log(nrow(airqualityNoSolar.R)),
-                   trace = 0)
+                   k = log(nrow(airqualityNoSolar.R)), trace = 0)
 summary(modBIC2)
 # In this example the approach works well because most of
 # the NA's are associated to the variable Solar.R
 
 # Imput data using the sample mean
 library(mice)
-airqualityMean <- complete(mice(data = airquality,
-                                m = 1, method = "mean"))
+airqualityMean <- complete(mice(data = airquality, m = 1, method = "mean"))
 head(airqualityMean)
 # Explanation of the sintaxis:
 # - complete() serves to retrieve the completed dataset from
@@ -145,9 +140,8 @@ head(airqualityMean)
 
 # Impute using linear regression for the response (first column)
 # and mean for the predictors (remaining five columns)
-airqualityLm <- complete(mice(data = airquality, m = 1,
-                              method = c("norm.predict",
-                                         rep("mean", 5))))
+airqualityLm <- complete(mice(data = airquality, m = 1, 
+                              method = c("norm.predict", rep("mean", 5))))
 head(airqualityLm)
 
 # Imputed data - some extrapolation problems may happen
@@ -167,8 +161,7 @@ complete(mice(data = airquality, m = 1,
 # better in this case (in the sense that it does not yield
 # negative Ozone values)
 # Notice that there is randomness in the imputation!
-airqualityMice <- complete(mice(data = airquality, m = 1,
-                                seed = 123))
+airqualityMice <- complete(mice(data = airquality, m = 1, seed = 123))
 head(airqualityMice)
 
 ## ---- r-1, echo = FALSE, cache = FALSE-----------------------------------

@@ -61,7 +61,7 @@ mod$coefficients
 ## # Read data
 ## wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
 
-## ---- wintab-2, fig.margin = FALSE, fig.fullwidth = TRUE, out.width = '100%', fig.cap = '(ref:wintab-2-title)'----
+## ---- wintab-2, fig.margin = FALSE, fig.fullwidth = TRUE, out.width = .tex_web('85%', '100%'), fig.cap = '(ref:wintab-2-title)'----
 # Numerical - marginal distributions
 summary(wine)
 
@@ -112,7 +112,7 @@ leastSquares3D <- data.frame(x1 = x1, x2 = x2, yLin = yLin,
                              yQua = yQua, yExp = yExp)
 
 ## ---- lscheck3d-2, eval = FALSE------------------------------------------
-## load(file = "leastSquares3D.RData")
+## load(file = "least-Squares-3D.RData")
 
 ## ---- ls3dcheck-3--------------------------------------------------------
 # Output from lm
@@ -120,10 +120,10 @@ mod <- lm(yLin ~ x1 + x2, data = leastSquares3D)
 mod$coefficients
 
 # Matrix X
-X <- cbind(1, x1, x2)
+X <- cbind(1, leastSquares3D$x1, leastSquares3D$x2)
 
 # Vector Y
-Y <- yLin
+Y <- leastSquares3D$yLin
 
 # Coefficients
 beta <- solve(t(X) %*% X) %*% t(X) %*% Y
@@ -149,7 +149,8 @@ data <- data.frame(x1 = x1, x2 = x2, y = y)
 
 ## ---- case1-1------------------------------------------------------------
 # Regression on all the predictors
-modWine1 <- lm(Price ~ Age + AGST + FrancePop + HarvestRain + WinterRain, data = wine)
+modWine1 <- lm(Price ~ Age + AGST + FrancePop + HarvestRain + WinterRain,
+               data = wine)
 
 # A shortcut
 modWine1 <- lm(Price ~ ., data = wine)
@@ -204,8 +205,7 @@ summary(modWine4)
 
 # Data for which we want a prediction
 # Important! You have to name the column with the predictor name!
-weather <- data.frame(WinterRain = 500, HarvestRain = 123,
-                      AGST = 18)
+weather <- data.frame(WinterRain = 500, HarvestRain = 123, AGST = 18)
 weatherBad <- data.frame(500, 123, 18)
 
 # Prediction of the mean
@@ -242,7 +242,7 @@ weather2 <- data.frame(WinterRain = c(500, 200), HarvestRain = c(123, 200),
                        AGST = c(17, 18))
 predict(modWine4, newdata = weather2, interval = "prediction")
 
-## ---- anova, echo = FALSE, fig.cap = '(ref:anova-title)', fig.margin = FALSE, fig.fullwidth = TRUE, out.width = '100%'----
+## ---- anova, echo = FALSE, fig.cap = '(ref:anova-title)', fig.margin = FALSE, fig.fullwidth = TRUE----
 knitr::include_graphics(.tex_web("images/R/anova.png", "images/R/anova-vert.png"))
 
 ## ---- simpleAnova--------------------------------------------------------
@@ -257,8 +257,7 @@ simpleAnova <- function(object, ...) {
 
   # Add predictors row
   predictorsRow <- colSums(tab[1:p, 1:2])
-  predictorsRow <- c(predictorsRow,
-                     predictorsRow[2] / predictorsRow[1])
+  predictorsRow <- c(predictorsRow, predictorsRow[2] / predictorsRow[1])
 
   # F-quantities
   Fval <- predictorsRow[3] / tab[p + 1, 3]
@@ -306,7 +305,7 @@ summary(reg)
 # abline(coef = reg$coef, col = 3)
 
 # But prediction is obviously problematic
-scatterplot(y ~ x, smooth = FALSE)
+scatterplot(y ~ x, col = 1, regLine = list(col = 2), smooth = FALSE)
 
 ## ---- R2bad-2------------------------------------------------------------
 # Multiple linear model
