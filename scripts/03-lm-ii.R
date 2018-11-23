@@ -9,21 +9,18 @@
 
 ## ---- case2-2, eval = FALSE----------------------------------------------
 ## # Read data
-## library(readxl)
-## Boston <- read_excel(path = "Boston.xlsx", sheet = 1, col_names = TRUE)
+## Boston <- readxl::read_excel(path = "Boston.xlsx", sheet = 1, col_names = TRUE)
 ## 
 ## # # Alternatively
-## # library(MASS)
-## # data(Boston)
+## # data(MASS::Boston)
 
 ## ---- case2-3------------------------------------------------------------
 summary(Boston)
 
 ## ---- scat2, fig.cap = '(ref:scat2-title)', fig.margin = FALSE-----------
-library(car)
-scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
-                  col = 1, smooth = list(col.smooth = 4, col.spread = 4), 
-                  data = Boston)
+car::scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
+                       col = 1, smooth = list(col.smooth = 4, col.spread = 4), 
+                       data = Boston)
 
 ## ---- case2-4------------------------------------------------------------
 # Two models with different predictors
@@ -51,18 +48,18 @@ summary(mod2)
 mod <- lm(Price ~ ., data = wine)
 
 # With BIC
-modBIC <- stepAIC(mod, k = log(nrow(wine)))
+modBIC <- MASS::stepAIC(mod, k = log(nrow(wine)))
 summary(modBIC)
 
 # With AIC
-modAIC <- stepAIC(mod, k = 2)
+modAIC <- MASS::stepAIC(mod, k = 2)
 summary(modAIC)
 
 ## ---- bic-2--------------------------------------------------------------
 # Different search directions and omitting the trace,
 # gives only the final model
-modAICFor <- stepAIC(mod, trace = 0, direction = "forward")
-modAICBack <- stepAIC(mod, trace = 0, direction = "backward")
+modAICFor <- MASS::stepAIC(mod, trace = 0, direction = "forward")
+modAICBack <- MASS::stepAIC(mod, trace = 0, direction = "backward")
 modAICFor
 modAICBack
 
@@ -72,11 +69,11 @@ summary(modHouse)
 
 ## ---- case2-8------------------------------------------------------------
 # Best models
-modBIC <- stepAIC(modHouse, k = log(nrow(Boston)))
-modAIC <- stepAIC(modHouse, trace = 0, k = 2)
+modBIC <- MASS::stepAIC(modHouse, k = log(nrow(Boston)))
+modAIC <- MASS::stepAIC(modHouse, trace = 0, k = 2)
 
 # Comparison
-compareCoefs(modBIC, modAIC)
+car::compareCoefs(modBIC, modAIC)
 summary(modBIC)
 
 # Confidence intervals
@@ -119,8 +116,7 @@ contrasts(iris$Species)
 
 ## ---- case2-9------------------------------------------------------------
 # Load the Boston dataset
-library(MASS)
-data(Boston)
+data(MASS::Boston)
 
 # Structure of the data
 str(Boston)
@@ -211,7 +207,7 @@ matplot(x, poly(x, degree = degree), type = "l", lty = 1,
         ylab = expression(p[k](x)))
 legend("bottomright", legend = paste("k =", 1:degree), col = 1:degree, lwd = 2)
 
-## ---- pol-2--------------------------------------------------------------
+## ---- pol-2-1, fig.cap = '(ref:pol-2-1-title)'---------------------------
 # Data containing speed (mph) and stopping distance (ft) of cars from 1920
 data(cars)
 plot(cars, xlab = "Speed (mph)", ylab = "Stopping distance (ft)")
@@ -246,16 +242,17 @@ plot(cars, xlab = "Speed (mph)", ylab = "Stopping distance (ft)")
 lines(d, predict(mod2, new = data.frame(speed = d)), col = 1)
 lines(d, predict(mod2Raw, new = data.frame(speed = d)), col = 2)
 
+## ---- pol-2-2, fig.cap = '(ref:pol-2-2-title)', fig.show = 'hold'--------
 # However: different coefficient estimates, but same R^2. How is this possible?
 summary(mod2)
 summary(mod2Raw)
 
 # Because the predictors in mod2Raw are highly related between them, and
 # the ones in mod2 are uncorrelated between them!
-scatterplotMatrix(mod2$model[, -1], col = 1, regLine = list(col = 2),
-                  smooth = list(col.smooth = 4, col.spread = 4))
-scatterplotMatrix(mod2Raw$model[, -1],col = 1, regLine = list(col = 2),
-                  smooth = list(col.smooth = 4, col.spread = 4))
+car::scatterplotMatrix(mod2$model[, -1], col = 1, regLine = list(col = 2),
+                       smooth = list(col.smooth = 4, col.spread = 4))
+car::scatterplotMatrix(mod2Raw$model[, -1],col = 1, regLine = list(col = 2),
+                       smooth = list(col.smooth = 4, col.spread = 4))
 cor(mod2$model[, -1])
 cor(mod2Raw$model[, -1])
 
@@ -278,30 +275,26 @@ summary(lm(medv ~ lstat * age * indus, data = Boston))
 ## ---- int-2--------------------------------------------------------------
 # Include first-order interactions in the search for the best model in
 # terms of BIC, not just single predictors
-modIntBIC <- stepAIC(object = lm(medv ~ ., data = Boston), scope = medv ~ .^2,
-                     k = log(nobs(modBIC)), trace = 0)
+modIntBIC <- MASS::stepAIC(object = lm(medv ~ ., data = Boston), 
+                           scope = medv ~ .^2, k = log(nobs(modBIC)), trace = 0)
 summary(modIntBIC)
 
 # There is no improvement by removing terms in modIntBIC
-dropterm(modIntBIC, k = log(nobs(modIntBIC)), sorted = TRUE)
+MASS::dropterm(modIntBIC, k = log(nobs(modIntBIC)), sorted = TRUE)
 
 # Neither by including other terms interactions
-addterm(modIntBIC, scope = lm(medv ~ .^2, data = Boston),
-        k = log(nobs(modIntBIC)), sorted = TRUE)
+MASS::addterm(modIntBIC, scope = lm(medv ~ .^2, data = Boston),
+              k = log(nobs(modIntBIC)), sorted = TRUE)
 
-## ---- int-3-1, fig.cap = '(ref:int-3-1-title)'---------------------------
-# 1. No dummy variable
-(mod1 <- lm(medv ~ lstat, data = Boston))
-plot(medv ~ lstat, data = Boston, pch = 16, cex = 0.5, main = "1")
-abline(coef = mod1$coefficients, lwd = 2)
-
-## ---- int-3-2, fig.margin = FALSE, fig.fullwidth = TRUE, fig.cap = '(ref:int-3-2-title)', out.width = '100%', fig.asp = 0.80, fig.show = 'hold'----
-# The rest of plots
-par(mfrow = c(2, 3))
-
+## ---- int-3--------------------------------------------------------------
 # Group settings
 col <- Boston$chas + 3
 cex <- 0.5 + 0.25 * Boston$chas
+
+# 1. No dummy variable
+(mod1 <- lm(medv ~ lstat, data = Boston))
+plot(medv ~ lstat, data = Boston, col = col, pch = 16, cex = cex, main = "1")
+abline(coef = mod1$coefficients, lwd = 2)
 
 # 2. Dummy variable
 (mod2 <- lm(medv ~ lstat + chas, data = Boston))
@@ -358,10 +351,12 @@ lm(medv ~ lstat, data = Boston, subset = chas == 1)
 
 ## ---- int-5, fig.cap = '(ref:int-5-title)'-------------------------------
 # Does not take into account the groups in the data
-(modIris <- lm(Sepal.Width ~ Petal.Width, data = iris))
+modIris <- lm(Sepal.Width ~ Petal.Width, data = iris)
+modIris$coefficients
 
 # Adding interactions with the groups
-(modIrisSpecies <- lm(Sepal.Width ~ Petal.Width * Species, data = iris))
+modIrisSpecies <- lm(Sepal.Width ~ Petal.Width * Species, data = iris)
+modIrisSpecies$coefficients
 
 # Joint regression line shows negative correlation, but each group
 # regression line shows a positive correlation
@@ -376,4 +371,252 @@ abline(a = modIrisSpecies$coefficients[1] + modIrisSpecies$coefficients[3],
 abline(a = modIrisSpecies$coefficients[1] + modIrisSpecies$coefficients[4],
        b = modIrisSpecies$coefficients[2] + modIrisSpecies$coefficients[6],
        col = 4, lwd = 2)
+
+## ---- case2-11, eval = FALSE---------------------------------------------
+## load("wine.RData")
+## mod <- lm(Price ~ Age + AGST + HarvestRain + WinterRain, data = wine)
+## summary(mod)
+
+## ---- diag-1, fig.cap = '(ref:diag-1-title)'-----------------------------
+plot(mod, 1)
+
+## ---- diag-2, fig.cap = '(ref:diag-2-title)'-----------------------------
+par(mfrow = c(2, 2)) # We have 4 predictors
+termplot(mod, partial.resid = TRUE)
+
+## ---- diag-3, fig.cap = '(ref:diag-3-title)', fig.asp = 1/2--------------
+par(mfrow = c(1, 2))
+plot(lm(y ~ x, data = nonLinear), 1) # Nonlinear
+plot(lm(y ~ I(x^2), data = nonLinear), 1) # Linear
+
+## ---- diag-4, fig.cap = '(ref:diag-4-title)'-----------------------------
+plot(mod, 2)
+
+## ---- diag-5-------------------------------------------------------------
+# Shapiro-Wilk test of normality
+shapiro.test(mod$residuals) # Allows up to 5000 observations - if dealing with 
+# more data points, randomization of the input is a possibility
+# We do not reject normality
+
+# Lilliefors test - the Kolmogorov-Smirnov adaptation for testing normality
+nortest::lillie.test(mod$residuals)
+# We do not reject normality
+
+## ---- box-yeo, fig.asp = 1/2, fig.margin = FALSE-------------------------
+# Test data
+
+# Predictors
+n <- 200
+set.seed(121938)
+X1 <- rexp(n, rate = 1 / 5) # Non-negative
+X2 <- rchisq(n, df = 5) - 3 # Real
+
+# Response of a linear model
+epsilon <- rchisq(n, df = 10) - 10 # Centered error, but not normal
+Y <- 10 - 0.5 * X1 + X2 + epsilon
+
+# Transformation of non-normal data to achieve normal-like data (no model)
+
+# Optimal lambda for Box-Cox
+BC <- car::powerTransform(lm(X1 ~ 1), family = "bcPower") # Maximum-likelihood fit
+# Note we use a regression model with no predictors
+(lambdaBC <- BC$lambda) # The optimal lambda
+# lambda < 1, so positive skewness is corrected
+
+# Box-Cox transformation
+X1Transf <- car::bcPower(U = X1, lambda = lambdaBC)
+
+# Comparison
+par(mfrow = c(1, 2))
+hist(X1, freq = FALSE, breaks = 10, ylim = c(0, 0.3))
+hist(X1Transf, freq = FALSE, breaks = 10, ylim = c(0, 0.3))
+
+# Optimal lambda for Yeo-Johnson
+YJ <- car::powerTransform(lm(X2 ~ 1), family = "yjPower")
+(lambdaYJ <- YJ$lambda)
+
+# Yeo-Johnson transformation
+X2Transf <- car::yjPower(U = X2, lambda = lambdaYJ)
+
+# Comparison
+par(mfrow = c(1, 2))
+hist(X2, freq = FALSE, breaks = 10, ylim = c(0, 0.3))
+hist(X2Transf, freq = FALSE, breaks = 10, ylim = c(0, 0.3))
+
+# Transformation of non-normal response in a linear model
+
+# Optimal lambda for Yeo-Johnson
+YJ <- car::powerTransform(lm(Y ~ X1 + X2), family = "yjPower")
+(lambdaYJ <- YJ$lambda)
+
+# Yeo-Johnson transformation
+YTransf <- car::yjPower(U = Y, lambda = lambdaYJ)
+
+# Comparison for the residuals
+par(mfrow = c(1, 2))
+plot(lm(Y ~ X1 + X2), 2)
+plot(lm(YTransf ~ X1 + X2), 2) # Slightly better
+
+## ---- diag-6, fig.cap = '(ref:diag-6-title)'-----------------------------
+plot(mod, 3)
+
+## ---- diag-7-------------------------------------------------------------
+# Breusch-Pagan test
+car::ncvTest(mod)
+# We do not reject homoscedasticity
+
+## ---- breusch, fig.cap = '(ref:breusch-title)', fig.show = 'hold'--------
+# Heteroskedastic models
+set.seed(123456)
+x <- rnorm(100)
+y1 <- 1 + 2 * x + rnorm(100, sd = x^2)
+y2 <- 1 + 2 * x + rnorm(100, sd = 1 + x * (x > 0))
+modHet1 <- lm(y1 ~ x)
+modHet2 <- lm(y2 ~ x)
+
+# Heteroskedasticity not detected
+car::ncvTest(modHet1)
+plot(modHet1, 3)
+
+# Heteroskedasticity correctly detected
+car::ncvTest(modHet2)
+plot(modHet2, 3)
+
+## ---- diag-8, fig.cap = '(ref:diag-8-title)', fig.show = 'hold'----------
+# Artificial data with heteroskedasticity
+set.seed(12345)
+X <- rchisq(500, df = 3)
+e <- rnorm(500, sd = sqrt(0.1 + 2 * X))
+Y <- 1 + X + e
+
+# Original
+plot(lm(Y ~ X), 3) # Very heteroskedastic
+
+# Transformed
+plot(lm(I(log(abs(Y))) ~ X), 3) # Much less hereroskedastic, but at the price
+# of losing the signs in Y...
+
+# Shifted and transformed
+delta <- 1 # This is tuneable
+m <- -min(Y) + delta
+plot(lm(I(log(Y + m)) ~ X), 3) # No signs loss
+
+# Transformed by Yeo-Johnson
+
+# Optimal lambda for Yeo-Johnson
+YJ <- car::powerTransform(lm(Y ~ X), family = "yjPower")
+(lambdaYJ <- YJ$lambda)
+
+# Yeo-Johnson transformation
+YTransf <- car::yjPower(U = Y, lambda = lambdaYJ)
+plot(lm(YTransf ~ X), 3) # Slightly less hereroskedastic
+
+## ---- diag-9, fig.cap = '(ref:diag-9-title)'-----------------------------
+plot(mod$residuals, type = "o")
+
+## ---- diag-10------------------------------------------------------------
+lag.plot(mod$residuals, lags = 1, do.lines = FALSE)
+# No serious serial trend, but some negative autocorrelation is appreaciated
+cor(mod$residuals[-1], mod$residuals[-length(mod$residuals)])
+
+## ---- diag-11------------------------------------------------------------
+# Durbin-Watson test
+car::durbinWatsonTest(mod)
+# Does not reject at alpha = 0.05
+
+## ---- multico-1, message = FALSE, fig.cap = '(ref:multico-1-title)'------
+# Numerically
+cor(wine)
+
+# Graphically
+corrplot::corrplot(cor(wine), addCoef.col = "grey")
+
+## ---- multico-2, fig.cap = '(ref:multico-2-title)'-----------------------
+# Create predictors with multicollinearity: x4 depends on the rest
+set.seed(45678)
+x1 <- rnorm(100)
+x2 <- 0.5 * x1 + rnorm(100)
+x3 <- 0.5 * x2 + rnorm(100)
+x4 <- -x1 + x2 + rnorm(100, sd = 0.25)
+
+# Response
+y <- 1 + 0.5 * x1 + 2 * x2 - 3 * x3 - x4 + rnorm(100)
+data <- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, y = y)
+
+# Correlations - none seems suspicious
+corrplot::corrplot(cor(data), addCoef.col = "grey")
+
+## ---- multico-3----------------------------------------------------------
+# Abnormal variance inflation factors: largest for x4, we remove it
+modMultiCo <- lm(y ~ x1 + x2 + x3 + x4)
+car::vif(modMultiCo)
+
+# Without x4
+modClean <- lm(y ~ x1 + x2 + x3)
+
+# Comparison
+car::compareCoefs(modMultiCo, modClean)
+confint(modMultiCo)
+confint(modClean)
+
+# Sumamries
+summary(modMultiCo)
+summary(modClean)
+
+# Variance inflation factors are normal
+car::vif(modClean)
+
+## ---- outl-1, fig.cap = '(ref:outl-1-title)'-----------------------------
+plot(mod, 5)
+
+## ---- outl-2-------------------------------------------------------------
+# Create data
+set.seed(12345)
+x <- rnorm(100)
+e <- rnorm(100, sd = 0.5)
+y <- 1 + 2 * x + e
+
+# Leverage expected value
+2 / 101 # (p + 1) / n
+
+# Base model
+m0 <- lm(y ~ x)
+plot(x, y)
+abline(coef = m0$coefficients, col = 2)
+plot(m0, 5)
+summary(m0)
+
+# Make an outlier
+x[101] <- 0; y[101] <- 30
+m1 <- lm(y ~ x)
+plot(x, y)
+abline(coef = m1$coefficients, col = 2)
+plot(m1, 5)
+summary(m1)
+
+# Make a high-leverage point
+x[101] <- 10; y[101] <- 5
+m2 <- lm(y ~ x)
+plot(x, y)
+abline(coef = m2$coefficients, col = 2)
+plot(m2, 5)
+summary(m2)
+
+## ---- outl-3-------------------------------------------------------------
+# Access leverage statistics
+head(influence(model = m2, do.coef = FALSE)$hat)
+
+# Another option
+h <- hat(x = x)
+
+# 1% most influential points
+n <- length(x)
+p <- 1
+hist(h, breaks = 20)
+abline(v = (qchisq(0.99, df = p) + 1) / n, col = 2)
+
+# Standardized residuals
+rs <- rstandard(m2)
+plot(m2, 2) # QQ-plot
+points(qnorm(ppoints(n = n)), sort(rs), col = 2, pch = '+') # Manually computed
 

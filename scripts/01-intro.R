@@ -10,9 +10,9 @@
 ## ---- install, eval = FALSE----------------------------------------------
 ## # Installation of required packages
 ## packages <- c("MASS", "car", "readxl", "rgl", "nortest", "pca3d", "ISLR",
-##               "pls", "glmnet", "biglm", "leaps", "lme4", "viridis", "ffbase",
-##               "KernSmooth", "np", "locfit", "manipulate", "mice", "VIM",
-##               "nnet", "lubridate")
+##               "pls", "corrplot", "glmnet", "biglm", "leaps", "lme4", "viridis",
+##               "ffbase", "KernSmooth", "np", "locfit", "manipulate", "mice",
+##               "VIM", "nnet")
 ## install.packages(packages)
 
 ## ---- library, eval = FALSE----------------------------------------------

@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- ht, fig.margin = FALSE, fig.fullwidth = TRUE, out.width = '100%', fig.asp = 1/2, fig.cap = '(ref:ht-title)'----
+## ---- ht, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ht-title)'----
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -41,7 +41,7 @@ abline(h = 1, col = 2)
 
 ## ---- nas-1, error = TRUE------------------------------------------------
 # The airquality dataset contains NA's
-data("airquality")
+data(airquality)
 head(airquality)
 summary(airquality)
 
@@ -73,11 +73,11 @@ summary(lm(Ozone ~ ., data = subset(airquality, select = -Solar.R)))
 mod <- lm(Ozone ~ ., data = airquality)
 
 # stepAIC drops an error
-modAIC <- stepAIC(mod)
+modAIC <- MASS::stepAIC(mod)
 
 # Also, this will be problematic (the number of complete
 # cases changes with the predictors considered!)
-modBIC <- stepAIC(mod, k = log(nrow(airquality)))
+modBIC <- MASS::stepAIC(mod, k = log(nrow(airquality)))
 
 # Comparison of AICs or BICs is spurious: the scale of the
 # likelihood changes with the sample size (the likelihood
@@ -103,13 +103,12 @@ summary(airqualityNoNA)
 # The package VIM has a function to visualize where the missing
 # data is present. It gives the percentage of NA's for each
 # variable and for the most important combinations of NA's.
-library(VIM)
-aggr(airquality)
-aggr(airqualityNoNA)
+VIM::aggr(airquality)
+VIM::aggr(airqualityNoNA)
 
 # Stepwise regression without NA's - no problem
-modBIC1 <- stepAIC(lm(Ozone ~ ., data = airqualityNoNA),
-                   k = log(nrow(airqualityNoNA)), trace = 0)
+modBIC1 <- MASS::stepAIC(lm(Ozone ~ ., data = airqualityNoNA),
+                         k = log(nrow(airqualityNoNA)), trace = 0)
 summary(modBIC1)
 
 # But we only take into account 16% of the original data
@@ -118,8 +117,8 @@ nrow(airqualityNoNA) / nrow(airquality)
 # Removing the predictor with many NA's, as we did before
 # We also exclude NA's from other predictors
 airqualityNoSolar.R <- na.exclude(subset(airquality, select = -Solar.R))
-modBIC2 <- stepAIC(lm(Ozone ~ ., data = airqualityNoSolar.R),
-                   k = log(nrow(airqualityNoSolar.R)), trace = 0)
+modBIC2 <- MASS::stepAIC(lm(Ozone ~ ., data = airqualityNoSolar.R),
+                         k = log(nrow(airqualityNoSolar.R)), trace = 0)
 summary(modBIC2)
 # In this example the approach works well because most of
 # the NA's are associated to the variable Solar.R
@@ -140,8 +139,8 @@ head(airqualityMean)
 
 # Impute using linear regression for the response (first column)
 # and mean for the predictors (remaining five columns)
-airqualityLm <- complete(mice(data = airquality, m = 1, 
-                              method = c("norm.predict", rep("mean", 5))))
+airqualityLm <- complete(mice::mice(data = airquality, m = 1, 
+                                    method = c("norm.predict", rep("mean", 5))))
 head(airqualityLm)
 
 # Imputed data - some extrapolation problems may happen
@@ -153,15 +152,15 @@ predict(lm(airquality$Ozone ~ ., data = airqualityMean),
         newdata = airqualityMean[is.na(airquality$Ozone), -1])
 
 # Removing the truncation with ridge = 0
-complete(mice(data = airquality, m = 1,
-              method = c("norm.predict", rep("mean", 5)),
-              ridge = 0))[is.na(airquality$Ozone), 1]
+complete(mice::mice(data = airquality, m = 1,
+                    method = c("norm.predict", rep("mean", 5)),
+                    ridge = 0))[is.na(airquality$Ozone), 1]
 
 # The default mice's method (predictive mean matching) works
 # better in this case (in the sense that it does not yield
 # negative Ozone values)
 # Notice that there is randomness in the imputation!
-airqualityMice <- complete(mice(data = airquality, m = 1, seed = 123))
+airqualityMice <- complete(mice::mice(data = airquality, m = 1, seed = 123))
 head(airqualityMice)
 
 ## ---- r-1, echo = FALSE, cache = FALSE-----------------------------------

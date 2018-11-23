@@ -66,9 +66,8 @@ mod$coefficients
 summary(wine)
 
 # Graphical - pairwise relations with linear and "smooth" regressions
-library(car)
-scatterplotMatrix(wine, col = 1, regLine = list(col = 2),
-                  smooth = list(col.smooth = 4, col.spread = 4))
+car::scatterplotMatrix(wine, col = 1, regLine = list(col = 2),
+                       smooth = list(col.smooth = 4, col.spread = 4))
 
 ## ---- wintab-3-----------------------------------------------------------
 # Set row names to Year - useful for outlier identification
@@ -178,7 +177,7 @@ modWine2 <- lm(Price ~ . - FrancePop, data = wine)
 summary(modWine2)
 
 ## ---- case1-4------------------------------------------------------------
-compareCoefs(modWine1, modWine2)
+car::compareCoefs(modWine1, modWine2)
 
 ## ---- case1-5------------------------------------------------------------
 # Fit a new model
@@ -305,7 +304,7 @@ summary(reg)
 # abline(coef = reg$coef, col = 3)
 
 # But prediction is obviously problematic
-scatterplot(y ~ x, col = 1, regLine = list(col = 2), smooth = FALSE)
+car::scatterplot(y ~ x, col = 1, regLine = list(col = 2), smooth = FALSE)
 
 ## ---- R2bad-2------------------------------------------------------------
 # Multiple linear model
@@ -325,7 +324,7 @@ summary(reg)
 
 ## ---- R2bad-4, webgl = knitr:::is_html_output(), eval = knitr:::is_html_output()----
 ## # But prediction is obviously problematic
-## scatter3d(y ~ x1 + x2, fit = "linear")
+## car::scatter3d(y ~ x1 + x2, fit = "linear")
 
 ## ---- R2bad-3, eval = FALSE----------------------------------------------
 ## # Generate data
