@@ -139,29 +139,6 @@ summary(modBIC)
 # the river, the mean of medv increases in 2.71871 units
 # chas is significant as well in the presence of more predictors
 
-## ---- nonlineartransf, echo = FALSE, fig.cap = '(ref:nonlineartransf-title)', fig.margin = FALSE, fig.show = 'hold', fig.purl = FALSE----
-x <- seq(-2, 5, l = 200)
-plot(x, x, xlab = "x", ylab = "y", type = "l", col = 1, lwd = 2)
-lines(x, x^2, col = 2, lwd = 2)
-lines(x, x^3, col = 3, lwd = 2)
-lines(x, sqrt(x), col = 4, lwd = 2)
-lines(x, exp(x), col = 5, lwd = 2)
-lines(x, exp(-x), col = 6, lwd = 2)
-lines(x, log(x), col = 7, lwd = 2)
-legend("bottomright", legend = expression(y == x, y == x^2, y == x^3, y == sqrt(x),
-                                          y == exp(x), y == exp(-x), y == log(x)),
-       lwd = 2, col = 1:7)
-plot(x, -x, xlab = "x", ylab = "y", type = "l", col = 1, lwd = 2)
-lines(x, -x^2, col = 2, lwd = 2)
-lines(x, -x^3, col = 3, lwd = 2)
-lines(x, -sqrt(x), col = 4, lwd = 2)
-lines(x, -exp(x), col = 5, lwd = 2)
-lines(x, -exp(-x), col = 6, lwd = 2)
-lines(x, -log(x), col = 7, lwd = 2)
-legend("topright", legend = expression(y == -x, y == -x^2, y == -x^3, y == -sqrt(x),
-                                       y == -exp(-x), y == -exp(x), y == -log(x)),
-       lwd = 2, col = 1:7)
-
 ## ---- datatra------------------------------------------------------------
 # Data
 x <- c(-2, -1.9, -1.7, -1.6, -1.4, -1.3, -1.1, -1, -0.9, -0.7, -0.6,
@@ -190,7 +167,7 @@ summary(mod2)
 # mod2 has a larger R^2. Also notice the intercept is not significative
 
 ## ---- pol-1-1, fig.cap = '(ref:pol-1-1-title)'---------------------------
-x1 <- seq(-1, 1, l = 5)
+x1 <- seq(-1, 1, l = 4)
 poly(x = x1, degree = 2, raw = TRUE) # (X, X^2)
 poly(x = x1, degree = 2) # By default, it employs orthogonal polynomials
 
@@ -619,4 +596,296 @@ abline(v = (qchisq(0.99, df = p) + 1) / n, col = 2)
 rs <- rstandard(m2)
 plot(m2, 2) # QQ-plot
 points(qnorm(ppoints(n = n)), sort(rs), col = 2, pch = '+') # Manually computed
+
+## ---- laliga-2, eval = FALSE---------------------------------------------
+## laliga <- readxl::read_excel("la-liga-2015-2016.xlsx", sheet = 1, col_names = TRUE)
+## laliga <- as.data.frame(laliga) # Avoid tibble since it drops row.names
+
+## ---- laliga-3-----------------------------------------------------------
+rownames(laliga) <- laliga$Team # Set teams as case names to avoid factors
+laliga$Team <- NULL
+laliga <- laliga[, -c(2, 8)] # Do not add irrelevant information
+summary(laliga)
+
+## ---- pca-1--------------------------------------------------------------
+# PCA
+pcaLaliga <- princomp(laliga)
+summary(pcaLaliga)
+# The standard deviations are the square roots of the eigenvalues
+# The cumulative proportion of variance explained accumulates the
+# variance explained starting at the first component
+
+# Plot of variances of each component (screeplot)
+plot(pcaLaliga, type = "l")
+# Useful for detecting an "elbow" in the graph whose location gives the
+# "right" number of components to retain. Ideally, this elbow appears
+# when the next variances are almost similar and notably smaller when
+# compared with the previous
+
+# Alternatively: plot of the cumulated percentage of variance
+# barplot(cumsum(pcaLaliga$sdev^2) / sum(pcaLaliga$sdev^2))
+
+# Computation of PCA from the spectral decomposition
+n <- nrow(laliga)
+eig <- eigen(cov(laliga) * (n - 1) / n) # By default, cov() computes the
+# quasi-variance-covariance matrix that divides by n - 1, but PCA and princomp
+# consider the sample variance-covariance matrix that divides by n
+A <- eig$vectors
+
+# Same eigenvalues
+pcaLaliga$sdev^2 - eig$values
+
+# The eigenvectors (the a_j vectors) are the column vectors in $loadings
+pcaLaliga$loadings
+
+# The scores is the representation of the data in the principal components - 
+# it has the same information as laliga
+head(pcaLaliga$scores)
+
+# Uncorrelated
+corrplot::corrplot(cor(pcaLaliga$scores), addCoef.col = "gray")
+# Caution! What happened in the last columns? What happened is that the 
+# variance for the last principal components is close to zero (because there 
+# are linear dependencies on the variables; e.g. Points, Wins, Loses, Draws), 
+# so the computation of the correlation matrix becomes unstable for those 
+# variables (a 0/0 division takes place)
+
+# Better to inspect the covariance matrix
+corrplot::corrplot(cov(pcaLaliga$scores), addCoef.col = "gray", is.corr = FALSE)
+ 
+# The scores are A' * (X_i - mu). We center the data with scale()
+# and then multiply each row by A'
+scores <- scale(laliga, center = TRUE, scale = FALSE) %*% A
+
+# Same as (but this is much slower)
+# scores <- t(apply(scale(laliga, center = TRUE, scale = FALSE), 1,
+#                   function(x) t(A) %*% x))
+
+# Same scores (up to possible changes in signs)
+max(abs(abs(pcaLaliga$scores) - abs(scores)))
+
+# Reconstruct the data from all the principal components
+head(
+  sweep(pcaLaliga$scores %*% t(pcaLaliga$loadings), 2, pcaLaliga$center, "+")
+  )
+
+## ---- pca-2, fig.show = 'hold', fig.cap = '(ref:pca-2-title)'------------
+# Use cor = TRUE to standardize variables (all have unit variance)
+# and avoid scale distortions
+pcaLaligaStd <- princomp(x = laliga, cor = TRUE)
+summary(pcaLaligaStd)
+
+# The effects of the distorsion can be clearly seen with the biplot
+# Variability absorbed by Shots, Shots.on.goal, Fouls.made
+biplot(pcaLaliga, cex = 0.75)
+
+# The effects of the variables are more balanced
+biplot(pcaLaligaStd, cex = 0.75)
+
+## ---- pca-4, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:pca-4-title)'----
+biplot(pcaLaligaStd, cex = 0.75)
+
+## ---- pca3d, eval = knitr:::is_html_output()-----------------------------
+## pca3d::pca3d(pcaLaligaStd, show.labels = TRUE, biplot = TRUE)
+## rgl::rglwidget()
+
+## ---- pca-5, fig.cap = '(ref:pca-5-title)', fig.show = 'hold'------------
+biplot(pcaLaligaStd, choices = c(1, 3)) # 0.7138 proportion of variance
+biplot(pcaLaligaStd, choices = c(2, 3)) # 0.2180 proportion of variance
+
+## ---- pcr-1--------------------------------------------------------------
+# A linear model is problematic
+mod <- lm(Points ~ . - Wins - Draws - Loses - Matches.without.conceding,
+          data = laliga)
+summary(mod) # Lots of non-significant predictors
+
+# We try to clean the model
+modBIC <- MASS::stepAIC(mod, k = log(nrow(laliga)), trace = 0)
+summary(modBIC) # Better, but still unsatisfactory
+
+# Also, huge multicollinearity
+car::vif(modBIC)
+
+# A quick way of removing columns without knowing its position
+laligaRed <- subset(laliga, select = -c(Points, Wins, Draws, Loses,
+                                        Matches.without.conceding))
+# PCA without Points, Wins, Draws, Loses, and Matches.without.conceding
+pcaLaligaRed <- princomp(x = laligaRed, cor = TRUE)
+summary(pcaLaligaRed) # l = 3 gives 86% of variance explained
+
+# Interpretation of PC1 and PC2
+biplot(pcaLaligaRed)
+# PC1: attack performance of the team
+
+# Create a new dataset with the response + principal components
+laligaPCA <- data.frame("Points" = laliga$Points, pcaLaligaRed$scores)
+
+# Regression on all the principal components
+modPCA <- lm(Points ~ ., data = laligaPCA)
+summary(modPCA) # Predictors clearly significative - same R^2 as mod
+car::vif(modPCA) # No problems at all
+
+# Using the first three components
+modPCA3 <- lm(Points ~ Comp.1 + Comp.2 + Comp.3, data = laligaPCA)
+summary(modPCA3)
+
+# Coefficients associated to each original predictor (gamma)
+alpha <- modPCA3$coefficients
+gamma <- pcaLaligaRed$loadings[, 1:3] %*% alpha[-1] # Slopes
+gamma <- c(alpha[1] - pcaLaligaRed$center %*% gamma, gamma) # Intercept
+gamma
+
+# We can overpenalize to have a simpler model - also one single
+# principal component does quite well
+modPCABIC <- MASS::stepAIC(modPCA, k = 2 * log(nrow(laliga)), trace = 0)
+summary(modPCABIC)
+# Note that the order of the principal components does not correspond
+# exactly to its importance in the regression!
+
+# To perform prediction we need to compute first the scores associated to the
+# new values of the predictors, conveniently preprocessed
+# Predictions for FCB and RMA (although they are part of the training sample)
+newPredictors <- laligaRed[1:2, ]
+newPredictors <- scale(newPredictors, center = pcaLaligaRed$center,
+                       scale = pcaLaligaRed$scale) # Centred and scaled
+newScores <- t(apply(newPredictors, 1,
+                     function(x) t(pcaLaligaRed$loadings) %*% x))
+
+# We need a data frame for prediction
+newScores <- data.frame("Comp" = newScores)
+predict(modPCABIC, newdata = newScores, interval = "prediction")
+
+# Reality
+laliga[1:2, 1]
+
+## ---- pcr-2--------------------------------------------------------------
+# Create a dataset without the problematic predictors and with the response
+laligaRed2 <- subset(laliga, select = -c(Wins, Draws, Loses,
+                                         Matches.without.conceding))
+
+# Simple call to pcr
+library(pls)
+modPcr <- pcr(Points ~ ., data = laligaRed2, scale = TRUE)
+# Notice we do not need to create a data.frame with PCA, it is automatically
+# done within pcr. We also have flexibility to remove predictors from the PCA
+# scale = TRUE means that the variables are scaled prior to compute PCA
+
+# The summary of the model is different
+summary(modPcr)
+# First row: percentage of variance explained of the predictors
+# Second row: percentage of variance explained of Y (the R^2)
+# Note that we have the same R^2 for 3 and 12 components as in the previous 
+# approach
+
+# Slots of information in the model - most of them as 3-dim arrays with the
+# third dimension indexing the number of components considered
+names(modPcr)
+
+# The coefficients of the original predictors (gammas), not of the components!
+modPcr$coefficients[, , 12]
+# pcr() computes up to ncomp (in this case, 12) linear models, each one
+# considering one extra principal component. $coefficients returns in a
+# 3-dim array the coefficients of all the linear models
+
+# Prediction is simpler and can be done for different number of components
+predict(modPcr, newdata = laligaRed2[1:2, ], ncomp = 12)
+
+# Selecting the number of components to retain. All the components up to ncomp
+# are selected, no further flexibility is possible
+modPcr2 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE, ncomp = 3)
+summary(modPcr2)
+
+# Selecting the number of components to retain by Leave-One-Out
+# cross-validation
+modPcrCV1 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE, 
+                 validation = "LOO")
+summary(modPcrCV1)
+
+# View cross-validation Mean Squared Error in Prediction
+validationplot(modPcrCV1, val.type = "MSEP") # l = 8 gives the minimum CV
+
+# Selecting the number of components to retain by 10-fold Cross-Validation
+# (k = 10 is the default)
+modPcrCV10 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE,
+                  validation = "CV")
+summary(modPcrCV10)
+validationplot(modPcrCV10, val.type = "MSEP") # l = 6 gives the minimum CV
+
+## ---- pcr-3--------------------------------------------------------------
+# Equality of loadings from princomp() and pcr()
+max(abs(abs(pcaLaligaRed$loadings[, 1:3]) - abs(modPcr$loadings[, 1:3])))
+
+# Equality of scores from princomp() and pcr() (with the same standardization)
+max(abs(abs(pcaLaligaRed$scores[, 1:3]) -
+          abs(modPcr$scores[, 1:3] * sqrt(n / (n - 1)))))
+
+# Equality of the gamma coefficients obtained previously for 3 PCA
+# (with the same standardization)
+modPcr$coefficients[, , 3] / sqrt(n / (n - 1))
+gamma[-1]
+
+# Coefficients associated to the principal components - same as in modPCA3
+lm(Points ~ ., data = data.frame("Points" = laliga$Points,
+                                 modPcr$scores[, 1:3] * sqrt(n / (n - 1))))
+modPCA3
+# Of course, flipping of signs is always possible with PCA
+
+## ---- pls-1--------------------------------------------------------------
+# Simple call to plsr - very similar to pcr
+library(pls)
+modPls <- plsr(Points ~ ., data = laligaRed2, scale = TRUE)
+
+# The summary of the model
+summary(modPls)
+# First row: percentage of variance explained of the predictors
+# Second row: percentage of variance explained of Y (the R^2)
+# Note we have the same R^2 for 12 components as in the linear model
+
+# Slots of information in the model
+names(modPls)
+
+# PLS scores
+head(modPls$scores)
+
+# Also uncorrelated
+head(cov(modPls$scores))
+
+# The coefficients of the original predictors, not of the components!
+modPls$coefficients[, , 2]
+
+# Obtaining the coefficients of the PLS components
+lm(formula = Points ~., data = data.frame("Points" = laliga$Points,
+                                          modPls$scores[, 1:3]))
+
+# Prediction
+predict(modPls, newdata = laligaRed2[1:2, ], ncomp = 12)
+
+# Selecting the number of components to retain
+modPls2 <- plsr(Points ~ ., data = laligaRed2, scale = TRUE, ncomp = 2)
+summary(modPls2)
+
+# Selecting the number of components to retain by Leave-One-Out cross-validation
+modPlsCV1 <- plsr(Points ~ ., data = laligaRed2, scale = TRUE,
+                  validation = "LOO")
+summary(modPlsCV1)
+
+# View cross-validation Mean Squared Error Prediction
+validationplot(modPlsCV1, val.type = "MSEP") # l = 4 gives the minimum CV
+
+# Selecting the number of components to retain by 10-fold Cross-Validation
+# (k = 10 is the default)
+modPlsCV10 <- plsr(Points ~ ., data = laligaRed2, scale = TRUE,
+                   validation = "CV")
+summary(modPlsCV10)
+validationplot(modPlsCV10, val.type = "MSEP")
+# l = 4 is close to the minimum CV
+
+# Regress manually Points in the scores, in order to have an lm object
+# Create a new dataset with the response + PLS components
+laligaPLS <- data.frame("Points" = laliga$Points, cbind(modPls$scores))
+
+# Regression on all principal components
+modPLS <- lm(Points ~ Comp.1 + Comp.2, data = laligaPLS)
+summary(modPLS) # Predictors clearly significative - same R^2 as in modPls2
+car::vif(modPLS) # No problems at all
 

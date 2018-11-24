@@ -322,9 +322,10 @@ y <- 1 - 3 * x1 * (1 + 0.25 * sin(4 * pi * x1)) + 0.25 * cos(x2) + eps
 reg <- lm(y ~ x1 + x2)
 summary(reg)
 
-## ---- R2bad-4, webgl = knitr:::is_html_output(), eval = knitr:::is_html_output()----
+## ---- R2bad-4, eval = knitr:::is_html_output()---------------------------
 ## # But prediction is obviously problematic
 ## car::scatter3d(y ~ x1 + x2, fit = "linear")
+## rgl::rglwidget()
 
 ## ---- R2bad-3, eval = FALSE----------------------------------------------
 ## # Generate data
