@@ -139,7 +139,7 @@ head(airqualityMean)
 
 # Impute using linear regression for the response (first column)
 # and mean for the predictors (remaining five columns)
-airqualityLm <- complete(mice::mice(data = airquality, m = 1, 
+airqualityLm <- complete(mice::mice(data = airquality, m = 1,
                                     method = c("norm.predict", rep("mean", 5))))
 head(airqualityLm)
 

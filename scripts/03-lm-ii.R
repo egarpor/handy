@@ -12,14 +12,14 @@
 ## Boston <- readxl::read_excel(path = "Boston.xlsx", sheet = 1, col_names = TRUE)
 ## 
 ## # # Alternatively
-## # data(MASS::Boston)
+## # data(Boston, package = "MASS")
 
 ## ---- case2-3------------------------------------------------------------
 summary(Boston)
 
 ## ---- scat2, fig.cap = '(ref:scat2-title)', fig.margin = FALSE-----------
 car::scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
-                       col = 1, smooth = list(col.smooth = 4, col.spread = 4), 
+                       col = 1, smooth = list(col.smooth = 4, col.spread = 4),
                        data = Boston)
 
 ## ---- case2-4------------------------------------------------------------
@@ -106,7 +106,7 @@ summary(mod2)
 
 # Coefficients of the model
 confint(mod2)
-# The coefficients of Speciesversicolor and Speciesvirginica are 
+# The coefficients of Speciesversicolor and Speciesvirginica are
 # significantly negative
 
 # Show the dummy variables employed for encoding a factor
@@ -116,7 +116,7 @@ contrasts(iris$Species)
 
 ## ---- case2-9------------------------------------------------------------
 # Load the Boston dataset
-data(MASS::Boston)
+data(Boston, package = "MASS")
 
 # Structure of the data
 str(Boston)
@@ -252,7 +252,7 @@ summary(lm(medv ~ lstat * age * indus, data = Boston))
 ## ---- int-2--------------------------------------------------------------
 # Include first-order interactions in the search for the best model in
 # terms of BIC, not just single predictors
-modIntBIC <- MASS::stepAIC(object = lm(medv ~ ., data = Boston), 
+modIntBIC <- MASS::stepAIC(object = lm(medv ~ ., data = Boston),
                            scope = medv ~ .^2, k = log(nobs(modBIC)), trace = 0)
 summary(modIntBIC)
 
@@ -371,7 +371,7 @@ plot(mod, 2)
 
 ## ---- diag-5-------------------------------------------------------------
 # Shapiro-Wilk test of normality
-shapiro.test(mod$residuals) # Allows up to 5000 observations - if dealing with 
+shapiro.test(mod$residuals) # Allows up to 5000 observations - if dealing with
 # more data points, randomization of the input is a possibility
 # We do not reject normality
 
@@ -638,21 +638,21 @@ pcaLaliga$sdev^2 - eig$values
 # The eigenvectors (the a_j vectors) are the column vectors in $loadings
 pcaLaliga$loadings
 
-# The scores is the representation of the data in the principal components - 
+# The scores is the representation of the data in the principal components -
 # it has the same information as laliga
 head(pcaLaliga$scores)
 
 # Uncorrelated
 corrplot::corrplot(cor(pcaLaliga$scores), addCoef.col = "gray")
-# Caution! What happened in the last columns? What happened is that the 
-# variance for the last principal components is close to zero (because there 
-# are linear dependencies on the variables; e.g. Points, Wins, Loses, Draws), 
-# so the computation of the correlation matrix becomes unstable for those 
+# Caution! What happened in the last columns? What happened is that the
+# variance for the last principal components is close to zero (because there
+# are linear dependencies on the variables; e.g. Points, Wins, Loses, Draws),
+# so the computation of the correlation matrix becomes unstable for those
 # variables (a 0/0 division takes place)
 
 # Better to inspect the covariance matrix
 corrplot::corrplot(cov(pcaLaliga$scores), addCoef.col = "gray", is.corr = FALSE)
- 
+
 # The scores are A' * (X_i - mu). We center the data with scale()
 # and then multiply each row by A'
 scores <- scale(laliga, center = TRUE, scale = FALSE) %*% A
@@ -774,7 +774,7 @@ modPcr <- pcr(Points ~ ., data = laligaRed2, scale = TRUE)
 summary(modPcr)
 # First row: percentage of variance explained of the predictors
 # Second row: percentage of variance explained of Y (the R^2)
-# Note that we have the same R^2 for 3 and 12 components as in the previous 
+# Note that we have the same R^2 for 3 and 12 components as in the previous
 # approach
 
 # Slots of information in the model - most of them as 3-dim arrays with the
@@ -797,7 +797,7 @@ summary(modPcr2)
 
 # Selecting the number of components to retain by Leave-One-Out
 # cross-validation
-modPcrCV1 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE, 
+modPcrCV1 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE,
                  validation = "LOO")
 summary(modPcrCV1)
 
@@ -832,7 +832,6 @@ modPCA3
 
 ## ---- pls-1--------------------------------------------------------------
 # Simple call to plsr - very similar to pcr
-library(pls)
 modPls <- plsr(Points ~ ., data = laligaRed2, scale = TRUE)
 
 # The summary of the model
