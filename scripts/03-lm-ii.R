@@ -307,7 +307,7 @@ abline(a = mod6$coefficients[1], b = 0, col = 3, lwd = 2)
 abline(a = mod6$coefficients[1] + mod6$coefficients[2],
        b = mod6$coefficients[3], col = 4, lwd = 2)
 
-# 7. Dummy variable. Interaction in the intercept and slope
+# 7. Dummy variable. Interaction in the slope
 (mod7 <- lm(medv ~ lstat:chas, data = Boston))
 plot(medv ~ lstat, data = Boston, col = col, pch = 16, cex = cex, main = "7")
 abline(a = mod7$coefficients[1], b = 0, col = 3, lwd = 2)
@@ -371,9 +371,10 @@ plot(mod, 2)
 
 ## ---- diag-5-------------------------------------------------------------
 # Shapiro-Wilk test of normality
-shapiro.test(mod$residuals) # Allows up to 5000 observations - if dealing with
-# more data points, randomization of the input is a possibility
+shapiro.test(mod$residuals) 
 # We do not reject normality
+# shapiro.test allows up to 5000 observations - if dealing with more data 
+# points, randomization of the input is a possibility
 
 # Lilliefors test - the Kolmogorov-Smirnov adaptation for testing normality
 nortest::lillie.test(mod$residuals)
