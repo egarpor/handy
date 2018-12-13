@@ -163,6 +163,78 @@ complete(mice::mice(data = airquality, m = 1,
 airqualityMice <- complete(mice::mice(data = airquality, m = 1, seed = 123))
 head(airqualityMice)
 
+## ---- notevarsel---------------------------------------------------------
+# Simulation setting
+n <- 2e2
+p <- 4
+p0 <- p %/% 2
+beta <- c(rep(1, p0), rep(0, p - p0))
+
+# Generate two sets of independent data following the same linear model
+# with coefficients beta and null intercept
+x1 <- matrix(rnorm(n * p), nrow = n, ncol = p)
+data1 <- data.frame("x" = x1)
+xbeta1 <- x1 %*% beta
+x2 <- matrix(rnorm(n * p), nrow = n, ncol = p)
+data2 <- data.frame("x" = x2)
+xbeta2 <- x2 %*% beta
+
+# Objects for the simulation
+M <- 1e4
+pvalues1 <- pvalues2 <- pvalues3 <- matrix(NA, nrow = M, ncol = p)
+set.seed(12345678)
+data1$y <- xbeta1 + rnorm(n)
+nam <- names(lm(y ~ 0 + ., data = data1)$coefficients)
+
+# Simulation
+# pb <- txtProgressBar(style = 3)
+for (i in 1:M) {
+
+  # Generate new data
+  data1$y <- xbeta1 + rnorm(n)
+
+  # Obtain the significances of the coefficients for the usual linear model
+  mod1 <- lm(y ~ 0 + ., data = data1)
+  s1 <- summary(mod1)
+  pvalues1[i, ] <- s1$coefficients[, 4]
+
+  # Obtain the significances of the coefficients for a data-driven selected
+  # linear model (in this case, by stepwise regression using BIC)
+  mod2 <- MASS::stepAIC(mod1, k = log(n), trace = 0)
+  s2 <- summary(mod2)
+  ind <- match(x = names(s2$coefficients[, 4]), table = nam)
+  pvalues2[i, ind] <- s2$coefficients[, 4]
+
+  # Generate independent data
+  data2$y <- xbeta2 + rnorm(n)
+
+  # Significances of the coefficients by the data-driven selected model
+  s3 <- summary(lm(y ~ 0 + ., data = data2[, c(ind, p + 1)]))
+  pvalues3[i, ind] <- s3$coefficients[, 4]
+
+  # Progress
+  # setTxtProgressBar(pb = pb, value = i / M)
+
+}
+
+# Percentage of NA's: NA = predictor excluded
+apply(pvalues2, 2, function(x) mean(is.na(x)))
+
+# Boxplots of significances
+boxplot(pvalues1, names = expression(beta[1], beta[3], beta[3], beta[4]),
+        main = "p-values in the full model", ylim = c(0, 1))
+boxplot(pvalues2, names = expression(beta[1], beta[3], beta[3], beta[4]),
+        main = "p-values in the stepwise model", ylim = c(0, 1))
+boxplot(pvalues3, names = expression(beta[1], beta[3], beta[3], beta[4]),
+        main = "p-values in the model with the predictors selected by
+        stepwise regression, and fitted in an independent sample",
+        ylim = c(0, 1))
+
+# Test uniformity of the p-values associated to the coefficients that are 0
+apply(pvalues1[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
+apply(pvalues2[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
+apply(pvalues3[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
+
 ## ---- r-1, echo = FALSE, cache = FALSE-----------------------------------
 rm(list = ls())
 

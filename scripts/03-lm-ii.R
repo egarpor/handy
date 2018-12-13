@@ -371,9 +371,9 @@ plot(mod, 2)
 
 ## ---- diag-5-------------------------------------------------------------
 # Shapiro-Wilk test of normality
-shapiro.test(mod$residuals) 
+shapiro.test(mod$residuals)
 # We do not reject normality
-# shapiro.test allows up to 5000 observations - if dealing with more data 
+# shapiro.test allows up to 5000 observations - if dealing with more data
 # points, randomization of the input is a possibility
 
 # Lilliefors test - the Kolmogorov-Smirnov adaptation for testing normality
