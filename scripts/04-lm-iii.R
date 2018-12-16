@@ -134,10 +134,10 @@ kcvRidge$cvm[indMin]
 min(kcvRidge$cvm)
 
 # Potential problem! Minimum occurs at one extreme of the lambda grid in which
-# CV is done. This was automatically selected, but can be manually inputted
+# CV is done. The grid was automatically selected, but can be manually inputted
 range(kcvRidge$lambda)
 lambdaGrid <- 10^seq(log10(kcvRidge$lambda[1]), log10(0.1),
-                     length.out = 150)
+                     length.out = 150) # log-spaced grid
 kcvRidge2 <- cv.glmnet(x = x, y = y, nfolds = 10, alpha = 0,
                        lambda = lambdaGrid)
 
@@ -189,6 +189,40 @@ predict(modRidgeCV, type = "response", s = kcvRidge2$lambda.1se,
 plot(log(modRidgeCV$lambda),
      predict(modRidgeCV, type = "response", newx = x[1, , drop = FALSE]),
      type = "l", xlab = "log(lambda)", ylab = " Prediction")
+
+## ---- ridge-4------------------------------------------------------------
+# Random data
+p <- 5
+n <- 200
+beta <- seq(-1, 1, l = p)
+set.seed(123124)
+x <- matrix(rnorm(n * p), n, p)
+y <- 1 + x %*% beta + rnorm(n)
+
+# Unrestricted fit
+fit <- glmnet(x, y, alpha = 0, lambda = 0, intercept = TRUE, 
+              standardize = FALSE)
+beta0Hat <- rbind(fit$a0, fit$beta)
+beta0Hat
+
+# Unrestricted fit matches least squares - but recall glmnet uses an
+# iterative method so it is inexact (convergence threshold thresh = 1e-7 by 
+# default)
+X <- model.matrix(y ~ x) # A way of constructing a design matrix that is a
+# data.frame and has a column of ones
+solve(crossprod(X)) %*% t(X) %*% y
+
+# Restricted fit
+# glmnet considers as the reguarization parameter "lambda" the value
+# lambda / n (lambda being here the penalty parameter employed in the theory)
+lambda <- 2
+fit <- glmnet(x, y, family = "mgaussian", alpha = 0, lambda = lambda / n,
+              intercept = TRUE, standardize = FALSE)
+betaLambdaHat <- rbind(fit$a0, fit$beta)
+betaLambdaHat
+
+# Analytical form with intercept
+solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
 
 ## ---- lasso-1------------------------------------------------------------
 # Call to the main function - use alpha = 1 for lasso regression (the default)
@@ -271,6 +305,18 @@ summary(modBIC)
 # that employs solutions of unconstrained least squares. What is remarkable
 # is the speed of lasso on selecting variables, and the fact that gives quite
 # good starting points for performing further model selection
+
+## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'---------------------------
+# Random data with predictors unrelated with the response
+p <- 100
+n <- 300
+set.seed(123124)
+x <- matrix(rnorm(n * p), n, p)
+y <- 1 + rnorm(n)
+
+# CV
+lambdaGrid <- exp(seq(-10, 3, l = 200))
+plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
 
 ## ---- biglm-1------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
