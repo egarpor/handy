@@ -197,6 +197,17 @@ confint(modWine1)
 confint(modWine2)
 confint(modWine3)
 
+## ---- case1-5b-----------------------------------------------------------
+# By default, scale centers (substracts the mean) and scales (divides by the 
+# standard deviation) the columns of a matrix
+wineCen <- data.frame(scale(wine, center = TRUE, scale = FALSE))
+
+# Regression with centered response and predictors
+modWine3Cen <- lm(Price ~ Age + WinterRain, data = wineCen)
+
+# Summary
+summary(modWine3Cen)
+
 ## ---- case1-6, error = TRUE----------------------------------------------
 # Fit a linear model for the price on WinterRain, HarvestRain, and AGST
 modWine4 <- lm(Price ~ WinterRain + HarvestRain + AGST, data = wine)
@@ -353,6 +364,72 @@ y <- 1 + rnorm(100)
 
 # Negative adjusted R^2
 summary(lm(y ~ x1 + x2))
+
+## ---- R2danger-2---------------------------------------------------------
+# Model with intercept
+mod1 <- lm(Sepal.Length ~ Petal.Width, data = iris)
+mod1
+
+# Model without intercept
+mod0 <- lm(Sepal.Length ~ 0 + Petal.Width, data = iris)
+mod0
+
+# Recall the different way of obtaining the estimators
+X1 <- cbind(1, iris$Petal.Width)
+X0 <- cbind(iris$Petal.Width) # No column of ones!
+Y <- iris$Sepal.Length
+betaHat1 <- solve(crossprod(X1)) %*% t(X1) %*% Y
+betaHat0 <- solve(crossprod(X0)) %*% t(X0) %*% Y
+betaHat1
+betaHat0
+
+# Summaries: higher R^2 for the model with no intercept!?
+summary(mod1)
+summary(mod0)
+
+# Wait a moment... let's see the actual fit
+plot(Sepal.Length ~ Petal.Width, data = iris)
+abline(mod1, col = 2) # Obviously, much better
+abline(mod0, col = 3)
+
+# Manually checking the R^2 indeed reveals that summary is doing something 
+# different for computing the R^2 when no intercept
+cor(mod0$model$Sepal.Length, mod0$fitted.values)^2
+
+# Compute the R^2 manually for mod1
+SSE1 <- sum((mod1$residuals - mean(mod1$residuals))^2)
+SST1 <- sum((mod1$model$Sepal.Length - mean(mod1$model$Sepal.Length))^2)
+1 - SSE1 / SST1
+  
+# Compute the R^2 manually for mod0
+SSE0 <- sum((mod0$residuals - mean(mod0$residuals))^2)
+SST0 <- sum((mod0$model$Sepal.Length - mean(mod0$model$Sepal.Length))^2)
+1 - SSE0 / SST0
+# It is negative! 
+ 
+# Recall that the mean of the residuals is not zero
+mean(mod0$residuals)
+
+# What summary really returns if there is no intercept
+n <- nrow(iris)
+p <- 1
+R0 <- 1 - sum(mod0$residuals^2) / sum(mod0$model$Sepal.Length^2)
+R0Adj <- 1 - sum(mod0$residuals^2) / sum(mod0$model$Sepal.Length^2) * 
+  (n - 1) / (n - p - 1)
+R0
+R0Adj
+
+# What if we centered the data previously?
+irisCen <- data.frame(scale(iris[, -5], center = TRUE, scale = FALSE))
+modCen1 <- lm(Sepal.Length ~ Petal.Width, data = irisCen)
+modCen0 <- lm(Sepal.Length ~ 0 + Petal.Width, data = irisCen)
+
+# No problem, "correct" R^2
+summary(modCen1)
+summary(modCen0)
+
+# But only if we center predictor and response...
+summary(lm(iris$Sepal.Length ~ 0 + irisCen$Petal.Width))
 
 ## ---- case1-8------------------------------------------------------------
 # Fit models

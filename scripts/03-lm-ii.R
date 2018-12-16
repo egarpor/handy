@@ -804,6 +804,8 @@ summary(modPcrCV1)
 
 # View cross-validation Mean Squared Error in Prediction
 validationplot(modPcrCV1, val.type = "MSEP") # l = 8 gives the minimum CV
+# The black is the CV loss, the dashed red line is the adjCV loss, a bias
+# corrected version of the MSEP (not described in the notes)
 
 # Selecting the number of components to retain by 10-fold Cross-Validation
 # (k = 10 is the default)
