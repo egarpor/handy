@@ -39,6 +39,51 @@ hist(pValues_H1, breaks = seq(0, 1, l = 20), probability = TRUE,
      main = expression(H[1]), ylim = c(0, 2.5))
 abline(h = 1, col = 2)
 
+## ---- multn-1------------------------------------------------------------
+# Data from the voting intentions in the 1988 Chilean national plebiscite
+data(Chile, package = "carData")
+summary(Chile)
+# vote is a factor with levels A (abstention), N (against Pinochet),
+# U (undecided), Y (for Pinochet)
+
+# Fit of the model done by multinom: Response ~ Predictors
+# It is an iterative procedure (maxit sets the maximum number of iterations)
+# Read the documentation in ?multinom for more information
+mod1 <- nnet::multinom(vote ~ age + education + statusquo, data = Chile,
+                       maxit = 1e3)
+
+# Each row of coefficients gives the coefficients of the logistic
+# regression of a level versus the reference level (A)
+summary(mod1)
+
+# Set a different level as the reference (N) for easening interpretations
+Chile$vote <- relevel(Chile$vote, ref = "N")
+mod2 <- nnet::multinom(vote ~ age + education + statusquo, data = Chile,
+                       maxit = 1e3)
+summary(mod2)
+exp(coef(mod2))
+# Some highlights:
+# - intercepts do not have too much interpretation (correspond to age = 0).
+#   A possible solution is to center age by its mean (so age = 0 would
+#   represent the mean of the ages)
+# - both age and statusquo increase the probability of voting Y, A or U
+#   with respect to voting N -> conservativeness increases with ages
+# - both age and statusquo increase more the probability of voting Y and U
+#   than A -> elderly and status quo supporters are more decided to participate
+# - a PS level of education increases the probability of voting N. Same for
+#   a S level of education, but more prone to A
+
+# Prediction of votes - three profile of voters
+newdata <- data.frame(age = c(23, 40, 50),
+                      education = c("PS", "S", "P"),
+                      statusquo = c(-1, 0, 2))
+
+# Probabilities of belonging to each class
+predict(mod2, newdata = newdata, type = "probs")
+
+# Predicted class
+predict(mod2, newdata = newdata, type = "class")
+
 ## ---- nas-1, error = TRUE------------------------------------------------
 # The airquality dataset contains NA's
 data(airquality)
@@ -124,8 +169,7 @@ summary(modBIC2)
 # the NA's are associated to the variable Solar.R
 
 # Imput data using the sample mean
-library(mice)
-airqualityMean <- complete(mice(data = airquality, m = 1, method = "mean"))
+airqualityMean <- complete(mice::mice(data = airquality, m = 1, method = "mean"))
 head(airqualityMean)
 # Explanation of the sintaxis:
 # - complete() serves to retrieve the completed dataset from
