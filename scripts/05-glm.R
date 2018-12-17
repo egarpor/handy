@@ -276,3 +276,48 @@ anova(species1, species2, test = "Chisq")
 r2glm(species1)
 r2glm(species2)
 
+## ---- glmmodsel-1--------------------------------------------------------
+# Models
+nasa1 <- glm(fail.field ~ temp, family = "binomial", data = challenger)
+nasa2 <- glm(fail.field ~ temp + pres.field, family = "binomial",
+             data = challenger)
+
+# Summaries
+summary(nasa1)
+summary(nasa2)
+
+# AICs
+AIC(nasa1) # Better
+AIC(nasa2)
+
+## ---- glmmodsel-2--------------------------------------------------------
+# Boston dataset
+data(Boston, package = "MASS")
+
+# Model whether a suburb has a median house value larger than $25000
+mod <- glm(I(medv > 25) ~ ., data = Boston, family = "binomial")
+summary(mod)
+r2glm(mod)
+
+# With BIC - ends up with only the significant variables and a similar R^2
+modBIC <- MASS::stepAIC(mod, trace = 0, k = log(nrow(Boston)))
+summary(modBIC)
+r2glm(modBIC)
+
+## ---- glmmodsel-3--------------------------------------------------------
+# Fitted probabilities for Y = 1
+nasa$fitted.values
+
+# Classified Y's
+yHat <- nasa$fitted.values > 0.5
+
+# Hit matrix:
+# - 16 correctly classified as 0
+# - 4 correctly classified as 1
+# - 3 incorrectly classified as 0
+tab <- table(challenger$fail.field, yHat)
+tab
+
+# Hit ratio (ratio of correct classification)
+sum(diag(tab)) / sum(tab)
+
