@@ -7,6 +7,9 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
+## ---- challenger-load, eval = FALSE--------------------------------------
+## challenger <- read.table(file = "challenger.txt", header = TRUE, sep = "\t")
+
 ## ---- challengerfigs-----------------------------------------------------
 car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE, 
                  data = challenger, subset = nfails.field > 0)
@@ -88,6 +91,9 @@ filled.contour(beta0, beta1, -L, color.palette = viridis::viridis,
                }) 
 # The plot.axes argument is a hack to add graphical information within the 
 # coordinates of the main panel (behind filled.contour there is a layout()...)
+
+## ---- pois-load, eval = FALSE--------------------------------------------
+## species <- read.table("species.txt", header = TRUE)
 
 ## ---- poiscurve----------------------------------------------------------
 # Data

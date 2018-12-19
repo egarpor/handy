@@ -7,9 +7,6 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- ridgelasso, echo = FALSE, fig.cap = '(ref:ridgelasso-title)', fig.margin = FALSE----
-knitr::include_graphics("images/figures/ridgelasso.png")
-
 ## ---- shrinkage----------------------------------------------------------
 # Load data - baseball players statistics
 data(Hitters, package = "ISLR")
@@ -335,14 +332,13 @@ bigData2 <- data.frame("resp" = y2, "pred" = x2)
 
 # biglm has a very similar syntaxis to lm - but the formula interface does not
 # work always as expected
-library(biglm)
-# biglm(formula = resp ~ ., data = bigData1) # Does not work
-# biglm(formula = y ~ x) # Does not work
-# biglm(formula = resp ~ pred.1 + pred.2, data = bigData1) # Does work, but
+# biglm::biglm(formula = resp ~ ., data = bigData1) # Does not work
+# biglm::biglm(formula = y ~ x) # Does not work
+# biglm::biglm(formula = resp ~ pred.1 + pred.2, data = bigData1) # Does work, but
 # not very convenient for a large number of predictors
 # Hack for automatic inclusion of all the predictors
 f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
-biglmMod <- biglm(formula = f, data = bigData1)
+biglmMod <- biglm::biglm(formula = f, data = bigData1)
 
 # lm's call
 lmMod <- lm(formula = resp ~ ., data = bigData1)
@@ -438,7 +434,7 @@ x[, p - 1] <- 2 - x[, 2] + rnorm(nSmall, sd = 0.5)
 y <- 1 + x %*% beta + rnorm(nSmall)
 
 # First fit
-bigMod <- biglm(y ~ x, data = data.frame(y, x))
+bigMod <- biglm::biglm(y ~ x, data = data.frame(y, x))
 
 # Update fit
 # pb <- txtProgressBar(style = 3)
