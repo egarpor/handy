@@ -381,7 +381,7 @@ AIC(biglmMod, k = log(n))
 (s1$nullrss * (1 - s1$rsq)) / s1$obj$df.resid
 s2$sigma^2
 
-## ---- biglm-2------------------------------------------------------------
+## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'---------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
 plot(reg) # Plot best model (top row) to worst model (bottom row)

@@ -22,7 +22,7 @@ plot(mod, 1)
 plot(mod, 2)
 
 ## ---- logcurve-----------------------------------------------------------
-# Logistic regression
+# Logistic regression: computed with glm and family = "binomial"
 nasa <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 
 # Plot data
@@ -326,4 +326,224 @@ tab
 
 # Hit ratio (ratio of correct classification)
 sum(diag(tab)) / sum(tab)
+
+## ---- moddiag-1----------------------------------------------------------
+# Create predictors with multicollinearity: x4 depends on the rest
+set.seed(45678)
+x1 <- rnorm(100)
+x2 <- 0.5 * x1 + rnorm(100)
+x3 <- 0.5 * x2 + rnorm(100)
+x4 <- -x1 + x2 + rnorm(100, sd = 0.25)
+
+# Response
+z <- 1 + 0.5 * x1 + 2 * x2 - 3 * x3 - x4
+y <- rbinom(n = 100, size = 1, prob = 1/(1 + exp(-z)))
+data <- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, y = y)
+
+# Correlations - none seems suspicious
+cor(data)
+
+# Abnormal generalized variance inflation factors: largest for x4, we remove it
+modMultiCo <- glm(y ~ x1 + x2 + x3 + x4, family = "binomial")
+vif(modMultiCo)
+
+# Without x4
+modClean <- glm(y ~ x1 + x2 + x3, family = "binomial")
+
+# Comparison
+summary(modMultiCo)
+summary(modClean)
+
+# Generalized variance inflation factors normal
+vif(modClean)
+
+## ---- glmshrinkage-------------------------------------------------------
+# Load data
+data(Hitters, package = "ISLR")
+
+# Include only predictors relatedwith 1986 season and discard NA's
+Hitters <- subset(Hitters, select = c(League, AtBat, Hits, HmRun, Runs, RBI,
+                                      Walks, Division, PutOuts, Assists, 
+                                      Errors))
+Hitters <- na.omit(Hitters)
+
+# Response and predictors
+y <- Hitters$League
+x <- model.matrix(League ~ ., data = Hitters)[, -1]
+
+## ---- glmshr-1-----------------------------------------------------------
+# Ridge and lasso regressions
+library(glmnet)
+ridgeMod <- glmnet(x = x, y = y, alpha = 0, family = "binomial")
+lassoMod <- glmnet(x = x, y = y, alpha = 1, family = "binomial")
+
+# Solution paths versus lambda
+plot(ridgeMod, label = TRUE, xvar = "lambda")
+plot(lassoMod, label = TRUE, xvar = "lambda")
+
+# Versus the percentage of deviance explained
+plot(ridgeMod, label = TRUE, xvar = "dev")
+plot(lassoMod, label = TRUE, xvar = "dev")
+# The percentage of deviance explained only goes up to 0.05. There are no
+# clear patterns indicating player differences between both leagues
+
+# Let's select the predictors to be included with a 10-fold cross-validation
+set.seed(12345)
+kcvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = 10, family = "binomial")
+plot(kcvLasso)
+
+# The lambda that minimises the CV error and "one standard error rule"'s lambda
+kcvLasso$lambda.min
+kcvLasso$lambda.1se
+
+# Leave-one-out cross-validation - similar result
+ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
+                      family = "binomial")
+plot(ncvLasso)
+ncvLasso$lambda.min
+ncvLasso$lambda.1se
+
+# Model selected
+predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
+
+## ---- glmshr-2, fig.asp = 1/2--------------------------------------------
+# Analyse the selected model)
+fit <- glm(League ~ HmRun, data = Hitters, family = "binomial")
+summary(fit)
+# HmRun is significant - but it may be spurious due to the model selection
+# procedure (see Section 4.2)
+
+# Let's split the dataset in two, do model-selection in one part and then
+# inference on the selected model in the other, to have an idea of the real
+# significance of HmRun
+set.seed(123456)
+train <- sample(c(FALSE, TRUE), size = nrow(Hitters), replace = TRUE)
+
+# Model selection in training part
+ncvLasso <- cv.glmnet(x = x[train, ], y = y[train], alpha = 1, 
+                      nfolds = sum(train), family = "binomial")
+predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
+
+# Inference in testing part
+summary(glm(League ~ HmRun, data = Hitters[!train, ], family = "binomial"))
+# HmRun is now not significant...
+# We can repeat the analysis for different partitions of the data and we will
+# obtain weak significances. Therefore, we can conclude that this is an spurious
+# finding and that HmRun is not significant as a single predictor
+
+# Prediction (obviously not trustable, but for illustration)
+pred <- predict(ncvLasso, newx = x[!train, ], type = "response",
+                s = ncvLasso$lambda.1se)
+
+# Hit matrix
+H <- table(pred > 0.5, y[!train] == "A") # ("A" was the reference level)
+H
+sum(diag(H)) / sum(H) # Worse than tossing a coin!
+
+## ---- bigglm-1-----------------------------------------------------------
+# Not really "big data", but for the sake of illustration
+set.seed(12345)
+n <- 1e6
+p <- 10
+beta <- seq(-1, 1, length.out = p)^5
+x1 <- matrix(rnorm(n * p), nrow = n, ncol = p)
+x1[, p] <- 2 * x1[, 1] + rnorm(n, sd = 0.1) # Add some dependence to predictors
+x1[, p - 1] <- 2 - x1[, 2] + rnorm(n, sd = 0.5)
+y1 <- rbinom(n, size = 1, prob = 1 / (1 + exp(-(1 + x1 %*% beta))))
+x2 <- matrix(rnorm(100 * p), nrow = 100, ncol = p)
+y2 <- rbinom(100, size = 1, prob = 1 / (1 + exp(-(1 + x2 %*% beta))))
+bigData1 <- data.frame("resp" = y1, "pred" = x1)
+bigData2 <- data.frame("resp" = y2, "pred" = x2)
+
+# Save files to disk to emulate the situation with big data
+write.csv(x = bigData1, file = "bigData1.csv", row.names = FALSE)
+write.csv(x = bigData2, file = "bigData2.csv", row.names = FALSE)
+
+# Read files using ff
+library(ffbase) # Imports ff
+bigData1ff <- read.table.ffdf(file = "bigData1.csv", header = TRUE, sep = ",")
+bigData2ff <- read.table.ffdf(file = "bigData2.csv", header = TRUE, sep = ",")
+
+# Recall: bigData1.csv is not copied into RAM
+print(object.size(bigData1), units = "Mb")
+print(object.size(bigData1ff), units = "Kb")
+
+# Delete the csv files in disk
+file.remove(c("bigData1.csv", "bigData2.csv"))
+
+# Logistic regression
+# Same comments for the formula framework - this is the hack for automatic
+# inclusion of all the predictors
+f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
+bigglmMod <- bigglm.ffdf(formula = f, data = bigData1ff, family = binomial())
+
+# glm's call
+glmMod <- glm(formula = resp ~ ., data = bigData1, family = binomial())
+
+# Comapre sizes
+print(object.size(bigglmMod), units = "Kb")
+print(object.size(glmMod), units = "Mb")
+
+# Summaries
+s1 <- summary(bigglmMod)
+s2 <- summary(glmMod)
+s1
+s2
+
+# Further information
+s1$mat # Coefficients and their inferences
+s1$rsq # R^2
+s1$nullrss # Null deviance
+
+# Extract coefficients
+coef(bigglmMod)
+
+# Prediction works as usual
+predict(bigglmMod, newdata = bigData2[1:5, ], type = "response")
+# predict(bigglmMod, newdata = bigData2[1:5, -1]) # Error
+
+# Update the model with training data
+update(bigglmMod, moredata = bigData2)
+
+# AIC and BIC
+AIC(bigglmMod, k = 2)
+AIC(bigglmMod, k = log(n))
+
+## Note that this is also a perfectly **valid approach for linear models**, we just need to specify `family = gaussian()` in the call to `bigglm.ffdf`.
+
+## ---- bigglm-2-----------------------------------------------------------
+# Model selection adapted to big data generalized linear models
+reg <- leaps::regsubsets(bigglmMod, nvmax = p + 1, method = "exhaustive")
+# This takes the QR decomposition, which encodes the linear model associated to
+# the last iteration of the IRLS algorithm. However, the reported BICs are *not*
+# the true BICs of the generalized linear models, but a sufficient
+# approximation to obtain a list of candidate models in a fast way
+
+# Get the model with lowest BIC
+plot(reg)
+subs <- summary(reg)
+subs$which
+subs$bic
+subs$which[which.min(subs$bic), ]
+
+# Let's compute the true BICs for the p models. This implies fitting p bigglm's
+bestModels <- list()
+for (i in 1:nrow(subs$which)) {
+  f <- formula(paste("resp ~", paste(names(which(subs$which[i, -1])),
+                                     collapse = " + ")))
+  bestModels[[i]] <- bigglm.ffdf(formula = f, data = bigData1ff,
+                                 family = binomial(), maxit = 20)
+  # Did not converge with the default iteration limit, maxit = 8
+
+}
+
+# The approximate BICs and the true BICs are very similar (in this example)
+exactBICs <- sapply(bestModels, AIC, k = log(n))
+plot(subs$bic, exactBICs, type = "o", xlab = "Exact", ylab = "Approximate")
+cor(subs$bic, exactBICs, method = "pearson") # Correlation
+
+# Both give the same model selection and same order
+subs$which[which.min(subs$bic), ] # Approximate
+subs$which[which.min(exactBICs), ] # Exact
+cor(subs$bic, exactBICs, method = "spearman") # Order correlation
 
