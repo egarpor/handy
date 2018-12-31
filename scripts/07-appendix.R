@@ -1,7 +1,7 @@
 
 ## ------------------------------------------------------------------------
-## Name: 08-appendix.R
-## Description: Script for Chapter 8 of "Notes for Predictive Modeling"
+## Name: 07-appendix.R
+## Description: Script for Chapter 7 of "Notes for Predictive Modeling"
 ## Link: https://bookdown.org/egarpor/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
@@ -169,10 +169,11 @@ summary(modBIC2)
 # the NA's are associated to the variable Solar.R
 
 # Imput data using the sample mean
-airqualityMean <- complete(mice::mice(data = airquality, m = 1, method = "mean"))
+library(mice)
+airqualityMean <- complete(mice(data = airquality, m = 1, method = "mean"))
 head(airqualityMean)
 # Explanation of the sintaxis:
-# - complete() serves to retrieve the completed dataset from
+# - mice::complete() serves to retrieve the completed dataset from
 #   the mids object.
 # - m = 1 specifies that we only want a reconstruction of the
 #   dataset because the imputation method is deterministic
@@ -183,8 +184,8 @@ head(airqualityMean)
 
 # Impute using linear regression for the response (first column)
 # and mean for the predictors (remaining five columns)
-airqualityLm <- complete(mice::mice(data = airquality, m = 1,
-                                    method = c("norm.predict", rep("mean", 5))))
+airqualityLm <- complete(mice(data = airquality, m = 1, 
+                              method = c("norm.predict", rep("mean", 5))))
 head(airqualityLm)
 
 # Imputed data - some extrapolation problems may happen
@@ -196,15 +197,15 @@ predict(lm(airquality$Ozone ~ ., data = airqualityMean),
         newdata = airqualityMean[is.na(airquality$Ozone), -1])
 
 # Removing the truncation with ridge = 0
-complete(mice::mice(data = airquality, m = 1,
-                    method = c("norm.predict", rep("mean", 5)),
-                    ridge = 0))[is.na(airquality$Ozone), 1]
+complete(mice(data = airquality, m = 1, 
+              method = c("norm.predict", rep("mean", 5)), 
+              ridge = 0))[is.na(airquality$Ozone), 1]
 
 # The default mice's method (predictive mean matching) works
 # better in this case (in the sense that it does not yield
 # negative Ozone values)
 # Notice that there is randomness in the imputation!
-airqualityMice <- complete(mice::mice(data = airquality, m = 1, seed = 123))
+airqualityMice <- complete(mice(data = airquality, m = 1, seed = 123))
 head(airqualityMice)
 
 ## ---- notevarsel---------------------------------------------------------

@@ -70,8 +70,8 @@ plot(ridgeMod, label = TRUE, xvar = "dev")
 # Indeed, we can see that R^2 = 0.5461
 summary(lm(Salary ~., data = Hitters))$r.squared
 
-# Some persistently important predictors are 15, 14, and 19
-colnames(x)[c(15, 14, 19)]
+# Some persistently important predictors are 16, 14, and 15
+colnames(x)[c(16, 14, 15)]
 
 # What is inside glmnet's output?
 names(ridgeMod)
@@ -97,7 +97,7 @@ ridgeMod$lambda[50]
 plot(ridgeMod, label = TRUE, xvar = "lambda",
      xlim = log(ridgeMod$lambda[50]) + c(-2, 2), ylim = c(-30, 10))
 abline(v = log(ridgeMod$lambda[50]))
-points(rep(log(ridgeMod$lambda[50]), 19), ridgeMod$beta[, 50],
+points(rep(log(ridgeMod$lambda[50]), nrow(ridgeMod$beta)), ridgeMod$beta[, 50],
        pch = 16, col = 1:6)
 
 # The squared l2-norm of the coefficients decreases as lambda increases
@@ -222,6 +222,10 @@ betaLambdaHat
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
 
 ## ---- lasso-1------------------------------------------------------------
+# Get the Hitters data back
+x <- model.matrix(Salary ~ 0 + ., data = Hitters) 
+y <- Hitters$Salary
+
 # Call to the main function - use alpha = 1 for lasso regression (the default)
 lassoMod <- glmnet(x = x, y = y, alpha = 1)
 # Same defaults as before, same object structure
@@ -249,6 +253,7 @@ kcvLasso$lambda.min
 kcvLasso$lambda.1se
 
 # Location of both optimal lambdas in the CV loss function
+indMin <- which.min(kcvLasso$cvm)
 plot(kcvLasso)
 abline(h = kcvLasso$cvm[indMin] + c(0, kcvLasso$cvsd[indMin]))
 # No problems now: minimum does not occur at one extreme
@@ -283,7 +288,7 @@ predict(modLassoCV, type = "response",
 ## ---- lasso-3------------------------------------------------------------
 # We can use lasso for model selection!
 selPreds <- predict(modLassoCV, type = "coefficients",
-                    s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se))[-1, ] > 0
+                    s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se))[-1, ] != 0
 x1 <- x[, selPreds[, 1]]
 x2 <- x[, selPreds[, 2]]
 

@@ -345,7 +345,7 @@ cor(data)
 
 # Abnormal generalized variance inflation factors: largest for x4, we remove it
 modMultiCo <- glm(y ~ x1 + x2 + x3 + x4, family = "binomial")
-vif(modMultiCo)
+car::vif(modMultiCo)
 
 # Without x4
 modClean <- glm(y ~ x1 + x2 + x3, family = "binomial")
@@ -355,7 +355,7 @@ summary(modMultiCo)
 summary(modClean)
 
 # Generalized variance inflation factors normal
-vif(modClean)
+car::vif(modClean)
 
 ## ---- glmshrinkage-------------------------------------------------------
 # Load data
@@ -474,6 +474,7 @@ file.remove(c("bigData1.csv", "bigData2.csv"))
 # Logistic regression
 # Same comments for the formula framework - this is the hack for automatic
 # inclusion of all the predictors
+library(biglm)
 f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
 bigglmMod <- bigglm.ffdf(formula = f, data = bigData1ff, family = binomial())
 
