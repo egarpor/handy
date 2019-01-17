@@ -361,7 +361,7 @@ car::vif(modClean)
 # Load data
 data(Hitters, package = "ISLR")
 
-# Include only predictors relatedwith 1986 season and discard NA's
+# Include only predictors related with 1986 season and discard NA's
 Hitters <- subset(Hitters, select = c(League, AtBat, Hits, HmRun, Runs, RBI,
                                       Walks, Division, PutOuts, Assists, 
                                       Errors))
@@ -411,7 +411,7 @@ predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
 fit <- glm(League ~ HmRun, data = Hitters, family = "binomial")
 summary(fit)
 # HmRun is significant - but it may be spurious due to the model selection
-# procedure (see Section 4.2)
+# procedure (see Appendix A.5)
 
 # Let's split the dataset in two, do model-selection in one part and then
 # inference on the selected model in the other, to have an idea of the real
@@ -468,9 +468,6 @@ bigData2ff <- read.table.ffdf(file = "bigData2.csv", header = TRUE, sep = ",")
 print(object.size(bigData1), units = "Mb")
 print(object.size(bigData1ff), units = "Kb")
 
-# Delete the csv files in disk
-file.remove(c("bigData1.csv", "bigData2.csv"))
-
 # Logistic regression
 # Same comments for the formula framework - this is the hack for automatic
 # inclusion of all the predictors
@@ -509,6 +506,9 @@ update(bigglmMod, moredata = bigData2)
 # AIC and BIC
 AIC(bigglmMod, k = 2)
 AIC(bigglmMod, k = log(n))
+
+# Delete the csv files in disk
+file.remove(c("bigData1.csv", "bigData2.csv"))
 
 ## Note that this is also a perfectly **valid approach for linear models**, we just need to specify `family = gaussian()` in the call to `bigglm.ffdf`.
 
