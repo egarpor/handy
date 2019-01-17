@@ -636,8 +636,8 @@ plot(fitIris)
 
 ## ---- mult-4, fig.margin = FALSE, fig.asp = 3/2--------------------------
 # Example from ?np::npreg: modeling of the GDP growth of a country from 
-# economic indicators of the country. Here the predictors contain a mix of 
-# unordered, ordered, and continuous variables
+# economic indicators of the country
+# The predictors contain a mix of unordered, ordered, and continuous variables
 
 # Load data
 data(oecdpanel, package = "np")
