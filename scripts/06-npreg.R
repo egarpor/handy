@@ -98,7 +98,7 @@ iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 set.seed(672641)
 x <- rnorm(100)
 
-# Rule-of-thumb
+# DPI selector
 bw.SJ(x = x, method = "dpi")
 
 # Similar to
@@ -115,9 +115,9 @@ bw.ucv(x = x)
 # Extend search interval
 bw.ucv(x = x, lower = 0.01, upper = 1)
 
-# bw.ucv.mod replaces the optimization routine of bw.ucv by an exhaustive search on
-# "h.grid" (chosen adaptatively from the sample) and optionally plots the LSCV curve
-# with "plot.cv"
+# bw.ucv.mod replaces the optimization routine of bw.ucv by an exhaustive 
+# search on "h.grid" (chosen adaptatively from the sample) and optionally 
+# plots the LSCV curve with "plot.cv"
 bw.ucv.mod <- function(x, nb = 1000L,
                        h.grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
                        plot.cv = FALSE) {
@@ -170,9 +170,9 @@ bw.bcv(x = x)
 args(bw.bcv)
 bw.bcv(x = x, lower = 0.01, upper = 1)
 
-# bw.bcv.mod replaces the optimization routine of bw.bcv by an exhaustive search on
-# "h.grid" (chosen adaptatively from the sample) and optionally plots the BCV curve
-# with "plot.cv"
+# bw.bcv.mod replaces the optimization routine of bw.bcv by an exhaustive 
+# search on "h.grid" (chosen adaptatively from the sample) and optionally 
+# plots the BCV curve with "plot.cv"
 bw.bcv.mod <- function(x, nb = 1000L,
                        h.grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
                        plot.cv = FALSE) {
@@ -234,8 +234,6 @@ plot(nor1mix::MW.nm10)
 plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm1, col = 2:3) # Also possible
 
-## **Which bandwidth selector is the most adequate for a given dataset?**
-
 ## ---- ks-2d-1------------------------------------------------------------
 # DPI selectors
 Hpi1 <- ks::Hpi(x = faithful)
@@ -264,7 +262,7 @@ plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75),
 plot(kdeHpi2, display = "filled.contour2", cont = c(25, 50, 75), 
      main = "diagonal")
 
-## ---- ks-2d-2, fig.margin = FALSE, fig.fullwidth = TRUE------------------
+## ---- ks-2d-2, fig.margin = FALSE----------------------------------------
 # Comparison of selectors along predefined contours
 x <- faithful
 Hlscv0 <- ks::Hlscv(x = x)
@@ -288,7 +286,7 @@ p <- lapply(list(Hlscv0, Hbcv0, Hpi0, Hns0), function(H) {
 ## points3d(x = iris[, 1:3])
 ## rgl::rglwidget()
 
-## ---- nw-1, fig.cap = '(ref:nw-1title)'----------------------------------
+## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE--------------
 # A naive implementation of the Nadaraya-Watson estimator
 mNW <- function(x, X, Y, h, K = dnorm) {
 
@@ -344,7 +342,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 ##   legend("topright", legend = c("True regression", "Nadaraya-Watson"),
 ##          lwd = 2, col = 1:2)
 ## 
-## }, h = slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
+## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
 
 ## ---- lp-1---------------------------------------------------------------
 # Generate some data
@@ -408,8 +406,8 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 ##   legend("bottom", legend = c("True regression", "Local polynomial fit"),
 ##          lwd = 2, col = c(1, p + 2))
 ## 
-## p = slider(min = 0, max = 4, initial = 0, step = 1))
-## }, h = slider(min = 0.01, max = 2, initial = 0.5, step = 0.01),
+## p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1))
+## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01),
 
 ## Under **A1**--**A5**, the conditional bias and variance of the local constant ($p=0$) and local linear ($p=1$) estimators are^[The notation $o_\mathbb{P}(a_n)$ stands for a random variable that converges in probability to zero at a rate faster than $a_n\to0$. It is mostly employed for denoting non-important terms in asymptotic expansions, like the ones in \@ref(eq:mbias)--\@ref(eq:mvar).]
 
@@ -557,7 +555,7 @@ lines(kre1$eval$xGrid, kre1$mean, col = 3)
 legend("top", legend = c("True regression", "Nadaraya-Watson", "Local linear"),
        lwd = 2, col = 1:3)
 
-## ---- bwd-5--------------------------------------------------------------
+## ---- bwd-5, fig.margin = FALSE------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100
@@ -593,23 +591,25 @@ legend("top", legend = c("True regression", "Fixed", "Generalized NN",
 # whereas in the high density regions they shrink to adapt faster to the 
 # changes of the regression function
 
-## ---- mult-2-------------------------------------------------------------
+## ---- mult-2, fig.margin = FALSE-----------------------------------------
 # Employing the wine dataset
 # wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
 
-# Bandwidth by CV for local linear estimator 
+# Bandwidth by CV for local linear estimator - a product kernel with 4 bandwidths
 # Employs 4 random starts for minimizing the CV surface
-bwWine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST + HarvestRain, 
-                      data = wine, regtype = "ll")
+out <- capture.output(
+  bwWine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST + HarvestRain, 
+                        data = wine, regtype = "ll")
+  )
 bwWine
-# Product kernel with 4 bandwidths
+# capture.output() to remove the multistart messages
 
 # Regression
 fitWine <- np::npreg(bwWine)
 summary(fitWine)
 
 # Plot marginal effects of each predictor on the response 
-plot(fitWine)
+plot(fitWine, )
 # Therefore: 
 # - Age is positively related with Price (almost linearly)
 # - WinterRain is positively related with Price (with a subtle nonlinearity)
@@ -617,13 +617,13 @@ plot(fitWine)
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
 
-## The "$R^2$" outputted by the `summary` of `np::npreg` is defined as
-
-## ---- mult-3, fig.asp = 2------------------------------------------------
+## ---- mult-3, fig.margin = FALSE, fig.asp = 1/2--------------------------
 # Bandwidth by CV for local linear estimator 
 # Recall that Species is a factor!
-bwIris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species, 
-                      data = iris, regtype = "ll")
+out <- capture.output(
+  bwIris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species, 
+                        data = iris, regtype = "ll")
+)
 bwIris
 # Product kernel with 2 bandwidths
 
@@ -632,10 +632,12 @@ fitIris <- np::npreg(bwIris)
 summary(fitIris)
 
 # Plot marginal effects of each predictor on the response 
-plot(fitIris)
+par(mfrow = c(1, 2))
+plot(fitIris, plot.par.mfrow = FALSE)
+# Options for the plot method for np::npreg available at ?np::npplot
 
-## ---- mult-4, fig.margin = FALSE, fig.asp = 3/2--------------------------
-# Example from ?np::npreg: modeling of the GDP growth of a country from 
+## ---- mult-4, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
+# Example from ?np::npreg: modeling of the GDP growth of a country from
 # economic indicators of the country
 # The predictors contain a mix of unordered, ordered, and continuous variables
 
@@ -644,26 +646,32 @@ data(oecdpanel, package = "np")
 
 # Bandwidth by CV for local constant - use only two starts to reduce the 
 # computation time
-bwOECD <- np::npregbw(formula = growth ~ factor(oecd) + factor(year) + 
-                        initgdp + popgro + inv + humancap, data = oecdpanel, 
-                      regtype = "lc", nmulti = 2)
+out <- capture.output(
+  bwOECD <- np::npregbw(formula = growth ~ factor(oecd) + ordered(year) + 
+                          initgdp + popgro + inv + humancap, data = oecdpanel, 
+                        regtype = "lc", nmulti = 2)
+)
 bwOECD
 
 # Regression
 fitOECD <- np::npreg(bwOECD)
 summary(fitOECD)
 
-# Plot marginal effects of each predictor on the response 
-plot(fitOECD)
+# Plot marginal effects of each predictor on the response
+par(mfrow = c(2, 3))
+plot(fitOECD, plot.par.mfrow = FALSE)
 
-## ---- predci, fig.margin = FALSE, fig.asp = 3/2--------------------------
+## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
 # Asymptotic confidence bands for the marginal effects of each predictor on the 
 # response 
-plot(fitOECD, plot.errors.method = "asymptotic")
+par(mfrow = c(2, 3))
+plot(fitOECD, plot.errors.method = "asymptotic", common.scale = FALSE, 
+     plot.par.mfrow = FALSE)
 
 # Bootstrap confidence bands
 # They take more time to compute because a resampling + refitting takes place
-plot(fitOECD, plot.errors.method = "bootstrap")
+par(mfrow = c(2, 3))
+plot(fitOECD, plot.errors.method = "bootstrap", plot.par.mfrow = FALSE)
 
 # The asymptotic standard error associated to the regression evaluated at the
 # evaluation points are in $merr
@@ -674,8 +682,13 @@ head(fitOECD$merr)
 # fitted values
 head(fitOECD$mean)
 
-# Prediction for the first 10 points + standard errors
-predict(fitOECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
+# Prediction for the first 3 points + standard errors
+pred <- predict(fitOECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
+
+# Approximate (based on assuming asymptotic normality) 100(1 - alpha)% CI for 
+# the conditional mean of the first 3 points
+alpha <- 0.05
+pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 
 ## ---- ll-1, eval = TRUE--------------------------------------------------
 # Simulate some data
@@ -690,8 +703,8 @@ Y <- rbinom(n = n, size = 1, prob = p(X))
 h <- 0.25
 x <- seq(-3, 3, l = 501)
 
-# Approach 1: optimize the weighted log-likelihood through the workhorse function 
-# underneath glm, glm.fit
+# Approach 1: optimize the weighted log-likelihood through the workhorse 
+# function underneath glm, glm.fit
 suppressWarnings(
   fitGlm <- sapply(x, function(x) {
     K <- dnorm(x = x, mean = X, sd = h)
