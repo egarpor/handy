@@ -115,8 +115,8 @@ bw.ucv(x = x)
 # Extend search interval
 bw.ucv(x = x, lower = 0.01, upper = 1)
 
-# bw.ucv.mod replaces the optimization routine of bw.ucv by an exhaustive 
-# search on "h.grid" (chosen adaptatively from the sample) and optionally 
+# bw.ucv.mod replaces the optimization routine of bw.ucv by an exhaustive
+# search on "h.grid" (chosen adaptatively from the sample) and optionally
 # plots the LSCV curve with "plot.cv"
 bw.ucv.mod <- function(x, nb = 1000L,
                        h.grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
@@ -170,8 +170,8 @@ bw.bcv(x = x)
 args(bw.bcv)
 bw.bcv(x = x, lower = 0.01, upper = 1)
 
-# bw.bcv.mod replaces the optimization routine of bw.bcv by an exhaustive 
-# search on "h.grid" (chosen adaptatively from the sample) and optionally 
+# bw.bcv.mod replaces the optimization routine of bw.bcv by an exhaustive
+# search on "h.grid" (chosen adaptatively from the sample) and optionally
 # plots the BCV curve with "plot.cv"
 bw.bcv.mod <- function(x, nb = 1000L,
                        h.grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
@@ -243,10 +243,10 @@ Hpi1
 kdeHpi1 <- ks::kde(x = faithful, H = Hpi1)
 
 # Different representations
-plot(kdeHpi1, display = "slice", cont = c(25, 50, 75)) 
-# "cont" specify the density contours, which are upper percentages of highest 
+plot(kdeHpi1, display = "slice", cont = c(25, 50, 75))
+# "cont" specify the density contours, which are upper percentages of highest
 # density regions. The default contours are at 25%, 50%, and 75%
-plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75)) 
+plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75))
 plot(kdeHpi1, display = "persp")
 
 # Manual plotting using the kde object structure
@@ -257,9 +257,9 @@ points(kdeHpi1$x)
 # Diagonal vs. full
 Hpi2 <- ks::Hpi.diag(x = faithful)
 kdeHpi2 <- ks::kde(x = faithful, H = Hpi2)
-plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75), 
-     main = "full") 
-plot(kdeHpi2, display = "filled.contour2", cont = c(25, 50, 75), 
+plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75),
+     main = "full")
+plot(kdeHpi2, display = "filled.contour2", cont = c(25, 50, 75),
      main = "diagonal")
 
 ## ---- ks-2d-2, fig.margin = FALSE----------------------------------------
@@ -272,7 +272,7 @@ Hns0 <- ks::Hns(x = x)
 par(mfrow = c(2, 2))
 p <- lapply(list(Hlscv0, Hbcv0, Hpi0, Hns0), function(H) {
   # col.fun for custom colours
-  plot(ks::kde(x = x, H = H), display = "filled.contour2", 
+  plot(ks::kde(x = x, H = H), display = "filled.contour2",
        cont = seq(10, 90, by = 10), col.fun = viridis::viridis)
   points(x, cex = 0.5, pch = 16)
 })
@@ -313,7 +313,7 @@ set.seed(12345)
 n <- 100
 eps <- rnorm(n, sd = 2)
 m <- function(x) x^2 * cos(x)
-# m <- function(x) x - x^2 # Other possible regression function, works 
+# m <- function(x) x - x^2 # Other possible regression function, works
 # equally well
 X <- rnorm(n, sd = 2)
 Y <- m(X) + eps
@@ -327,7 +327,7 @@ plot(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 lines(xGrid, m(xGrid), col = 1)
 lines(xGrid, mNW(x = xGrid, X = X, Y = Y, h = h), col = 2)
-legend("top", legend = c("True regression", "Nadaraya-Watson"), 
+legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 ## ---- nw-2, eval = FALSE-------------------------------------------------
@@ -357,7 +357,7 @@ xGrid <- seq(-10, 10, l = 500)
 # KernSmooth::locpoly fits
 h <- 0.25
 lp0 <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h, degree = 0,
-                           range.x = c(-10, 10), gridsize = 500) 
+                           range.x = c(-10, 10), gridsize = 500)
 lp1 <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h, degree = 1,
                            range.x = c(-10, 10), gridsize = 500)
 # Provide the evaluation points by range.x and gridsize
@@ -367,10 +367,10 @@ span <- 0.25 # The default span is 0.75, which works very bad in this scenario
 lo0 <- loess(Y ~ X, degree = 0, span = span)
 lo1 <- loess(Y ~ X, degree = 1, span = span)
 # loess employs an "span" argument that plays the role of an variable bandwidth
-# "span" gives the proportion of points of the sample that are taken into 
-# account for performing the local fit around x and then uses a triweight kernel 
-# (not a normal kernel) for weighting the contributions. Therefore, the final 
-# estimate differs from the definition of local polynomial estimator, although 
+# "span" gives the proportion of points of the sample that are taken into
+# account for performing the local fit around x and then uses a triweight kernel
+# (not a normal kernel) for weighting the contributions. Therefore, the final
+# estimate differs from the definition of local polynomial estimator, although
 # the principles in which are based are the same
 
 # Prediction at x = 2
@@ -388,7 +388,7 @@ lines(lp1$x, lp1$y, col = 3)
 lines(xGrid, predict(lo0, newdata = data.frame(X = xGrid)), col = 2, lty = 2)
 lines(xGrid, predict(lo1, newdata = data.frame(X = xGrid)), col = 3, lty = 2)
 legend("bottom", legend = c("True regression", "Local constant (locpoly)",
-                            "Local linear (locpoly)", "Local constant (loess)", 
+                            "Local linear (locpoly)", "Local constant (loess)",
                             "Local linear (loess)"),
        lwd = 2, col = c(1:3, 2:3), lty = c(rep(1, 3), rep(2, 2)))
 
@@ -426,7 +426,7 @@ hDPI <- KernSmooth::dpill(x = X, y = Y)
 
 # Fits
 lp1 <- KernSmooth::locpoly(x = X, y = Y, bandwidth = 0.25, degree = 0,
-                           range.x = c(-10, 10), gridsize = 500) 
+                           range.x = c(-10, 10), gridsize = 500)
 lp1DPI <- KernSmooth::locpoly(x = X, y = Y, bandwidth = hDPI, degree = 1,
                               range.x = c(-10, 10), gridsize = 500)
 
@@ -436,7 +436,7 @@ rug(X, side = 1); rug(Y, side = 2)
 lines(xGrid, m(xGrid), col = 1)
 lines(lp1$x, lp1$y, col = 2)
 lines(lp1DPI$x, lp1DPI$y, col = 3)
-legend("bottom", legend = c("True regression", "Local linear", 
+legend("bottom", legend = c("True regression", "Local linear",
                             "Local linear (DPI)"),
        lwd = 2, col = 1:3)
 
@@ -466,18 +466,18 @@ xGrid <- seq(-10, 10, l = 500)
 
 # Objective function
 cvNW <- function(X, Y, h, K = dnorm) {
-  
+
   sum(((Y - mNW(x = X, X = X, Y = Y, h = h, K = K)) /
          (1 - K(0) / colSums(K(outer(X, X, "-") / h))))^2)
   # Beware: outer() is not very memory-friendly!
-  
+
 }
 
 # Find optimum CV bandwidth, with sensible grid
 bw.cv.grid <- function(X, Y,
                        h.grid = diff(range(X)) * (seq(0.1, 1, l = 200))^2,
                        K = dnorm, plot.cv = FALSE) {
-  
+
 	obj <- sapply(h.grid, function(h) cvNW(X = X, Y = Y, h = h, K = K))
   h <- h.grid[which.min(obj)]
   if (plot.cv) {
@@ -486,7 +486,7 @@ bw.cv.grid <- function(X, Y,
     abline(v = h, col = 2, lwd = 2)
   }
   h
-  
+
 }
 
 # Bandwidth
@@ -502,11 +502,11 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 ## ---- bwd-4--------------------------------------------------------------
-# np::npregbw computes by default the least squares CV bandwidth associated to 
+# np::npregbw computes by default the least squares CV bandwidth associated to
 # a local constant fit
 bw0 <- np::npregbw(formula = Y ~ X)
 
-# Multiple initial points can be employed for minimizing the CV function (for 
+# Multiple initial points can be employed for minimizing the CV function (for
 # one predictor, defaults to 1)
 bw0 <- np::npregbw(formula = Y ~ X, nmulti = 2)
 
@@ -515,22 +515,22 @@ bw0 <- np::npregbw(formula = Y ~ X, nmulti = 2)
 bw0
 # Recall that the fit is very similar to hCV
 
-# Once the bandwith is estimated, np::npreg can be directly called with the 
-# "rbandwidth" object (it encodes the regression to be made, the data, the kind 
-# of estimator considered, etc). The hard work goes on np::npregbw, not on 
+# Once the bandwith is estimated, np::npreg can be directly called with the
+# "rbandwidth" object (it encodes the regression to be made, the data, the kind
+# of estimator considered, etc). The hard work goes on np::npregbw, not on
 # np::npreg
 kre0 <- np::npreg(bw0)
 kre0
 
-# The evaluation points of the estimator are by default the predictor's sample 
+# The evaluation points of the estimator are by default the predictor's sample
 # (which is not sorted!)
 # The evaluation of the estimator is given in "mean"
 plot(kre0$eval$X, kre0$mean)
-     
+
 # The evaluation points can be changed using "exdat"
 kre0 <- np::npreg(bw0, exdat = xGrid)
 
-# Plot directly the fit via plot() - it employs different evaluation points 
+# Plot directly the fit via plot() - it employs different evaluation points
 # than exdat
 plot(kre0, col = 2, type = "o")
 points(X, Y)
@@ -582,13 +582,13 @@ lines(xGrid, m(xGrid), col = 1)
 lines(krec$eval$xGrid, krec$mean, col = 2)
 lines(kreg$eval$xGrid, kreg$mean, col = 3)
 lines(krea$eval$xGrid, krea$mean, col = 4)
-legend("top", legend = c("True regression", "Fixed", "Generalized NN", 
+legend("top", legend = c("True regression", "Fixed", "Generalized NN",
                          "Adaptive NN"),
        lwd = 2, col = 1:4)
-# Observe how the fixed bandwidth may yield a fit that produces serious 
-# artifacts in the low density region. At that region the NN-based bandwidths 
-# expand to borrow strenght from the points in the high density regions, 
-# whereas in the high density regions they shrink to adapt faster to the 
+# Observe how the fixed bandwidth may yield a fit that produces serious
+# artifacts in the low density region. At that region the NN-based bandwidths
+# expand to borrow strenght from the points in the high density regions,
+# whereas in the high density regions they shrink to adapt faster to the
 # changes of the regression function
 
 ## ---- mult-2, fig.margin = FALSE-----------------------------------------
@@ -598,7 +598,7 @@ legend("top", legend = c("True regression", "Fixed", "Generalized NN",
 # Bandwidth by CV for local linear estimator - a product kernel with 4 bandwidths
 # Employs 4 random starts for minimizing the CV surface
 out <- capture.output(
-  bwWine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST + HarvestRain, 
+  bwWine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST + HarvestRain,
                         data = wine, regtype = "ll")
   )
 bwWine
@@ -608,20 +608,20 @@ bwWine
 fitWine <- np::npreg(bwWine)
 summary(fitWine)
 
-# Plot marginal effects of each predictor on the response 
+# Plot marginal effects of each predictor on the response
 plot(fitWine, )
-# Therefore: 
+# Therefore:
 # - Age is positively related with Price (almost linearly)
 # - WinterRain is positively related with Price (with a subtle nonlinearity)
-# - AGST is positively related with Price, but now we see what it looks like a 
+# - AGST is positively related with Price, but now we see what it looks like a
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
 
 ## ---- mult-3, fig.margin = FALSE, fig.asp = 1/2--------------------------
-# Bandwidth by CV for local linear estimator 
+# Bandwidth by CV for local linear estimator
 # Recall that Species is a factor!
 out <- capture.output(
-  bwIris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species, 
+  bwIris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species,
                         data = iris, regtype = "ll")
 )
 bwIris
@@ -631,7 +631,7 @@ bwIris
 fitIris <- np::npreg(bwIris)
 summary(fitIris)
 
-# Plot marginal effects of each predictor on the response 
+# Plot marginal effects of each predictor on the response
 par(mfrow = c(1, 2))
 plot(fitIris, plot.par.mfrow = FALSE)
 # Options for the plot method for np::npreg available at ?np::npplot
@@ -644,11 +644,11 @@ plot(fitIris, plot.par.mfrow = FALSE)
 # Load data
 data(oecdpanel, package = "np")
 
-# Bandwidth by CV for local constant - use only two starts to reduce the 
+# Bandwidth by CV for local constant - use only two starts to reduce the
 # computation time
 out <- capture.output(
-  bwOECD <- np::npregbw(formula = growth ~ factor(oecd) + ordered(year) + 
-                          initgdp + popgro + inv + humancap, data = oecdpanel, 
+  bwOECD <- np::npregbw(formula = growth ~ factor(oecd) + ordered(year) +
+                          initgdp + popgro + inv + humancap, data = oecdpanel,
                         regtype = "lc", nmulti = 2)
 )
 bwOECD
@@ -662,10 +662,10 @@ par(mfrow = c(2, 3))
 plot(fitOECD, plot.par.mfrow = FALSE)
 
 ## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
-# Asymptotic confidence bands for the marginal effects of each predictor on the 
-# response 
+# Asymptotic confidence bands for the marginal effects of each predictor on the
+# response
 par(mfrow = c(2, 3))
-plot(fitOECD, plot.errors.method = "asymptotic", common.scale = FALSE, 
+plot(fitOECD, plot.errors.method = "asymptotic", common.scale = FALSE,
      plot.par.mfrow = FALSE)
 
 # Bootstrap confidence bands
@@ -678,14 +678,14 @@ plot(fitOECD, plot.errors.method = "bootstrap", plot.par.mfrow = FALSE)
 head(fitOECD$merr)
 
 # Recall that in $mean we had the regression evaluated at the evaluation points,
-# by default the sample of the predictors, so in this case the same as the 
+# by default the sample of the predictors, so in this case the same as the
 # fitted values
 head(fitOECD$mean)
 
 # Prediction for the first 3 points + standard errors
 pred <- predict(fitOECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
 
-# Approximate (based on assuming asymptotic normality) 100(1 - alpha)% CI for 
+# Approximate (based on assuming asymptotic normality) 100(1 - alpha)% CI for
 # the conditional mean of the first 3 points
 alpha <- 0.05
 pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
@@ -703,7 +703,7 @@ Y <- rbinom(n = n, size = 1, prob = p(X))
 h <- 0.25
 x <- seq(-3, 3, l = 501)
 
-# Approach 1: optimize the weighted log-likelihood through the workhorse 
+# Approach 1: optimize the weighted log-likelihood through the workhorse
 # function underneath glm, glm.fit
 suppressWarnings(
   fitGlm <- sapply(x, function(x) {

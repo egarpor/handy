@@ -198,7 +198,7 @@ confint(modWine2)
 confint(modWine3)
 
 ## ---- case1-5b-----------------------------------------------------------
-# By default, scale centers (substracts the mean) and scales (divides by the 
+# By default, scale centers (substracts the mean) and scales (divides by the
 # standard deviation) the columns of a matrix
 wineCen <- data.frame(scale(wine, center = TRUE, scale = FALSE))
 
@@ -392,7 +392,7 @@ plot(Sepal.Length ~ Petal.Width, data = iris)
 abline(mod1, col = 2) # Obviously, much better
 abline(mod0, col = 3)
 
-# Manually checking the R^2 indeed reveals that summary is doing something 
+# Manually checking the R^2 indeed reveals that summary is doing something
 # different for computing the R^2 when no intercept
 cor(mod0$model$Sepal.Length, mod0$fitted.values)^2
 
@@ -400,13 +400,13 @@ cor(mod0$model$Sepal.Length, mod0$fitted.values)^2
 SSE1 <- sum((mod1$residuals - mean(mod1$residuals))^2)
 SST1 <- sum((mod1$model$Sepal.Length - mean(mod1$model$Sepal.Length))^2)
 1 - SSE1 / SST1
-  
+
 # Compute the R^2 manually for mod0
 SSE0 <- sum((mod0$residuals - mean(mod0$residuals))^2)
 SST0 <- sum((mod0$model$Sepal.Length - mean(mod0$model$Sepal.Length))^2)
 1 - SSE0 / SST0
-# It is negative! 
- 
+# It is negative!
+
 # Recall that the mean of the residuals is not zero
 mean(mod0$residuals)
 
@@ -414,7 +414,7 @@ mean(mod0$residuals)
 n <- nrow(iris)
 p <- 1
 R0 <- 1 - sum(mod0$residuals^2) / sum(mod0$model$Sepal.Length^2)
-R0Adj <- 1 - sum(mod0$residuals^2) / sum(mod0$model$Sepal.Length^2) * 
+R0Adj <- 1 - sum(mod0$residuals^2) / sum(mod0$model$Sepal.Length^2) *
   (n - 1) / (n - p - 1)
 R0
 R0Adj
