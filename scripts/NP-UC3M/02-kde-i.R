@@ -155,8 +155,6 @@ bw.SJ(x = x, method = "dpi")
 # Similar to
 ks::hpi(x) # Default is two-stages
 
-## Apply and inspect the kde of `airquality$Ozone` using the DPI selector (both `bw.SJ` and `ks::hpi`). What can you conclude from the estimate? *Beware*: remove `NA`s prior to performing the kde and bandwidth selection.
-
 ## ---- bw-ucv-mod---------------------------------------------------------
 # Data
 set.seed(123456)
@@ -290,7 +288,7 @@ lines(nor1mix::MW.nm10) # Also possible
 
 ## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat h_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat h_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat h_\mathrm{BCV}/h_\mathrm{MISE}-1$.
 
-## ---- ci-1, fig.cap = '(ref:ci-1-title)'---------------------------------
+## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE-------------
 # R(K) for a normal
 Rk <- 1 / (2 * sqrt(pi))
 
@@ -336,7 +334,7 @@ legend("topright", legend = c("Estimate", "CI estimated var",
                               "CI known var", "Smoothed density"),
        col = c("black", "gray", "gray", "red"), lwd = 2, lty = c(1, 1, 2, 1))
 
-## ---- ci-2, fig.cap = '(ref:ci-2-title)'---------------------------------
+## ---- ci-2, fig.cap = '(ref:ci-2-title)', fig.margin = FALSE-------------
 # Simulation setting
 n <- 200; h <- 0.15
 mu <- 0; sigma <- 1 # Normal parameters

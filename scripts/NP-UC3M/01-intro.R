@@ -7,5 +7,4 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## Show, by directly applying the previous definitions, that:
 
