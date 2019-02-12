@@ -286,7 +286,7 @@ plot(nor1mix::MW.nm10)
 plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm10) # Also possible
 
-## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat h_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat h_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat h_\mathrm{BCV}/h_\mathrm{MISE}-1$.
+## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for model `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat h_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat h_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat h_\mathrm{BCV}/h_\mathrm{MISE}-1$.
 
 ## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE-------------
 # R(K) for a normal
@@ -399,4 +399,71 @@ legend(x = "bottom", legend = c("CI estimated var", "CI known var",
 ##   rug(x)
 ## 
 ## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
+
+## ---- transf-1-----------------------------------------------------------
+# Sample from a LN(0, 1)
+set.seed(123456)
+samp <- rlnorm(n = 500)
+
+# kde and density
+plot(density(samp), ylim = c(0, 1))
+curve(dlnorm(x), from = -2, to = 10, n = 500, col = 2, add = TRUE)
+rug(samp)
+
+## ---- transf-2-----------------------------------------------------------
+# kde with log-transformed data
+kde <- density(log(samp))
+plot(kde, main = "kde of transformed data")
+rug(log(samp))
+
+# Careful: kde$x is in the reals!
+range(kde$x)
+
+# Untransform kde$x so the grid is in (0, infty)
+kde_transf <- kde
+kde_transf$x <- exp(kde_transf$x)
+
+# Transform the density using the chain rule
+kde_transf$y <- kde_transf$y * 1 / kde_transf$x
+
+# Transformed kde
+plot(kde_transf, main = "Transformed kde")
+curve(dlnorm(x), col = 2, add = TRUE)
+rug(samp)
+
+## Consider the data given by `set.seed(12345); x <- rbeta(n = 200, shape1 = 1, shape2 = 2)`. Compute:
+
+## ---- samp---------------------------------------------------------------
+# Sample the Claw
+n <- 100
+set.seed(23456)
+samp <- nor1mix::rnorMix(n = n, obj = nor1mix::MW.nm10)
+
+# Kde
+h <- 0.1
+plot(density(samp, bw = h))
+
+# Naive sampling algorithm
+samp_kde <- numeric(1e6)
+for (k in 1:1e6) {
+
+  i <- sample(x = 1:100, size = 1)
+  samp_kde[k] <- rnorm(n = 1, mean = samp[i], sd = h)
+
+}
+
+# Add kde of the sampled kde - almost equal
+lines(density(samp_kde), col = 2)
+
+# Sample 1e6 points from the kde
+i <- sample(x = 100, size = 1e6, replace = TRUE)
+samp_kde <- rnorm(1e6, mean = samp[i], sd = h)
+
+# Add kde of the sampled kde - almost equal
+lines(density(samp_kde), col = 3)
+
+
+## Sample data points from the kde of `iris$Petal.Width` that is computed with the NS selector.
+
+## The dataset `sunspot.year` contains the yearly numbers of sunspots from 1700 to 1988 (rounded to one digit). Employing a log-transformed kde with DPI bandwidth, sample new sunspots observations. *Beware*: recall the log-transformation before sampling.
 
