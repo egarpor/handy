@@ -406,14 +406,14 @@ set.seed(123456)
 samp <- rlnorm(n = 500)
 
 # kde and density
-plot(density(samp), ylim = c(0, 1))
+plot(density(samp), ylim = c(0, 0.8))
 curve(dlnorm(x), from = -2, to = 10, n = 500, col = 2, add = TRUE)
 rug(samp)
 
 ## ---- transf-2-----------------------------------------------------------
 # kde with log-transformed data
 kde <- density(log(samp))
-plot(kde, main = "kde of transformed data")
+plot(kde, main = "Kde of transformed data")
 rug(log(samp))
 
 # Careful: kde$x is in the reals!
@@ -427,11 +427,11 @@ kde_transf$x <- exp(kde_transf$x)
 kde_transf$y <- kde_transf$y * 1 / kde_transf$x
 
 # Transformed kde
-plot(kde_transf, main = "Transformed kde")
-curve(dlnorm(x), col = 2, add = TRUE)
+plot(kde_transf, main = "Transformed kde", xlim = c(0, 15))
+curve(dlnorm(x), col = 2, add = TRUE, n = 500)
 rug(samp)
 
-## Consider the data given by `set.seed(12345); x <- rbeta(n = 200, shape1 = 1, shape2 = 2)`. Compute:
+## Consider the data given by `set.seed(12345); x <- rbeta(n = 500, shape1 = 2, shape2 = 2)`. Compute:
 
 ## ---- samp---------------------------------------------------------------
 # Sample the Claw
@@ -441,29 +441,95 @@ samp <- nor1mix::rnorMix(n = n, obj = nor1mix::MW.nm10)
 
 # Kde
 h <- 0.1
-plot(density(samp, bw = h))
+plot(density(samp, bw = h), main = "", col = 4)
 
-# Naive sampling algorithm
-samp_kde <- numeric(1e6)
-for (k in 1:1e6) {
+# # Naive sampling algorithm
+# N <- 1e6
+# samp_kde <- numeric(N)
+# for (k in 1:N) {
+# 
+#   i <- sample(x = 1:n, size = 1)
+#   samp_kde[k] <- rnorm(n = 1, mean = samp[i], sd = h)
+# 
+# }
 
-  i <- sample(x = 1:100, size = 1)
-  samp_kde[k] <- rnorm(n = 1, mean = samp[i], sd = h)
-
-}
-
-# Add kde of the sampled kde - almost equal
-lines(density(samp_kde), col = 2)
-
-# Sample 1e6 points from the kde
-i <- sample(x = 100, size = 1e6, replace = TRUE)
-samp_kde <- rnorm(1e6, mean = samp[i], sd = h)
+# Sample N points from the kde
+N <- 1e6
+i <- sample(x = n, size = N, replace = TRUE)
+samp_kde <- rnorm(N, mean = samp[i], sd = h)
 
 # Add kde of the sampled kde - almost equal
 lines(density(samp_kde), col = 3)
-
+legend("topright", legend = c("Kde", "Kde of sampled kde"), 
+       lwd = 2, col = 4:3)
 
 ## Sample data points from the kde of `iris$Petal.Width` that is computed with the NS selector.
 
 ## The dataset `sunspot.year` contains the yearly numbers of sunspots from 1700 to 1988 (rounded to one digit). Employing a log-transformed kde with DPI bandwidth, sample new sunspots observations. *Beware*: recall the log-transformation before sampling.
+
+## ---- kde-eval-1---------------------------------------------------------
+# Sample
+n <- 25
+samp_t <- rt(n, df = 2)
+
+# Comparison: same output and same parametrization for bandwidth
+bw <- 0.75
+plot(kde <- ks::kde(x = samp_t, h = bw), lwd = 3) # ?ks::plot.kde for options
+lines(density(x = samp_t, bw = bw), col = 2)
+# Beware: there is no lines() method for ks::kde objects
+
+# The default h is the DPI obtained by ks::hpi
+kde <- ks::kde(x = samp_t)
+
+# Manual plot - recall $eval.points and $estimate
+lines(kde$eval.points, kde$estimate, col = 4)
+
+# Evaluating the kde at specific points, e.g., the first 5 sample points
+ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:5])
+
+# By default ks::kde() computes the *binned* kde (much faster) and then employs 
+# an interpolation to evaluate the kde at the given grid; if the exact kde is 
+# desired, this can be specified with binned = FALSE
+ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:5], binned = FALSE)
+
+# Changing the size of the evaluation grid
+length(ks::kde(x = samp_t, h = bw, gridsize = 1e3)$estimate)
+
+## ---- kde-eval-2---------------------------------------------------------
+# Sample from a LN(0, 1)
+set.seed(123456)
+samp_ln <- rlnorm(n = 200)
+
+# Log-kde without shifting
+a <- seq(0.1, 2, by = 0.4) # Sequence of shiftings
+col <- viridis::viridis(length(a) + 1)
+plot(ks::kde(x = samp_ln, positive = TRUE), col = col[1],
+     main = "Log-transformed kde and the effect of adj.positive", 
+     xlim = c(0, 7.5), ylim = c(0, 0.75))
+# If h is not provided, then ks::hpi() is called on the transformed data
+
+# Shiftings: larger a increases the bias
+for (i in seq_along(a)) {
+  plot(ks::kde(x = samp_ln, positive = TRUE, adj.positive = a[i]), 
+       add = TRUE, col = col[i])
+}
+curve(dlnorm(x), col = 2, add = TRUE, n = 500)
+rug(samp_ln)
+legend("topright", legend = c("True density", paste("adj.positive =", c(0, a))), 
+       col = c(2, col), lwd = 2)
+
+## ---- kde-eval-3---------------------------------------------------------
+# Untransformed kde
+plot(kde <- ks::kde(x = log(samp_ln)), col = 4)
+samp_kde <- ks::rkde(n = 5e4, fhat = kde)
+plot(ks::kde(x = samp_kde), add = TRUE, col = 3)
+legend("topright", legend = c("Kde", "Kde of sampled kde"), 
+       lwd = 2, col = 3:4)
+
+# Transformed kde
+plot(kde_transf <- ks::kde(x = samp_ln, positive = TRUE), col = 4)
+samp_kde_transf <- ks::rkde(n = 5e4, fhat = kde_transf, positive = TRUE)
+plot(ks::kde(x = samp_kde_transf), add = TRUE, col = 3)
+legend("topright", legend = c("Kde", "Kde of sampled kde"), 
+       lwd = 2, col = 3:4)
 
