@@ -795,3 +795,62 @@ for (i in 1:nrow(iris)) rgl::lines3d(kms_iris$path[[i]], col = cols[i])
 rgl::spheres3d(kms_iris$mode, radius = 0.05)
 rgl::rglwidget()
 
+## ---- kda-1, fig.cap = '(ref:kda-1-title)'-------------------------------
+# Univariate example
+x <- iris$Sepal.Length
+groups <- iris$Species
+
+# By default, the ks::hpi bandwidths are computed
+kda_1 <- ks::kda(x = x, x.group = groups)
+
+# Manual specification of bandwidths via ks::hkda (we have univariate data)
+hs <- ks::hkda(x = x, x.group = groups, bw = "plugin")
+kda_1 <- ks::kda(x = x, x.group = groups, hs = hs)
+
+# Estimated class probabilites
+kda_1$prior.prob
+
+# Classification
+head(kda_1$x.group.estimate)
+
+# Classification error
+ks::compare(x.group = kda_1$x.group, est.group = kda_1$x.group.estimate)
+
+# Classification regions (points on the bottom)
+plot(kda_1, xlab = "Sepal length", drawpoints = TRUE, col = rainbow(3))
+legend("topright", legend = c("Setosa", "Versicolor", "Virginica"), 
+       lwd = 2, col = rainbow(3))
+
+## ---- kda-2, fig.cap = '(ref:kda-2-title)'-------------------------------
+# Bivariate example
+x <- iris[, 1:2]
+groups <- iris$Species
+
+# By default, the ks::Hpi bandwidths are computed
+kda_2 <- ks::kda(x = x, x.group = groups)
+
+# Manual specification of bandwidths via ks::Hkda
+Hs <- ks::Hkda(x = x, x.group = groups, bw = "plugin")
+kda_2 <- ks::kda(x = x, x.group = groups, Hs = Hs)
+
+# Classification error
+ks::compare(x.group = kda_2$x.group, est.group = kda_2$x.group.estimate)
+
+# Plot of classification regions
+plot(kda_2, col = rainbow(3), lwd = 2, col.pt = 1, cont = seq(5, 85, by = 20),
+     col.part = rainbow(3, alpha = 0.25), drawpoints = TRUE)
+
+## ---- kda-3--------------------------------------------------------------
+# Trivariate example
+x <- iris[, 1:3]
+groups <- iris$Species
+
+# Normal scale bandwidths to avoid undersmoothing
+Hs <- rbind(ks::Hns(x = x[groups == "setosa", ]), 
+            ks::Hns(x = x[groups == "versicolor", ]), 
+            ks::Hns(x = x[groups == "virginica", ]))
+kda_3 <- ks::kda(x = x, x.group = groups, Hs = Hs)
+
+# Classification regions
+plot(kda_3, drawpoints = TRUE, col.pt = c(2, 3, 4), cont = seq(5, 85, by = 20))
+
