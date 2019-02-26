@@ -286,7 +286,7 @@ plot(nor1mix::MW.nm10)
 plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm10) # Also possible
 
-## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for model `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat h_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat h_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat h_\mathrm{BCV}/h_\mathrm{MISE}-1$.
+## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for model `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat{h}_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat{h}_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat{h}_\mathrm{BCV}/h_\mathrm{MISE}-1$.
 
 ## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE-------------
 # R(K) for a normal
