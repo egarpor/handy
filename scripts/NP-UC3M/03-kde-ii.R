@@ -312,9 +312,9 @@ samp <- rnorm(n = n)
 bw <- bw.nrd(x = samp)
 kde <- density(x = samp, bw = bw, n = 4096, from = -4, to = 4)
 
-# For a given c, what is the theoretical level set? Since we know that the real
-# density is symmetric and unimodal, then the level set is an inverval of the
-# form [-x_c, x_c]
+# For a given c, what is the theoretical level set? Since we know that the 
+# real density is symmetric and unimodal, then the level set is an inverval 
+# of the form [-x_c, x_c]
 c <- 0.2
 x_c <- tryCatch(uniroot(function(x) dnorm(x) - c, lower = 0, upper = 4)$root,
                 error = function(e) NA)
@@ -326,7 +326,10 @@ rug(samp)
 polygon(x = c(-x_c, -x_c, x_c, x_c), y = c(0, c, c, 0),
         col = rgb(0, 0, 0, alpha = 0.5), density = 10)
 
-# Function to compute and plot a kde level set
+# Function to compute and plot a kde level set. Observe that kde stands for an
+# object containing the output of density(), although obvious modifications 
+# could be done to the function code could be done to receive a ks::kde object 
+# as the main argument
 kde_level_set <- function(kde, c, add_plot = FALSE, ...) {
 
   # Begin and end index for the potantially many intervals in the level sets
@@ -336,8 +339,8 @@ kde_level_set <- function(kde, c, add_plot = FALSE, ...) {
   # sequence of TRUEs that indicates an interval for which kde$y >= c
   begin <- which(diff(kde_larger_c) > 0) # Trick to search for the begin of
   # each of the intervals
-  end <- begin + run_length_kde$lengths[run_length_kde$values] - 1 # Compute the
-  # end of the intervals from begin + length
+  end <- begin + run_length_kde$lengths[run_length_kde$values] - 1 # Compute 
+  # the end of the intervals from begin + length
 
   # Add polygons to a density plot? If so, ... are the additional parameters
   # for polygon()
@@ -483,7 +486,7 @@ legend("topleft", lwd = 2, col = c(1, 4),
 # integration
 ks::contourSizes(kde, abs.cont = c)
 
-## ---- level-set-6--------------------------------------------------------
+## ---- level-set-6a-------------------------------------------------------
 # Simulate a sample from a mixture of normals
 n <- 5e2
 set.seed(123456)
@@ -504,6 +507,7 @@ plot(kde, cont = 100 * c(0.99, 0.95, 0.5), col.fun = viridis::viridis,
      drawpoints = TRUE, col.pt = 1)
 rgl::rglwidget()
 
+## ---- level-set-6b-------------------------------------------------------
 # Simulate a large sample from a single normal
 n <- 5e4
 set.seed(123456)
@@ -687,7 +691,7 @@ x <- c(-2, 2)
 # x <- c(-4, 4)
 N <- 1e3
 h <- 0.5
-phi <- matrix(nrow = N + 1, ncol = p)
+phi <- matrix(nrow = N + 1, ncol = 2)
 phi[1, ] <- x
 for (t in 1:N) {
 
@@ -702,7 +706,7 @@ text(rbind(x), labels = "x", pos = 3)
 points(rbind(mu_1, mu_2), pch = 16, col = 4)
 text(rbind(mu_1, mu_2), labels = expression(mu[1], mu[2]), pos = 4, col = 4)
 
-# The modes ar different from the mean of the components! -- see the gradients
+# The modes are different from the mean of the components! -- see the gradients
 cbind(Df(mu_1), Df(mu_2))
 
 # Modes
@@ -713,7 +717,7 @@ text(rbind(xi_1, xi_2), labels = expression(xi[1], xi[2]), col = 2, pos = 2)
 
 ## ---- kms-1--------------------------------------------------------------
 # A simulated example for which the population clusters are known
-# Extracted from ?ks::dnorm.mixt
+# Extracted from ?ks::dmvnorm.mixt
 mus <- rbind(c(-1, 0), c(1, 2 / sqrt(3)), c(1, -2 / sqrt(3)))
 Sigmas <- 1/25 * rbind(ks::invvech(c(9, 63/10, 49/4)),
                        ks::invvech(c(9, 0, 49/4)),
@@ -769,7 +773,7 @@ points(modes, pch = 8, cex = 2, lwd = 2)
 modes
 mus
 
-## ---- kms-3--------------------------------------------------------------
+## ---- kms-3a-------------------------------------------------------------
 # Obtain PI bandwidth
 H <- ks::Hpi(x = iris[, 1:3], deriv.order = 1)
 
@@ -786,6 +790,7 @@ summary(kms_iris)
 plot(kms_iris, pch = as.numeric(iris$Species) + 1,
      col = viridis::viridis(kms_iris$nclust))
 
+## ---- kms-3b-------------------------------------------------------------
 # See ascending paths
 kms_iris <- ks::kms(x = iris[, 1:3], H = H, min.clust.size = 15,
                     keep.path = TRUE)
@@ -853,4 +858,5 @@ kda_3 <- ks::kda(x = x, x.group = groups, Hs = Hs)
 
 # Classification regions
 plot(kda_3, drawpoints = TRUE, col.pt = c(2, 3, 4), cont = seq(5, 85, by = 20))
+rgl::rglwidget()
 
