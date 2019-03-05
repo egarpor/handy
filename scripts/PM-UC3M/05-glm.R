@@ -11,9 +11,9 @@
 ## challenger <- read.table(file = "challenger.txt", header = TRUE, sep = "\t")
 
 ## ---- challengerfigs-----------------------------------------------------
-car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE, 
+car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger, subset = nfails.field > 0)
-car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE, 
+car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger)
 
 ## ---- nasadiag-----------------------------------------------------------
@@ -81,15 +81,15 @@ for (i in seq_along(beta0)) {
     L[i, j] <- minusLogLik(c(beta0[i], beta1[j]))
   }
 }
-filled.contour(beta0, beta1, -L, color.palette = viridis::viridis, 
-               xlab = expression(beta[0]), ylab = expression(beta[1]), 
+filled.contour(beta0, beta1, -L, color.palette = viridis::viridis,
+               xlab = expression(beta[0]), ylab = expression(beta[1]),
                plot.axes = {
                  axis(1:2)
-                 points(mod$coefficients[1], mod$coefficients[2], 
+                 points(mod$coefficients[1], mod$coefficients[2],
                         col = 2, pch = 16)
                  points(opt$par[1], opt$par[2], col = 4)
-               }) 
-# The plot.axes argument is a hack to add graphical information within the 
+               })
+# The plot.axes argument is a hack to add graphical information within the
 # coordinates of the main panel (behind filled.contour there is a layout()...)
 
 ## ---- pois-load, eval = FALSE--------------------------------------------
@@ -363,7 +363,7 @@ data(Hitters, package = "ISLR")
 
 # Include only predictors related with 1986 season and discard NA's
 Hitters <- subset(Hitters, select = c(League, AtBat, Hits, HmRun, Runs, RBI,
-                                      Walks, Division, PutOuts, Assists, 
+                                      Walks, Division, PutOuts, Assists,
                                       Errors))
 Hitters <- na.omit(Hitters)
 
@@ -420,7 +420,7 @@ set.seed(123456)
 train <- sample(c(FALSE, TRUE), size = nrow(Hitters), replace = TRUE)
 
 # Model selection in training part
-ncvLasso <- cv.glmnet(x = x[train, ], y = y[train], alpha = 1, 
+ncvLasso <- cv.glmnet(x = x[train, ], y = y[train], alpha = 1,
                       nfolds = sum(train), family = "binomial")
 predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
 

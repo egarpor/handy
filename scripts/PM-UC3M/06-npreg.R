@@ -244,7 +244,7 @@ kdeHpi1 <- ks::kde(x = faithful, H = Hpi1)
 
 # Different representations
 plot(kdeHpi1, display = "slice", cont = c(25, 50, 75))
-# "cont" specify the density contours, which are upper percentages of highest
+# "cont" specifies the density contours, which are upper percentages of highest
 # density regions. The default contours are at 25%, 50%, and 75%
 plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75))
 plot(kdeHpi1, display = "persp")
@@ -406,8 +406,8 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 ##   legend("bottom", legend = c("True regression", "Local polynomial fit"),
 ##          lwd = 2, col = c(1, p + 2))
 ## 
-## p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1))
-## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01),
+## }, p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1),
+## h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
 
 ## Under **A1**--**A5**, the conditional bias and variance of the local constant ($p=0$) and local linear ($p=1$) estimators are^[The notation $o_\mathbb{P}(a_n)$ stands for a random variable that converges in probability to zero at a rate faster than $a_n\to0$. It is mostly employed for denoting non-important terms in asymptotic expansions, like the ones in \@ref(eq:mbias)--\@ref(eq:mvar).]
 
