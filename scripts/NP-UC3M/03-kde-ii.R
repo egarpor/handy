@@ -222,58 +222,52 @@ n <- 500
 Sigma_1 <- matrix(c(1, -0.75, -0.75, 2), nrow = 2, ncol = 2)
 Sigma_2 <- matrix(c(2, -0.25, -0.25, 1), nrow = 2, ncol = 2)
 set.seed(123456)
-samp <- ks::rmvnorm.mixt(n = n, mus = rbind(c(2, 2), c(-2, -2)), 
-                         Sigmas = rbind(Sigma_1, Sigma_2), 
+samp <- ks::rmvnorm.mixt(n = n, mus = rbind(c(2, 2), c(-2, -2)),
+                         Sigmas = rbind(Sigma_1, Sigma_2),
                          props = c(0.5, 0.5))
 
 # Normal scale bandwidth
-Hns <- ks::Hns(x = samp)
-Hns
+(Hns <- ks::Hns(x = samp))
 
 # PI bandwidth unconstrained
-Hpi <- ks::Hpi(x = samp)
-Hpi
+(Hpi <- ks::Hpi(x = samp))
 
 # PI bandwidth diagonal
-Hpi_diag <- ks::Hpi.diag(x = samp)
-Hpi_diag
+(Hpi_diag <- ks::Hpi.diag(x = samp))
 
 # Compare kdes
 par(mfrow = c(2, 2))
 cont <- seq(0, 0.05, l = 20)
 col <- viridis::viridis
-plot(ks::kde(x = samp, H = Hns), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hns), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "NS")
-plot(ks::kde(x = samp, H = diag(diag(Hns))), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = diag(diag(Hns))), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "NS diagonal")
-plot(ks::kde(x = samp, H = Hpi), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hpi), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "PI")
-plot(ks::kde(x = samp, H = Hpi_diag), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hpi_diag), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "PI diagonal")
 
 ## ---- bwd-pi-der, fig.margin = FALSE-------------------------------------
 # Normal scale bandwidth
-Hns <- ks::Hns(x = samp, deriv.order = 1)
-Hns
+(Hns <- ks::Hns(x = samp, deriv.order = 1))
 
 # PI bandwidth unconstrained
-Hpi <- ks::Hpi(x = samp, deriv.order = 1)
-Hpi
+(Hpi <- ks::Hpi(x = samp, deriv.order = 1))
 
 # PI bandwidth diagonal
-Hpi_diag <- ks::Hpi.diag(x = samp, deriv.order = 1)
-Hpi_diag
+(Hpi_diag <- ks::Hpi.diag(x = samp, deriv.order = 1))
 
 # Compare kddes
 par(mfrow = c(2, 2))
 cont <- seq(-0.02, 0.02, l = 21)
-plot(ks::kdde(x = samp, H = Hns, deriv.order = 1), 
+plot(ks::kdde(x = samp, H = Hns, deriv.order = 1),
      display = "filled.contour2", main = "NS", abs.cont = cont)
-plot(ks::kdde(x = samp, H = diag(diag(Hns)), deriv.order = 1), 
+plot(ks::kdde(x = samp, H = diag(diag(Hns)), deriv.order = 1),
      display = "filled.contour2", main = "NS diagonal", abs.cont = cont)
-plot(ks::kdde(x = samp, H = Hpi, deriv.order = 1), 
+plot(ks::kdde(x = samp, H = Hpi, deriv.order = 1),
      display = "filled.contour2", main = "PI", abs.cont = cont)
-plot(ks::kdde(x = samp, H = Hpi_diag, deriv.order = 1), 
+plot(ks::kdde(x = samp, H = Hpi_diag, deriv.order = 1),
      display = "filled.contour2", main = "PI diagonal", abs.cont = cont)
 
 ## ---- bwd-cv, fig.margin = FALSE-----------------------------------------
@@ -293,13 +287,13 @@ Hbcv_diag <- ks::Hbcv.diag(x = samp)
 par(mfrow = c(2, 2))
 cont <- seq(0, 0.03, l = 20)
 col <- viridis::viridis
-plot(ks::kde(x = samp, H = Hlscv), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hlscv), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "LSCV")
-plot(ks::kde(x = samp, H = Hlscv_diag), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hlscv_diag), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "LSCV diagonal")
-plot(ks::kde(x = samp, H = Hbcv), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hbcv), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "BCV")
-plot(ks::kde(x = samp, H = Hbcv_diag), display = "filled.contour2", 
+plot(ks::kde(x = samp, H = Hbcv_diag), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "BCV diagonal")
 
 ## ---- level-set-1, fig.cap = '(ref:level-set-1-title)'-------------------
@@ -312,8 +306,8 @@ samp <- rnorm(n = n)
 bw <- bw.nrd(x = samp)
 kde <- density(x = samp, bw = bw, n = 4096, from = -4, to = 4)
 
-# For a given c, what is the theoretical level set? Since we know that the 
-# real density is symmetric and unimodal, then the level set is an inverval 
+# For a given c, what is the theoretical level set? Since we know that the
+# real density is symmetric and unimodal, then the level set is an inverval
 # of the form [-x_c, x_c]
 c <- 0.2
 x_c <- tryCatch(uniroot(function(x) dnorm(x) - c, lower = 0, upper = 4)$root,
@@ -327,8 +321,8 @@ polygon(x = c(-x_c, -x_c, x_c, x_c), y = c(0, c, c, 0),
         col = rgb(0, 0, 0, alpha = 0.5), density = 10)
 
 # Function to compute and plot a kde level set. Observe that kde stands for an
-# object containing the output of density(), although obvious modifications 
-# could be done to the function code could be done to receive a ks::kde object 
+# object containing the output of density(), although obvious modifications
+# could be done to the function code could be done to receive a ks::kde object
 # as the main argument
 kde_level_set <- function(kde, c, add_plot = FALSE, ...) {
 
@@ -339,7 +333,7 @@ kde_level_set <- function(kde, c, add_plot = FALSE, ...) {
   # sequence of TRUEs that indicates an interval for which kde$y >= c
   begin <- which(diff(kde_larger_c) > 0) # Trick to search for the begin of
   # each of the intervals
-  end <- begin + run_length_kde$lengths[run_length_kde$values] - 1 # Compute 
+  end <- begin + run_length_kde$lengths[run_length_kde$values] - 1 # Compute
   # the end of the intervals from begin + length
 
   # Add polygons to a density plot? If so, ... are the additional parameters
@@ -823,7 +817,7 @@ ks::compare(x.group = kda_1$x.group, est.group = kda_1$x.group.estimate)
 
 # Classification regions (points on the bottom)
 plot(kda_1, xlab = "Sepal length", drawpoints = TRUE, col = rainbow(3))
-legend("topright", legend = c("Setosa", "Versicolor", "Virginica"), 
+legend("topright", legend = c("Setosa", "Versicolor", "Virginica"),
        lwd = 2, col = rainbow(3))
 
 ## ---- kda-2, fig.cap = '(ref:kda-2-title)'-------------------------------
@@ -851,8 +845,8 @@ x <- iris[, 1:3]
 groups <- iris$Species
 
 # Normal scale bandwidths to avoid undersmoothing
-Hs <- rbind(ks::Hns(x = x[groups == "setosa", ]), 
-            ks::Hns(x = x[groups == "versicolor", ]), 
+Hs <- rbind(ks::Hns(x = x[groups == "setosa", ]),
+            ks::Hns(x = x[groups == "versicolor", ]),
             ks::Hns(x = x[groups == "virginica", ]))
 kda_3 <- ks::kda(x = x, x.group = groups, Hs = Hs)
 

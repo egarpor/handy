@@ -105,7 +105,7 @@ plot(density(x = samp, from = -4, to = 4), xlim = c(-5, 5))
 # The density object is a list
 kde <- density(x = samp, from = -5, to = 5, n = 1024)
 str(kde)
-# Note that the evaluation grid "x"" is not directly controlled, only through
+# Note that the evaluation grid "x" is not directly controlled, only through
 # "from, "to", and "n" (better use powers of 2)
 plot(kde$x, kde$y, type = "l")
 curve(dnorm(x), col = 2, add = TRUE) # True density
