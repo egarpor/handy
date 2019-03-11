@@ -326,10 +326,10 @@ bw_cv_grid_slow <- function(X, Y, h_grid =
 # Same bandwidth
 (h <- bw_cv_grid_slow(X = X, Y = Y, plot_cv = TRUE))
 
-# Time comparison, a factor 10 difference
-microbenchmark::microbenchmark(bw_cv_grid(X = X, Y = Y),
-                               bw_cv_grid_slow(X = X, Y = Y),
-                               times = 10)
+# # Time comparison, a factor 10 difference
+# microbenchmark::microbenchmark(bw_cv_grid(X = X, Y = Y),
+#                                bw_cv_grid_slow(X = X, Y = Y),
+#                                times = 10)
 
 ## ---- bw-6---------------------------------------------------------------
 # Data -- nonlinear trend
@@ -421,7 +421,7 @@ rug(X, side = 1); rug(Y, side = 2)
 legend("top", legend = c("True regression", "Nadaraya-Watson", "Local linear"),
        lwd = 2, col = 1:3)
 
-## ---- np-4, fig.margin = FALSE-------------------------------------------
+## ---- np-4---------------------------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100
