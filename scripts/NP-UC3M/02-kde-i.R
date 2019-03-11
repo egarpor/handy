@@ -346,7 +346,7 @@ N <- 1e6
 i <- sample(x = n, size = N, replace = TRUE)
 samp_kde <- rnorm(N, mean = samp[i], sd = h)
 
-# Add kde of the sampled kde - almost equal
+# Add kde of the sampled kde -- almost equal
 lines(density(samp_kde), col = 3)
 legend("topright", legend = c("Kde", "Kde of sampled kde"),
        lwd = 2, col = 4:3)
@@ -369,7 +369,7 @@ lines(density(x = samp_t, bw = bw), col = 2)
 # The default h is the DPI obtained by ks::hpi
 kde <- ks::kde(x = samp_t)
 
-# Manual plot - recall $eval.points and $estimate
+# Manual plot -- recall $eval.points and $estimate
 lines(kde$eval.points, kde$estimate, col = 4)
 
 # Evaluating the kde at specific points, e.g., the first 5 sample points

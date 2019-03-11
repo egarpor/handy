@@ -18,9 +18,9 @@ nw <- function(x, X, Y, h, K = dnorm) {
   # h: bandwidth
   # K: kernel
 
-  # Matrix of size n x length(x) (rbind() is called for ensuring a matrix 
+  # Matrix of size n x length(x) (rbind() is called for ensuring a matrix
   # output if x is a scalar)
-  Kx <- rbind(sapply(X, function(Xi) K((x - Xi) / h) / h)) 
+  Kx <- rbind(sapply(X, function(Xi) K((x - Xi) / h) / h))
 
   # Weights
   W <- Kx / rowSums(Kx) # Column recycling!
@@ -35,7 +35,7 @@ set.seed(12345)
 n <- 100
 eps <- rnorm(n, sd = 2)
 m <- function(x) x^2 * cos(x)
-# m <- function(x) x - x^2 # Other possible regression function, works 
+# m <- function(x) x - x^2 # Other possible regression function, works
 # equally well
 X <- rnorm(n, sd = 2)
 Y <- m(X) + eps
@@ -49,7 +49,7 @@ plot(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 lines(x_grid, m(x_grid), col = 1)
 lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
-legend("top", legend = c("True regression", "Nadaraya-Watson"), 
+legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 ## ---- nw-2, eval = FALSE-------------------------------------------------
@@ -158,16 +158,16 @@ Y <- m(X) + eps
 
 # Rule-of-thumb selector
 h_RT <- function(X, Y) {
-  
+
   # Quartic fit
   mod_Q <- lm(Y ~ poly(X, raw = TRUE, degree = 4))
-  
+
   # Estimates of unknown quantities
   int_sigma2_hat <- diff(range(X)) * sum(mod_Q$residuals^2) / mod_Q$df.residual
-  theta_22_hat <- mean((2 * mod_Q$coefficients[3] + 
-                        6 * mod_Q$coefficients[4] * X + 
+  theta_22_hat <- mean((2 * mod_Q$coefficients[3] +
+                        6 * mod_Q$coefficients[4] * X +
                         12 * mod_Q$coefficients[5] * X^2)^2)
-  
+
   # h_ROT
   R_K <- 0.5 / sqrt(pi)
   ((R_K * int_sigma2_hat) / (2 * theta_22_hat * length(X)))^(1 / 5)
@@ -189,10 +189,10 @@ plot(X, Y, ylim = c(-6, 8))
 rug(X, side = 1); rug(Y, side = 2)
 lines(x_grid, m(x_grid), col = 1)
 lines(lp1_RT$x, lp1_RT$y, col = 2)
-lines(x_grid, mod_Q$coefficients[1] + 
+lines(x_grid, mod_Q$coefficients[1] +
         poly(x_grid, raw = TRUE, degree = 4) %*% mod_Q$coefficients[-1],
       col = 3)
-legend("topright", legend = c("True regression", "Local linear (RT)", 
+legend("topright", legend = c("True regression", "Local linear (RT)",
                               "Cuartic fit"),
        lwd = 2, col = 1:3)
 
@@ -237,8 +237,6 @@ error <- sapply(h_grid, function(h) {
 plot(h_grid, error, type = "l")
 rug(h_grid)
 abline(v = h_grid[which.min(error)], col = 2)
-
-## For any $p\geq0$, the weights of the leave-one-out estimator $\hat{m}_{-i}(x;p,h)=\sum_{\substack{j=1\\j\neq i}}^nW_{-i,j}^p(x)Y_j$ can be obtained from $\hat{m}(x;p,h)=\sum_{i=1}^nW_{i}^p(x)Y_i$:
 
 ## ---- bw-4---------------------------------------------------------------
 # Generate some data to test the implementation
@@ -289,7 +287,7 @@ plot(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 lines(x_grid, m(x_grid), col = 1)
 lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
-legend("top", legend = c("True regression", "Nadaraya-Watson"), 
+legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 ## ---- bw-5---------------------------------------------------------------
@@ -303,7 +301,7 @@ cv_nw_slow <- function(X, Y, h, K = dnorm) {
 }
 
 # Optimum CV bandwidth, with sensible grid
-bw_cv_grid_slow <- function(X, Y, h_grid = 
+bw_cv_grid_slow <- function(X, Y, h_grid =
                               diff(range(X)) * (seq(0.05, 0.5, l = 200))^2,
                             K = dnorm, plot_cv = FALSE) {
 
@@ -329,11 +327,12 @@ bw_cv_grid_slow <- function(X, Y, h_grid =
 (h <- bw_cv_grid_slow(X = X, Y = Y, plot_cv = TRUE))
 
 # Time comparison, a factor 10 difference
-microbenchmark::microbenchmark(bw_cv_grid(X = X, Y = Y), 
-                               bw_cv_grid_slow(X = X, Y = Y), times = 10)
+microbenchmark::microbenchmark(bw_cv_grid(X = X, Y = Y),
+                               bw_cv_grid_slow(X = X, Y = Y),
+                               times = 10)
 
 ## ---- bw-6---------------------------------------------------------------
-# Data - nonlinear trend
+# Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
 Y <- Auto$mpg
@@ -347,4 +346,114 @@ x_grid <- seq(1600, 5200, by = 10)
 plot(X, Y, xlab = "weight", ylab = "mpg", pch = 16)
 rug(X, side = 1); rug(Y, side = 2)
 lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
+
+## ---- np-1, message = FALSE----------------------------------------------
+# Data -- nonlinear trend
+data(Auto, package = "ISLR")
+X <- Auto$weight
+Y <- Auto$mpg
+
+# np::npregbw computes by default the least squares CV bandwidth associated to
+# a local *constant* fit and admits a formula interface (to be exploited more
+# in multivariate regression)
+bw0 <- np::npregbw(formula = Y ~ X)
+
+# Multiple initial points can be employed for minimizing the CV function (for
+# one predictor, defaults to 1) and avoiding local minima
+bw0 <- np::npregbw(formula = Y ~ X, nmulti = 2)
+
+# The "rbandwidth" object contains many useful information, see ?np::npregbw for
+# all the returned objects
+bw0
+head(bw0)
+# Recall that the fit is very similar to h_CV
+
+# Once the bandwith is estimated, np::npreg can be directly called with the
+# "rbandwidth" object (it encodes the regression to be made, the data, the kind
+# of estimator considered, etc). The hard work goes on np::npregbw, not on
+# np::npreg
+kre0 <- np::npreg(bws = bw0)
+kre0
+
+# Plot directly the fit via plot() -- it employs as evaluation points the 
+# (unsorted!) sample
+plot(kre0, col = 2, type = "o")
+points(X, Y)
+rug(X, side = 1); rug(Y, side = 2)
+lines(x_grid, m(x_grid), col = 1)
+
+## ---- np-2---------------------------------------------------------------
+# Local linear fit -- find first the CV bandwidth
+bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll")
+
+# Fit
+kre1 <- np::npreg(bws = bw1)
+
+# Plot
+plot(kre1, col = 2, type = "o")
+points(X, Y)
+rug(X, side = 1); rug(Y, side = 2)
+lines(x_grid, m(x_grid), col = 1)
+
+## ---- np-3---------------------------------------------------------------
+# Summary of the npregression object
+summary(kre0)
+
+# Evaluation points (a data.frame) -- by default the sample (unsorted!)
+head(kre0$eval)
+
+# The estimation of the regression function at the evaluation points
+head(kre0$mean)
+
+# The evaluation points can be changed using "exdat"
+kre0 <- np::npreg(bws = bw0, exdat = x_grid)
+kre1 <- np::npreg(bws = bw1, exdat = x_grid)
+
+# Notice how $eval is a data.frame containing x_grid
+head(kre0$eval)
+
+# This allows to compare estimators in a more transparent form
+plot(X, Y)
+lines(x_grid, m(x_grid), col = 1)
+lines(kre0$eval$x_grid, kre0$mean, col = 2)
+lines(kre1$eval$x_grid, kre1$mean, col = 3)
+rug(X, side = 1); rug(Y, side = 2)
+legend("top", legend = c("True regression", "Nadaraya-Watson", "Local linear"),
+       lwd = 2, col = 1:3)
+
+## ---- np-4, fig.margin = FALSE-------------------------------------------
+# Generate some data with bimodal density
+set.seed(12345)
+n <- 100
+eps <- rnorm(2 * n, sd = 2)
+m <- function(x) x^2 * sin(x)
+X <- c(rnorm(n, mean = -2, sd = 0.5), rnorm(n, mean = 2, sd = 0.5))
+Y <- m(X) + eps
+x_grid <- seq(-10, 10, l = 500)
+
+# Constant bandwidth
+bwc <- np::npregbw(formula = Y ~ X, bwtype = "fixed", regtype = "ll")
+krec <- np::npreg(bwc, exdat = x_grid)
+
+# Variable bandwidths
+bwg <- np::npregbw(formula = Y ~ X, bwtype = "generalized_nn", regtype = "ll")
+kreg <- np::npreg(bwg, exdat = x_grid)
+bwa <- np::npregbw(formula = Y ~ X, bwtype = "adaptive_nn", regtype = "ll")
+krea <- np::npreg(bwa, exdat = x_grid)
+
+# Comparison
+plot(X, Y)
+rug(X, side = 1); rug(Y, side = 2)
+lines(x_grid, m(x_grid), col = 1)
+lines(krec$eval$x_grid, krec$mean, col = 2)
+lines(kreg$eval$x_grid, kreg$mean, col = 3)
+lines(krea$eval$x_grid, krea$mean, col = 4)
+legend("top", legend = c("True regression", "Fixed", "Generalized NN",
+                         "Adaptive NN"),
+       lwd = 2, col = 1:4)
+# Observe how the fixed bandwidth may yield a fit that produces serious
+# artifacts in the low density region. At that region the NN-based bandwidths
+# expand to borrow strenght from the points in the high density regions,
+# whereas in the high density regions they shrink to adapt faster to the
+# changes of the regression function
 
