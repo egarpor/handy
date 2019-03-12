@@ -441,11 +441,11 @@ legend("bottom", legend = c("True regression", "Local linear",
        lwd = 2, col = 1:3)
 
 ## ---- bwd-2, eval = FALSE------------------------------------------------
-## # Grid for representing (3.22)
+## # Grid for representing (6.26)
 ## hGrid <- seq(0.1, 1, l = 200)^2
 ## error <- sapply(hGrid, function(h) {
 ##   mean((Y - mNW(x = X, X = X, Y = Y, h = h))^2)
-##   })
+## })
 ## 
 ## # Error curve
 ## plot(hGrid, error, type = "l")

@@ -375,7 +375,7 @@ head(bw0)
 kre0 <- np::npreg(bws = bw0)
 kre0
 
-# Plot directly the fit via plot() -- it employs as evaluation points the 
+# Plot directly the fit via plot() -- it employs as evaluation points the
 # (unsorted!) sample
 plot(kre0, col = 2, type = "o")
 points(X, Y)
