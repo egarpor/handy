@@ -193,7 +193,7 @@ lines(x_grid, mod_Q$coefficients[1] +
         poly(x_grid, raw = TRUE, degree = 4) %*% mod_Q$coefficients[-1],
       col = 3)
 legend("topright", legend = c("True regression", "Local linear (RT)",
-                              "Cuartic fit"),
+                              "Quartic fit"),
        lwd = 2, col = 1:3)
 
 ## ---- bwd-2--------------------------------------------------------------
