@@ -170,7 +170,7 @@ h_RT <- function(X, Y) {
 
   # h_ROT
   R_K <- 0.5 / sqrt(pi)
-  ((R_K * int_sigma2_hat) / (2 * theta_22_hat * length(X)))^(1 / 5)
+  ((R_K * int_sigma2_hat) / (theta_22_hat * length(X)))^(1 / 5)
 
 }
 

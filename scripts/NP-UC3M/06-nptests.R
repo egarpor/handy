@@ -77,9 +77,10 @@ dgof::ks.test(x = x, y = ppois_stepfun)
 # If data is normally distributed, the test rejects H_0
 dgof::ks.test(x = rnorm(n = n, mean = 5), y = ppois_stepfun)
 
-## ---- ks-4, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ks-4-title)'----
+## ---- ks-4, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ks-4-title)', out.width = '100%'----
 # Simulation of p-values when H_0 is true
 set.seed(131231)
+n <- 100
 M <- 1e4
 pvalues_H0 <- sapply(1:M, function(i) {
   x <- rnorm(n) # N(0, 1)
@@ -326,7 +327,7 @@ cvm_nm_test <- function(x, m, B = 1e3, plot_boot = TRUE) {
                         ran.gen = r_mod, mle = theta_hat, R = B)
   
   # Return an "htest" result
-  method <- "Bootstrap-based Cramér-von Mises test for exponentiality"
+  method <- "Bootstrap-based Cramér-von Mises test for normal mixtures"
   result <- list(statistic = Tn_star$t0, p.value = mean(Tn_star$t > Tn_star$t0), 
                  theta_hat = theta_hat, statistic_boot = drop(Tn_star$t), B = B,
                  alternative = paste("any alternative to a", m, 
