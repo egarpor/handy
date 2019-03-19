@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- ks-1, fig.cap = '(ref:ks-1-title)'---------------------------------
+## ---- ks-1, fig.cap = '(ref:ks-1-title)', fig.margin = FALSE-------------
 # Sample data with H_0 true
 n <- 20
 mu0 <- 2; sd0 <- 1
