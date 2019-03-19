@@ -142,6 +142,33 @@ pred <- predict(fit_OECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
 alpha <- 0.05
 pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 
+## ---- exr-pred-sol, echo = FALSE, eval = FALSE---------------------------
+## # Data
+## data(Auto, package = "ISLR")
+## set.seed(12345)
+## ind_train <- sample(392, size = 380)
+## train <- Auto[ind_train, ]
+## validation <- Auto[-ind_train, ]
+## 
+## # Local constant fit
+## bw0 <- np::npregbw(formula = mpg ~ ordered(cylinders) + horsepower + weight +
+##                      factor(origin), data = train, regtype = "lc")
+## kre0 <- np::npreg(bws = bw0)
+## 
+## # Local linear fit
+## bw1 <- np::npregbw(formula = mpg ~ ordered(cylinders) + horsepower + weight +
+##                      factor(origin), data = train, regtype = "ll")
+## kre1 <- np::npreg(bws = bw1)
+## 
+## # Linear fit
+## lm_mod <- lm(formula = mpg ~ ordered(cylinders) + horsepower + weight +
+##                factor(origin), data = train)
+## 
+## # MSEP
+## mean((validation$mpg - predict(kre0, newdata = validation))^2)
+## mean((validation$mpg - predict(kre1, newdata = validation))^2)
+## mean((validation$mpg - predict(lm_mod, newdata = validation))^2)
+
 ## ---- ll-1, eval = TRUE--------------------------------------------------
 # Simulate some data
 n <- 200
