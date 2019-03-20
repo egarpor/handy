@@ -168,18 +168,18 @@ h_RT <- function(X, Y) {
                         6 * mod_Q$coefficients[4] * X +
                         12 * mod_Q$coefficients[5] * X^2)^2)
 
-  # h_ROT
+  # h_RT
   R_K <- 0.5 / sqrt(pi)
   ((R_K * int_sigma2_hat) / (theta_22_hat * length(X)))^(1 / 5)
 
 }
 
 # Selected bandwidth
-(h_ROT <- h_RT(X = X, Y = Y))
+(h_RT <- h_RT(X = X, Y = Y))
 
 # Local linear fit
-lp1_RT <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h_ROT, degree = 1,
-                               range.x = c(0, 10), gridsize = 500)
+lp1_RT <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h_RT, degree = 1,
+                              range.x = c(0, 10), gridsize = 500)
 
 # Quartic fit employed
 mod_Q <- lm(Y ~ poly(X, raw = TRUE, degree = 4))
