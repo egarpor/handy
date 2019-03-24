@@ -380,7 +380,6 @@ kre0
 plot(kre0, col = 2, type = "o")
 points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
-lines(x_grid, m(x_grid), col = 1)
 
 ## ---- np-2---------------------------------------------------------------
 # Local linear fit -- find first the CV bandwidth
@@ -393,7 +392,6 @@ kre1 <- np::npreg(bws = bw1)
 plot(kre1, col = 2, type = "o")
 points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
-lines(x_grid, m(x_grid), col = 1)
 
 ## ---- np-3---------------------------------------------------------------
 # Summary of the npregression object
@@ -406,6 +404,7 @@ head(kre0$eval)
 head(kre0$mean)
 
 # The evaluation points can be changed using "exdat"
+x_grid <- seq(1000, 5500, by = 5)
 kre0 <- np::npreg(bws = bw0, exdat = x_grid)
 kre1 <- np::npreg(bws = bw1, exdat = x_grid)
 
@@ -414,12 +413,11 @@ head(kre0$eval)
 
 # This allows to compare estimators in a more transparent form
 plot(X, Y)
-lines(x_grid, m(x_grid), col = 1)
 lines(kre0$eval$x_grid, kre0$mean, col = 2)
 lines(kre1$eval$x_grid, kre1$mean, col = 3)
 rug(X, side = 1); rug(Y, side = 2)
-legend("top", legend = c("True regression", "Nadaraya-Watson", "Local linear"),
-       lwd = 2, col = 1:3)
+legend("top", legend = c("Nadaraya-Watson", "Local linear"),
+       lwd = 2, col = 2:3)
 
 ## ---- np-4---------------------------------------------------------------
 # Generate some data with bimodal density

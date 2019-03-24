@@ -47,7 +47,7 @@ rgl::surface3d(x = x_grid, y = y_grid,
                col = "green", alpha = 0.25, lit = FALSE)
 rgl::rglwidget()
 
-## ---- mult-3, fig.margin = FALSE-----------------------------------------
+## ---- mult-3-------------------------------------------------------------
 # Employing the wine dataset
 # wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
 
@@ -81,7 +81,7 @@ apply(wine, 2, median)
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
 
-## ---- mult-4, fig.margin = FALSE-----------------------------------------
+## ---- mult-4-------------------------------------------------------------
 # The argument "xq" controls the conditioning quantile of the predictors, by 
 # default the median (xq = 0.5). But xq can be a vector of p quantiles, for 
 # example (0.25, 0.5, 0.25, 0.75) for (Age, WinterRain, AGST, HarvestRain)
