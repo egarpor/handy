@@ -64,14 +64,56 @@ bw_wine
 fit_wine <- np::npreg(bw_wine)
 summary(fit_wine)
 
-# Plot marginal effects of each predictor on the response
+# Plot the "marginal effects of each predictor" on the response
 plot(fit_wine)
-# Therefore:
+
+# These marginal effects are the p profiles of the estimated regression surface 
+# \hat{m}(x_1, ..., x_p) that are obtained by fixing the predictors to each of 
+# their median values. For example, the profile for Age is the curve
+# \hat{m}(x, median_WinterRain, median_AGST, median_HarvestRain). The medians
+# are:
+apply(wine, 2, median)
+
+# Therefore, conditionally on the median values of the precitors:
 # - Age is positively related with Price (almost linearly)
 # - WinterRain is positively related with Price (with a subtle nonlinearity)
 # - AGST is positively related with Price, but now we see what it looks like a
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
+
+## ---- mult-4, fig.margin = FALSE-----------------------------------------
+# The argument "xq" controls the conditioning quantile of the predictors, by 
+# default the median (xq = 0.5). But xq can be a vector of p quantiles, for 
+# example (0.25, 0.5, 0.25, 0.75) for (Age, WinterRain, AGST, HarvestRain)
+plot(fit_wine, xq = c(0.25, 0.5, 0.25, 0.75))
+
+# With "plot.behavior = data" the plot() function returns a list with the data 
+# for performing the plots
+res <- plot(fit_wine, xq = 0.5, plot.behavior = "data")
+str(res, 1)
+
+# Plot the marginal effect of AGST ($r3) alone
+head(res$r3$eval) # All the predictors are constant (medians, except age)
+plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST", 
+     ylab = "Marginal effect")
+
+# Plot the marginal effects of AGST for varying quantiles in the rest of 
+# predictors (all with the same quantile)
+tau <- seq(0.1, 0.9, by = 0.1)
+res <- plot(fit_wine, xq = tau[1], plot.behavior = "data")
+col <- viridis::viridis(length(tau))
+plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST", 
+     ylab = "Marginal effect", col = col[1], ylim = c(6, 9), 
+     main = "Marginal effects of AGST for varying quantiles in the predictors")
+for (i in 2:length(tau)) {
+  res <- plot(fit_wine, xq = tau[i], plot.behavior = "data")
+  lines(res$r3$eval$V3, res$r3$mean, col = col[i])
+}
+legend("topleft", legend = latex2exp::TeX(paste0("$\\tau =", tau, "$")), 
+       col = col, lwd = 2)
+
+# These quantiles are
+apply(wine[c("Price", "WinterRain", "HarvestRain")], 2, quantile, prob = tau)
 
 ## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2---------------------------
 # Bandwidth by CV for local linear estimator
@@ -87,10 +129,14 @@ bw_iris
 fit_iris <- np::npreg(bw_iris)
 summary(fit_iris)
 
-# Plot marginal effects of each predictor on the response
+# Plot marginal effects (for quantile 0.5) of each predictor on the response
 par(mfrow = c(1, 2))
 plot(fit_iris, plot.par.mfrow = FALSE)
 # Options for the plot method for np::npreg available at ?np::npplot
+
+# Plot marginal effects (for quantile 0.9) of each predictor on the response
+par(mfrow = c(1, 2))
+plot(fit_iris, xq = 0.9, plot.par.mfrow = FALSE)
 
 ## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3-----
 # Load data
@@ -211,10 +257,10 @@ fit_locfit <- locfit::locfit(Y ~ locfit::lp(X, deg = 1, nn = h),
 # Compare fits
 plot(x, p(x), ylim = c(0, 1.5), type = "l", lwd = 2)
 lines(x, logistic(fit_glm), col = 2)
-lines(x, logistic(fit_nlm), col = 2, lty = 2)
+lines(x, logistic(fit_nlm), col = 3, lty = 2)
 plot(fit_locfit, add = TRUE, col = 4)
 legend("topright", legend = c("p(x)", "glm", "nlm", "locfit"), lwd = 2,
-       col = c(1, 2, 2, 4), lty = c(1, 2, 1, 1))
+       col = c(1, 2, 3, 4), lty = c(1, 1, 2, 1))
 
 ## ---- ll-2, eval = TRUE--------------------------------------------------
 # Exact LCV - recall that we *maximize* the LCV!

@@ -175,10 +175,10 @@ h_RT <- function(X, Y) {
 }
 
 # Selected bandwidth
-(h_RT <- h_RT(X = X, Y = Y))
+(h_ROT <- h_RT(X = X, Y = Y))
 
 # Local linear fit
-lp1_RT <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h_RT, degree = 1,
+lp1_RT <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h_ROT, degree = 1,
                               range.x = c(0, 10), gridsize = 500)
 
 # Quartic fit employed
