@@ -28,6 +28,7 @@ Bk <- seq(t0, max(faithE), by = h)
 hist(faithE, probability = TRUE, breaks = Bk)
 rug(faithE) # The sample
 
+
 ## ---- hist-2, fig.asp = 1/2, fig.cap = '(ref:hist-2-title)', fig.margin = FALSE----
 # Uniform sample
 set.seed(1234567)
@@ -49,6 +50,13 @@ hist(u, probability = TRUE, breaks = Bk2, ylim = c(0, 1.5),
      main = "t0 = -0.1, h = 0.2")
 rug(u)
 abline(h = 1, col = 2)
+
+
+
+
+
+
+
 
 ## ---- kdeR, eval = TRUE--------------------------------------------------
 # Sample 100 points from a N(0, 1)
@@ -79,6 +87,9 @@ plot(kde$x, kde$y, type = "l")
 curve(dnorm(x), col = 2, add = TRUE) # True density
 rug(samp)
 
+
+
+
 ## ---- bwnrd--------------------------------------------------------------
 # Data
 set.seed(667478)
@@ -93,6 +104,7 @@ bw.nrd(x = x)
 iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 1.06 * n^(-1/5) * min(sd(x), iqr)
 
+
 ## ---- SJ-----------------------------------------------------------------
 # Data
 set.seed(672641)
@@ -103,6 +115,9 @@ bw.SJ(x = x, method = "dpi")
 
 # Similar to
 ks::hpi(x) # Default is two-stages
+
+
+
 
 ## ---- bw-ucv-mod---------------------------------------------------------
 # Data
@@ -157,6 +172,7 @@ bw.ucv.mod(x = x, plot.cv = TRUE)
 
 # We can compare with the default bw.ucv output
 abline(v = bw.ucv(x = x), col = 3)
+
 
 ## ---- bw-bcv-mod---------------------------------------------------------
 # Data
@@ -213,6 +229,7 @@ bw.bcv.mod(x = x, plot.cv = TRUE)
 # We can compare with the default bw.bcv output
 abline(v = bw.bcv(x = x), col = 3)
 
+
 ## ---- MW-----------------------------------------------------------------
 # Available models
 ?nor1mix::MarronWand
@@ -233,6 +250,11 @@ plot(nor1mix::MW.nm7)
 plot(nor1mix::MW.nm10)
 plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm1, col = 2:3) # Also possible
+
+
+
+
+
 
 ## ---- ks-2d-1------------------------------------------------------------
 # DPI selectors
@@ -262,6 +284,7 @@ plot(kdeHpi1, display = "filled.contour2", cont = c(25, 50, 75),
 plot(kdeHpi2, display = "filled.contour2", cont = c(25, 50, 75),
      main = "diagonal")
 
+
 ## ---- ks-2d-2, fig.margin = FALSE----------------------------------------
 # Comparison of selectors along predefined contours
 x <- faithful
@@ -277,6 +300,7 @@ p <- lapply(list(Hlscv0, Hbcv0, Hpi0, Hns0), function(H) {
   points(x, cex = 0.5, pch = 16)
 })
 
+
 ## ---- ks-3d, eval = knitr:::is_html_output()-----------------------------
 ## # Normal scale bandwidth
 ## Hns1 <- ks::Hns(iris[, 1:3])
@@ -285,6 +309,11 @@ p <- lapply(list(Hlscv0, Hbcv0, Hpi0, Hns0), function(H) {
 ## plot(ks::kde(x = iris[, 1:3], H = Hns1))
 ## points3d(x = iris[, 1:3])
 ## rgl::rglwidget()
+
+
+
+
+
 
 ## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE--------------
 # A naive implementation of the Nadaraya-Watson estimator
@@ -330,6 +359,9 @@ lines(xGrid, mNW(x = xGrid, X = X, Y = Y, h = h), col = 2)
 legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
+
+
+
 ## ---- nw-2, eval = FALSE-------------------------------------------------
 ## # Simple plot of N-W for varying h's
 ## manipulate::manipulate({
@@ -343,6 +375,13 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 ##          lwd = 2, col = 1:2)
 ## 
 ## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
+
+
+
+
+
+
+
 
 ## ---- lp-1---------------------------------------------------------------
 # Generate some data
@@ -392,6 +431,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
                             "Local linear (loess)"),
        lwd = 2, col = c(1:3, 2:3), lty = c(rep(1, 3), rep(2, 2)))
 
+
 ## ---- lp-2, eval = FALSE-------------------------------------------------
 ## # Simple plot of local polynomials for varying h's
 ## manipulate::manipulate({
@@ -409,7 +449,37 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 ## }, p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1),
 ## h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
 
+
 ## Under **A1**--**A5**, the conditional bias and variance of the local constant ($p=0$) and local linear ($p=1$) estimators are^[The notation $o_\mathbb{P}(a_n)$ stands for a random variable that converges in probability to zero at a rate faster than $a_n\to0$. It is mostly employed for denoting non-important terms in asymptotic expansions, like the ones in \@ref(eq:mbias)--\@ref(eq:mvar).]
+
+## 
+## \begin{align}
+
+## \mathrm{Bias}[\hat{m}(x;p,h)| X_1,\ldots,X_n]&=B_p(x)h^2+o_\mathbb{P}(h^2),(\#eq:mbias)\\
+
+## \mathbb{V}\mathrm{ar}[\hat{m}(x;p,h)| X_1,\ldots,X_n]&=\frac{R(K)}{nhf(x)}\sigma^2(x)+o_\mathbb{P}((nh)^{-1}),(\#eq:mvar)
+
+## \end{align}
+
+## 
+## where
+
+## 
+## \begin{align*}
+
+## B_p(x):=\begin{cases}
+
+## \frac{\mu_2(K)}{2}\left\{m''(x)+2\frac{m'(x)f'(x)}{f(x)}\right\},&\text{ if }p=0,\\
+
+## \frac{\mu_2(K)}{2}m''(x),&\text{ if }p=1.
+
+## \end{cases}
+
+## \end{align*}
+
+## 
+
+
 
 ## ---- bwd-1--------------------------------------------------------------
 # Generate some data
@@ -440,6 +510,7 @@ legend("bottom", legend = c("True regression", "Local linear",
                             "Local linear (DPI)"),
        lwd = 2, col = 1:3)
 
+
 ## ---- bwd-2, eval = FALSE------------------------------------------------
 ## # Grid for representing (6.26)
 ## hGrid <- seq(0.1, 1, l = 200)^2
@@ -452,7 +523,29 @@ legend("bottom", legend = c("True regression", "Local linear",
 ## rug(hGrid)
 ## abline(v = hGrid[which.min(error)], col = 2)
 
+
 ## For any $p\geq0$, the weights of the leave-one-out estimator $\hat{m}_{-i}(x;p,h)=\sum_{\substack{j=1\\j\neq i}}^nW_{-i,j}^p(x)Y_j$ can be obtained from $\hat{m}(x;p,h)=\sum_{i=1}^nW_{i}^p(x)Y_i$:
+
+## 
+## \begin{align*}
+
+## W_{-i,j}^p(x)=\frac{W^p_j(x)}{\sum_{\substack{k=1\\k\neq i}}^nW_k^p(x)}=\frac{W^p_j(x)}{1-W_i^p(x)}.
+
+## \end{align*}
+
+## 
+## This implies that
+
+## 
+## \begin{align}
+
+## \mathrm{CV}(h)=\frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i-\hat{m}(X_i;p,h)}{1-W_i^p(X_i)}\right)^2.(\#eq:cvfast)
+
+## \end{align}
+
+## 
+
+
 
 ## ---- bwd-3--------------------------------------------------------------
 # Generate some data to test the implementation
@@ -500,6 +593,7 @@ lines(xGrid, m(xGrid), col = 1)
 lines(xGrid, mNW(x = xGrid, X = X, Y = Y, h = hCV), col = 2)
 legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
+
 
 ## ---- bwd-4--------------------------------------------------------------
 # np::npregbw computes by default the least squares CV bandwidth associated to
@@ -555,6 +649,9 @@ lines(kre1$eval$xGrid, kre1$mean, col = 3)
 legend("top", legend = c("True regression", "Nadaraya-Watson", "Local linear"),
        lwd = 2, col = 1:3)
 
+
+
+
 ## ---- bwd-5, fig.margin = FALSE------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
@@ -591,6 +688,9 @@ legend("top", legend = c("True regression", "Fixed", "Generalized NN",
 # whereas in the high density regions they shrink to adapt faster to the
 # changes of the regression function
 
+
+
+
 ## ---- mult-2, fig.margin = FALSE-----------------------------------------
 # Employing the wine dataset
 # wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
@@ -617,6 +717,9 @@ plot(fitWine, )
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
 
+
+
+
 ## ---- mult-3, fig.margin = FALSE, fig.asp = 1/2--------------------------
 # Bandwidth by CV for local linear estimator
 # Recall that Species is a factor!
@@ -635,6 +738,7 @@ summary(fitIris)
 par(mfrow = c(1, 2))
 plot(fitIris, plot.par.mfrow = FALSE)
 # Options for the plot method for np::npreg available at ?np::npplot
+
 
 ## ---- mult-4, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
 # Example from ?np::npreg: modeling of the GDP growth of a country from
@@ -660,6 +764,7 @@ summary(fitOECD)
 # Plot marginal effects of each predictor on the response
 par(mfrow = c(2, 3))
 plot(fitOECD, plot.par.mfrow = FALSE)
+
 
 ## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
 # Asymptotic confidence bands for the marginal effects of each predictor on the
@@ -689,6 +794,11 @@ pred <- predict(fitOECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
 # the conditional mean of the first 3 points
 alpha <- 0.05
 pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
+
+
+
+
+
 
 ## ---- ll-1, eval = TRUE--------------------------------------------------
 # Simulate some data
@@ -732,10 +842,11 @@ fitLocfit <- locfit::locfit(Y ~ locfit::lp(X, deg = 1, nn = h),
 # Compare fits
 plot(x, p(x), ylim = c(0, 1.5), type = "l", lwd = 2)
 lines(x, logistic(fitGlm), col = 2)
-lines(x, logistic(fitNlm), col = 2, lty = 2)
+lines(x, logistic(fitNlm), col = 3, lty = 2)
 plot(fitLocfit, add = TRUE, col = 4)
 legend("topright", legend = c("p(x)", "glm", "nlm", "locfit"), lwd = 2,
-       col = c(1, 2, 2, 4), lty = c(1, 2, 1, 1))
+       col = c(1, 2, 3, 4), lty = c(1, 1, 2, 1))
+
 
 ## ---- ll-2, eval = TRUE--------------------------------------------------
 # Exact LCV - recall that we *maximize* the LCV!

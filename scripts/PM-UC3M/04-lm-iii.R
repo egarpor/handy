@@ -30,6 +30,9 @@ head(x[, 14:19])
 # We also need the vector of responses
 y <- Hitters$Salary
 
+
+
+
 ## ---- modelmatrix--------------------------------------------------------
 # Data with NA in the first observation
 data_na <- data.frame("x1" = rnorm(3), "x2" = rnorm(3), "y" = rnorm(3))
@@ -43,6 +46,7 @@ model.matrix(y ~ 0 + ., data = data_na, na.action = "na.pass")
 
 # Does not ignore NA's
 model.matrix.lm(y ~ 0 + ., data = data_na, na.action = "na.pass")
+
 
 ## ---- ridge-1------------------------------------------------------------
 # Call to the main function - use alpha = 0 for ridge regression
@@ -103,6 +107,7 @@ points(rep(log(ridgeMod$lambda[50]), nrow(ridgeMod$beta)), ridgeMod$beta[, 50],
 # The squared l2-norm of the coefficients decreases as lambda increases
 plot(log(ridgeMod$lambda), sqrt(colSums(ridgeMod$beta^2)), type = "l",
      xlab = "log(lambda)", ylab = "l2 norm")
+
 
 ## ---- ridge-2------------------------------------------------------------
 # If we want, we can choose manually the grid of penalty parameters to explore
@@ -165,6 +170,7 @@ ncvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvRidge)
 
+
 ## ---- ridge-3------------------------------------------------------------
 # The glmnet fit is inside the output of cv.glmnet
 modRidgeCV <- kcvRidge2$glmnet.fit
@@ -186,6 +192,9 @@ predict(modRidgeCV, type = "response", s = kcvRidge2$lambda.1se,
 plot(log(modRidgeCV$lambda),
      predict(modRidgeCV, type = "response", newx = x[1, , drop = FALSE]),
      type = "l", xlab = "log(lambda)", ylab = " Prediction")
+
+
+
 
 ## ---- ridge-4------------------------------------------------------------
 # Random data
@@ -220,6 +229,7 @@ betaLambdaHat
 
 # Analytical form with intercept
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
+
 
 ## ---- lasso-1------------------------------------------------------------
 # Get the Hitters data back
@@ -269,6 +279,7 @@ ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvLasso)
 
+
 ## ---- lasso-2------------------------------------------------------------
 # Inspect the best models
 modLassoCV <- kcvLasso$glmnet.fit
@@ -284,6 +295,7 @@ predict(modLassoCV, type = "coefficients",
 predict(modLassoCV, type = "response",
         s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se),
         newx = x[1:2, ])
+
 
 ## ---- lasso-3------------------------------------------------------------
 # We can use lasso for model selection!
@@ -308,6 +320,11 @@ summary(modBIC)
 # is the speed of lasso on selecting variables, and the fact that gives quite
 # good starting points for performing further model selection
 
+
+
+
+
+
 ## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'---------------------------
 # Random data with predictors unrelated with the response
 p <- 100
@@ -319,6 +336,7 @@ y <- 1 + rnorm(n)
 # CV
 lambdaGrid <- exp(seq(-10, 3, l = 200))
 plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
+
 
 ## ---- biglm-1------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
@@ -386,6 +404,7 @@ AIC(biglmMod, k = log(n))
 (s1$nullrss * (1 - s1$rsq)) / s1$obj$df.resid
 s2$sigma^2
 
+
 ## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'---------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
@@ -414,12 +433,14 @@ subs$which[which.min(subs$bic), ]
 MASS::stepAIC(lm(resp ~ ., data = bigData1), trace = 0,
               direction = "backward", k = log(n))
 
+
 ## ---- biglm-3------------------------------------------------------------
 # Size of the response
 print(object.size(rnorm(1e6)) * 1e2, units = "Gb")
 
 # Size of the predictors
 print(object.size(rnorm(1e6)) * 1e2 * 10, units = "Gb")
+
 
 ## ---- biglm-4------------------------------------------------------------
 # Linear regression with n = 10^8 and p = 10
