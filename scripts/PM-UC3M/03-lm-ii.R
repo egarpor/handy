@@ -27,6 +27,7 @@ car::scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
 
 ## ---- lmitcasesn, results = 'hide'------------------------------------------------
 # Data: n observations and p = n - 1 predictors
+set.seed(123456)
 n <- 5
 p <- n - 1
 df <- data.frame(y = rnorm(n), x = matrix(rnorm(n * p), nrow = n, ncol = p))
@@ -82,13 +83,85 @@ summary(modAIC)
 
 
 
+## ---- type-aic--------------------------------------------------------------------
+# Same BICs, different scale
+n <- nobs(modBIC)
+extractAIC(modBIC, k = log(n))[2]
+BIC(modBIC)
+# Observe that MASS::stepAIC(mod, k = log(nrow(wine))) returned as final BIC
+# the one given by extractAIC(), not by BIC()! But both are equivalent, they
+# just live in different scales
+
+# Same AICs, different scale
+extractAIC(modBIC, k = 2)[2]
+BIC(modBIC)
+
+# The additive constant: BIC() includes it but extractAIC() does not
+BIC(modBIC) - extractAIC(modBIC, k = log(n))[2]
+n * (log(2 * pi) + 1) + log(n)
+
+# Same for the AIC
+AIC(modAIC) - extractAIC(modAIC)[2]
+n * (log(2 * pi) + 1) + 2
+
+
+
+
 ## ---- bic-2-----------------------------------------------------------------------
-# Different search directions and omitting the trace,
-# gives only the final model
-modAICFor <- MASS::stepAIC(mod, trace = 0, direction = "forward")
-modAICBack <- MASS::stepAIC(mod, trace = 0, direction = "backward")
-modAICFor
-modAICBack
+# Add an irrelevant predictor to the wine dataset
+set.seed(123456)
+wineNoise <- wine
+n <- nrow(wineNoise)
+wineNoise$noisePredictor <- rnorm(n)
+
+# Backward selection: removes predictors sequentially from the given model
+
+# Starting from the model with all the predictors
+modAll <- lm(formula = Price ~ ., data = wineNoise)
+MASS::stepAIC(modAll, direction = "backward", k = log(n))
+
+# Starting from an intermediate model
+modInter <- lm(formula = Price ~ noisePredictor + Year + AGST, data = wineNoise)
+MASS::stepAIC(modInter, direction = "backward", k = log(n))
+# Recall that other predictors not included in modInter are not explored
+# during the search (so the relevant predictor HarvestRain is not added)
+
+# Forward selection: adds predictors sequentially from the given model
+
+# Starting from the model with no predictors, only intercept (denoted as ~ 1)
+modZero <- lm(formula = Price ~ 1, data = wineNoise)
+MASS::stepAIC(modZero, direction = "forward", 
+              scope = list(lower = modZero, upper = modAll), k = log(n))
+# It is very important to set the scope argument adequately when doing forward
+# search! In the scope you have to define the "minimum" (lower) and "maximum" 
+# (upper) models that contain the set of explorable models. If not provided,
+# the maximum model will be taken as the passed starting model (in this case
+# modZero) and stepAIC will not do any search
+
+# Starting from an intermediate model
+MASS::stepAIC(modInter, direction = "forward", 
+              scope = list(lower = modZero, upper = modAll), k = log(n))
+# Recall that predictors included in modInter are not dropped during the
+# search (so the irrelevant noisePredictor is kept)
+
+# Both selection: useful if starting from an intermediate model
+
+# Removes the problems associated to "backward" and "forward" searchs done
+# from intermediate models
+MASS::stepAIC(modInter, direction = "both", 
+              scope = list(lower = modZero, upper = modAll), k = log(n))
+# It is very important as well to correctly define the scope, because "both"
+# resorts to "forward" (as well as to "backward")
+
+# Using the defaults from the full model essentially does backward selection,
+# but allowing predictors that were removed to enter again at later steps
+MASS::stepAIC(modAll, direction = "both", k = log(n))
+
+# Omit lengthty outputs
+MASS::stepAIC(modAll, direction = "both", trace = 0,
+              scope = list(lower = modZero, upper = modAll), k = log(n))
+
+
 
 
 
