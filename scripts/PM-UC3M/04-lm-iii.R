@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- shrinkage----------------------------------------------------------
+## ---- shrinkage-------------------------------------------------------------------
 # Load data - baseball players statistics
 data(Hitters, package = "ISLR")
 
@@ -33,7 +33,7 @@ y <- Hitters$Salary
 
 
 
-## ---- modelmatrix--------------------------------------------------------
+## ---- modelmatrix-----------------------------------------------------------------
 # Data with NA in the first observation
 data_na <- data.frame("x1" = rnorm(3), "x2" = rnorm(3), "y" = rnorm(3))
 data_na$x1[1] <- NA
@@ -48,7 +48,7 @@ model.matrix(y ~ 0 + ., data = data_na, na.action = "na.pass")
 model.matrix.lm(y ~ 0 + ., data = data_na, na.action = "na.pass")
 
 
-## ---- ridge-1------------------------------------------------------------
+## ---- ridge-1---------------------------------------------------------------------
 # Call to the main function - use alpha = 0 for ridge regression
 library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0)
@@ -109,7 +109,7 @@ plot(log(ridgeMod$lambda), sqrt(colSums(ridgeMod$beta^2)), type = "l",
      xlab = "log(lambda)", ylab = "l2 norm")
 
 
-## ---- ridge-2------------------------------------------------------------
+## ---- ridge-2---------------------------------------------------------------------
 # If we want, we can choose manually the grid of penalty parameters to explore
 # The grid should be descending
 ridgeMod2 <- glmnet(x = x, y = y, alpha = 0, lambda = 100:1)
@@ -171,7 +171,7 @@ ncvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = nrow(Hitters),
 plot(ncvRidge)
 
 
-## ---- ridge-3------------------------------------------------------------
+## ---- ridge-3---------------------------------------------------------------------
 # The glmnet fit is inside the output of cv.glmnet
 modRidgeCV <- kcvRidge2$glmnet.fit
 
@@ -196,7 +196,7 @@ plot(log(modRidgeCV$lambda),
 
 
 
-## ---- ridge-4------------------------------------------------------------
+## ---- ridge-4---------------------------------------------------------------------
 # Random data
 p <- 5
 n <- 200
@@ -231,7 +231,7 @@ betaLambdaHat
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
 
 
-## ---- lasso-1------------------------------------------------------------
+## ---- lasso-1---------------------------------------------------------------------
 # Get the Hitters data back
 x <- model.matrix(Salary ~ 0 + ., data = Hitters) 
 y <- Hitters$Salary
@@ -280,7 +280,7 @@ ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
 plot(ncvLasso)
 
 
-## ---- lasso-2------------------------------------------------------------
+## ---- lasso-2---------------------------------------------------------------------
 # Inspect the best models
 modLassoCV <- kcvLasso$glmnet.fit
 plot(modLassoCV, label = TRUE, xvar = "lambda")
@@ -297,7 +297,7 @@ predict(modLassoCV, type = "response",
         newx = x[1:2, ])
 
 
-## ---- lasso-3------------------------------------------------------------
+## ---- lasso-3---------------------------------------------------------------------
 # We can use lasso for model selection!
 selPreds <- predict(modLassoCV, type = "coefficients",
                     s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se))[-1, ] != 0
@@ -325,7 +325,7 @@ summary(modBIC)
 
 
 
-## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'---------------------------
+## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'------------------------------------
 # Random data with predictors unrelated with the response
 p <- 100
 n <- 300
@@ -338,7 +338,7 @@ lambdaGrid <- exp(seq(-10, 3, l = 200))
 plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
 
 
-## ---- biglm-1------------------------------------------------------------
+## ---- biglm-1---------------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
 set.seed(12345)
 n <- 1e6
@@ -405,7 +405,7 @@ AIC(biglmMod, k = log(n))
 s2$sigma^2
 
 
-## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'---------------------------
+## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'------------------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
 plot(reg) # Plot best model (top row) to worst model (bottom row)
@@ -434,7 +434,7 @@ MASS::stepAIC(lm(resp ~ ., data = bigData1), trace = 0,
               direction = "backward", k = log(n))
 
 
-## ---- biglm-3------------------------------------------------------------
+## ---- biglm-3---------------------------------------------------------------------
 # Size of the response
 print(object.size(rnorm(1e6)) * 1e2, units = "Gb")
 
@@ -442,7 +442,7 @@ print(object.size(rnorm(1e6)) * 1e2, units = "Gb")
 print(object.size(rnorm(1e6)) * 1e2 * 10, units = "Gb")
 
 
-## ---- biglm-4------------------------------------------------------------
+## ---- biglm-4---------------------------------------------------------------------
 # Linear regression with n = 10^8 and p = 10
 n <- 10^8
 p <- 10
