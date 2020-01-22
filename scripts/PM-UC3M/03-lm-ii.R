@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- case2-2, eval = FALSE-----------------------------------------------------------------------------------------------
+## ---- case2-2, eval = FALSE------------------------------------
 ## # Read data
 ## Boston <- readxl::read_excel(path = "Boston.xlsx", sheet = 1, col_names = TRUE)
 ## 
@@ -15,17 +15,17 @@
 ## # data(Boston, package = "MASS")
 
 
-## ---- case2-3-------------------------------------------------------------------------------------------------------------
+## ---- case2-3--------------------------------------------------
 summary(Boston)
 
 
-## ---- scat2, fig.cap = '(ref:scat2-title)', fig.margin = FALSE------------------------------------------------------------
+## ---- scat2, fig.cap = '(ref:scat2-title)', fig.margin = FALSE----
 car::scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
                        col = 1, smooth = list(col.smooth = 4, col.spread = 4),
                        data = Boston)
 
 
-## ---- lmitcasesn, results = 'hide'----------------------------------------------------------------------------------------
+## ---- lmitcasesn, results = 'hide'-----------------------------
 # Data: n observations and p = n - 1 predictors
 set.seed(123456)
 n <- 5
@@ -43,7 +43,7 @@ summary(lm(y ~ . - x.1, data = df))
 
 
 
-## ---- case2-4-------------------------------------------------------------------------------------------------------------
+## ---- case2-4--------------------------------------------------
 # Two models with different predictors
 mod1 <- lm(medv ~ age + crim, data = Boston)
 mod2 <- lm(medv ~ age + crim + lstat, data = Boston)
@@ -63,12 +63,12 @@ summary(mod2)
 
 
 
-## ---- case2-6, eval = FALSE-----------------------------------------------------------------------------------------------
-## # Load data - notice that "Year" is also included
+## ---- case2-6, eval = FALSE------------------------------------
+## # Load data -- notice that "Year" is also included
 ## wine <- read.csv(file = "wine.csv", header = TRUE)
 
 
-## ---- bic-1---------------------------------------------------------------------------------------------------------------
+## ---- bic-1----------------------------------------------------
 # Full model
 mod <- lm(Price ~ ., data = wine)
 
@@ -83,7 +83,7 @@ summary(modAIC)
 
 
 
-## ---- type-aic------------------------------------------------------------------------------------------------------------
+## ---- type-aic-------------------------------------------------
 # Same BICs, different scale
 n <- nobs(modBIC)
 extractAIC(modBIC, k = log(n))[2]
@@ -107,7 +107,7 @@ n * (log(2 * pi) + 1) + 2
 
 
 
-## ---- bic-2---------------------------------------------------------------------------------------------------------------
+## ---- bic-2----------------------------------------------------
 # Add an irrelevant predictor to the wine dataset
 set.seed(123456)
 wineNoise <- wine
@@ -168,12 +168,12 @@ MASS::stepAIC(modAll, direction = "both", trace = 0,
 
 
 
-## ---- case2-7-------------------------------------------------------------------------------------------------------------
+## ---- case2-7--------------------------------------------------
 modHouse <- lm(medv ~ ., data = Boston)
 summary(modHouse)
 
 
-## ---- case2-8-------------------------------------------------------------------------------------------------------------
+## ---- case2-8--------------------------------------------------
 # Best models
 modBIC <- MASS::stepAIC(modHouse, k = log(nrow(Boston)))
 modAIC <- MASS::stepAIC(modHouse, trace = 0, k = 2)
@@ -188,8 +188,8 @@ confint(modBIC)
 
 
 
-## ---- qua-----------------------------------------------------------------------------------------------------------------
-# iris dataset - factors in the last column
+## ---- qua------------------------------------------------------
+# iris dataset -- factors in the last column
 summary(iris)
 
 # Summary of a linear model
@@ -228,7 +228,7 @@ contrasts(iris$Species)
 
 
 
-## ---- case2-9-------------------------------------------------------------------------------------------------------------
+## ---- case2-9--------------------------------------------------
 # Load the Boston dataset
 data(Boston, package = "MASS")
 
@@ -262,7 +262,7 @@ summary(modBIC)
 
 
 
-## ---- datatra-------------------------------------------------------------------------------------------------------------
+## ---- datatra--------------------------------------------------
 # Data
 x <- c(-2, -1.9, -1.7, -1.6, -1.4, -1.3, -1.1, -1, -0.9, -0.7, -0.6,
        -0.4, -0.3, -0.1, 0, 0.1, 0.3, 0.4, 0.6, 0.7, 0.9, 1, 1.1, 1.3,
@@ -294,7 +294,7 @@ summary(mod2)
 
 
 
-## ---- pol-1-1, fig.cap = '(ref:pol-1-1-title)'----------------------------------------------------------------------------
+## ---- pol-1-1, fig.cap = '(ref:pol-1-1-title)'-----------------
 x1 <- seq(-1, 1, l = 4)
 poly(x = x1, degree = 2, raw = TRUE) # (X, X^2)
 poly(x = x1, degree = 2) # By default, it employs orthogonal polynomials
@@ -307,14 +307,14 @@ matplot(x, poly(x, degree = degree, raw = TRUE), type = "l", lty = 1,
 legend("bottomright", legend = paste("k =", 1:degree), col = 1:degree, lwd = 2)
 
 
-## ---- pol-1-2, fig.cap = '(ref:pol-1-2-title)'----------------------------------------------------------------------------
+## ---- pol-1-2, fig.cap = '(ref:pol-1-2-title)'-----------------
 # Depiction of orthogonal polynomials
 matplot(x, poly(x, degree = degree), type = "l", lty = 1,
         ylab = expression(p[k](x)))
 legend("bottomright", legend = paste("k =", 1:degree), col = 1:degree, lwd = 2)
 
 
-## ---- pol-2-1, fig.cap = '(ref:pol-2-1-title)'----------------------------------------------------------------------------
+## ---- pol-2-1, fig.cap = '(ref:pol-2-1-title)'-----------------
 # Data containing speed (mph) and stopping distance (ft) of cars from 1920
 data(cars)
 plot(cars, xlab = "Speed (mph)", ylab = "Stopping distance (ft)")
@@ -333,11 +333,11 @@ lines(d, predict(mod2, new = data.frame(speed = d)), col = 3)
 mod3 <- lm(dist ~ poly(speed, degree = 3), data = cars)
 lines(d, predict(mod3, new = data.frame(speed = d)), col = 4)
 
-# 10th order - overfitting
+# 10th order -- overfitting
 mod10 <- lm(dist ~ poly(speed, degree = 10), data = cars)
 lines(d, predict(mod10, new = data.frame(speed = d)), col = 5)
 
-# BICs - the linear model is better!
+# BICs -- the linear model is better!
 BIC(mod1, mod2, mod3, mod10)
 
 # poly computes by default orthogonal polynomials. These are not
@@ -350,7 +350,7 @@ lines(d, predict(mod2, new = data.frame(speed = d)), col = 1)
 lines(d, predict(mod2Raw, new = data.frame(speed = d)), col = 2)
 
 
-## ---- pol-2-2, fig.cap = '(ref:pol-2-2-title)', fig.show = 'hold'---------------------------------------------------------
+## ---- pol-2-2, fig.cap = '(ref:pol-2-2-title)', fig.show = 'hold'----
 # However: different coefficient estimates, but same R^2. How is this possible?
 summary(mod2)
 summary(mod2Raw)
@@ -367,7 +367,7 @@ cor(mod2Raw$model[, -1])
 
 
 
-## ---- int-1---------------------------------------------------------------------------------------------------------------
+## ---- int-1----------------------------------------------------
 # Interaction between lstat and age
 summary(lm(medv ~ lstat + lstat:age, data = Boston))
 # For a unit increment in age, the effect of lstat in the response
@@ -386,7 +386,7 @@ summary(lm(medv ~ lstat * age * indus, data = Boston))
 
 
 
-## ---- int-2---------------------------------------------------------------------------------------------------------------
+## ---- int-2----------------------------------------------------
 # Include first-order interactions in the search for the best model in
 # terms of BIC, not just single predictors
 modIntBIC <- MASS::stepAIC(object = lm(medv ~ ., data = Boston),
@@ -401,7 +401,7 @@ MASS::addterm(modIntBIC, scope = lm(medv ~ .^2, data = Boston),
               k = log(nobs(modIntBIC)), sorted = TRUE)
 
 
-## ---- int-3---------------------------------------------------------------------------------------------------------------
+## ---- int-3----------------------------------------------------
 # Group settings
 col <- Boston$chas + 3
 cex <- 0.5 + 0.25 * Boston$chas
@@ -452,7 +452,7 @@ abline(a = mod7$coefficients[1], b = 0, col = 3, lwd = 2)
 abline(a = mod7$coefficients[1], b = mod7$coefficients[2], col = 4, lwd = 2)
 
 
-## ---- int-4---------------------------------------------------------------------------------------------------------------
+## ---- int-4----------------------------------------------------
 # Model using a dummy variable in the full dataset
 lm(medv ~ lstat + chas + lstat:chas, data = Boston)
 
@@ -466,7 +466,7 @@ lm(medv ~ lstat, data = Boston, subset = chas == 1)
 # joint model, plus the specific terms associated to chas
 
 
-## ---- int-5, fig.cap = '(ref:int-5-title)'--------------------------------------------------------------------------------
+## ---- int-5, fig.cap = '(ref:int-5-title)'---------------------
 # Does not take into account the groups in the data
 modIris <- lm(Sepal.Width ~ Petal.Width, data = iris)
 modIris$coefficients
@@ -496,7 +496,7 @@ abline(a = modIrisSpecies$coefficients[1] + modIrisSpecies$coefficients[4],
 
 
 
-## ---- case2-11, eval = FALSE----------------------------------------------------------------------------------------------
+## ---- case2-11, eval = FALSE-----------------------------------
 ## load("wine.RData")
 ## mod <- lm(Price ~ Age + AGST + HarvestRain + WinterRain, data = wine)
 ## summary(mod)
@@ -504,35 +504,35 @@ abline(a = modIrisSpecies$coefficients[1] + modIrisSpecies$coefficients[4],
 
 
 
-## ---- diag-1, fig.cap = '(ref:diag-1-title)'------------------------------------------------------------------------------
+## ---- diag-1, fig.cap = '(ref:diag-1-title)'-------------------
 plot(mod, 1)
 
 
 
 
-## ---- diag-2, fig.cap = '(ref:diag-2-title)'------------------------------------------------------------------------------
+## ---- diag-2, fig.cap = '(ref:diag-2-title)'-------------------
 par(mfrow = c(2, 2)) # We have 4 predictors
 termplot(mod, partial.resid = TRUE)
 
 
-## ---- diag-3, fig.cap = '(ref:diag-3-title)', fig.asp = 1/2---------------------------------------------------------------
+## ---- diag-3, fig.cap = '(ref:diag-3-title)', fig.asp = 1/2----
 par(mfrow = c(1, 2))
 plot(lm(y ~ x, data = nonLinear), 1) # Nonlinear
 plot(lm(y ~ I(x^2), data = nonLinear), 1) # Linear
 
 
-## ---- diag-4, fig.cap = '(ref:diag-4-title)'------------------------------------------------------------------------------
+## ---- diag-4, fig.cap = '(ref:diag-4-title)'-------------------
 plot(mod, 2)
 
 
-## ---- diag-5--------------------------------------------------------------------------------------------------------------
+## ---- diag-5---------------------------------------------------
 # Shapiro-Wilk test of normality
 shapiro.test(mod$residuals)
 # We do not reject normality
-# shapiro.test allows up to 5000 observations - if dealing with more data
+# shapiro.test allows up to 5000 observations -- if dealing with more data
 # points, randomization of the input is a possibility
 
-# Lilliefors test - the Kolmogorov-Smirnov adaptation for testing normality
+# Lilliefors test -- the Kolmogorov-Smirnov adaptation for testing normality
 nortest::lillie.test(mod$residuals)
 # We do not reject normality
 
@@ -543,7 +543,7 @@ nortest::lillie.test(mod$residuals)
 
 
 
-## ---- box-yeo, fig.asp = 1/2, fig.margin = FALSE--------------------------------------------------------------------------
+## ---- box-yeo, fig.asp = 1/2, fig.margin = FALSE---------------
 # Test data
 
 # Predictors
@@ -599,13 +599,13 @@ plot(lm(Y ~ X1 + X2), 2)
 plot(lm(YTransf ~ X1 + X2), 2) # Slightly better
 
 
-## ---- diag-6, fig.cap = '(ref:diag-6-title)'------------------------------------------------------------------------------
+## ---- diag-6, fig.cap = '(ref:diag-6-title)'-------------------
 plot(mod, 3)
 
 
 
 
-## ---- diag-7--------------------------------------------------------------------------------------------------------------
+## ---- diag-7---------------------------------------------------
 # Breusch-Pagan test
 car::ncvTest(mod)
 # We do not reject homoscedasticity
@@ -613,7 +613,7 @@ car::ncvTest(mod)
 
 
 
-## ---- breusch, fig.cap = '(ref:breusch-title)', fig.show = 'hold'---------------------------------------------------------
+## ---- breusch, fig.cap = '(ref:breusch-title)', fig.show = 'hold'----
 # Heteroskedastic models
 set.seed(123456)
 x <- rnorm(100)
@@ -631,7 +631,7 @@ car::ncvTest(modHet2)
 plot(modHet2, 3)
 
 
-## ---- diag-8, fig.cap = '(ref:diag-8-title)', fig.show = 'hold'-----------------------------------------------------------
+## ---- diag-8, fig.cap = '(ref:diag-8-title)', fig.show = 'hold'----
 # Artificial data with heteroskedasticity
 set.seed(12345)
 X <- rchisq(500, df = 3)
@@ -661,17 +661,17 @@ YTransf <- car::yjPower(U = Y, lambda = lambdaYJ)
 plot(lm(YTransf ~ X), 3) # Slightly less hereroskedastic
 
 
-## ---- diag-9, fig.cap = '(ref:diag-9-title)'------------------------------------------------------------------------------
+## ---- diag-9, fig.cap = '(ref:diag-9-title)'-------------------
 plot(mod$residuals, type = "o")
 
 
-## ---- diag-10-------------------------------------------------------------------------------------------------------------
+## ---- diag-10--------------------------------------------------
 lag.plot(mod$residuals, lags = 1, do.lines = FALSE)
 # No serious serial trend, but some negative autocorrelation is appreaciated
 cor(mod$residuals[-1], mod$residuals[-length(mod$residuals)])
 
 
-## ---- diag-11-------------------------------------------------------------------------------------------------------------
+## ---- diag-11--------------------------------------------------
 # Durbin-Watson test
 car::durbinWatsonTest(mod)
 # Does not reject at alpha = 0.05
@@ -683,7 +683,7 @@ car::durbinWatsonTest(mod)
 
 
 
-## ---- multico-1, message = FALSE, fig.cap = '(ref:multico-1-title)'-------------------------------------------------------
+## ---- multico-1, message = FALSE, fig.cap = '(ref:multico-1-title)'----
 # Numerically
 cor(wine)
 
@@ -691,7 +691,7 @@ cor(wine)
 corrplot::corrplot(cor(wine), addCoef.col = "grey")
 
 
-## ---- multico-2, fig.cap = '(ref:multico-2-title)'------------------------------------------------------------------------
+## ---- multico-2, fig.cap = '(ref:multico-2-title)'-------------
 # Create predictors with multicollinearity: x4 depends on the rest
 set.seed(45678)
 x1 <- rnorm(100)
@@ -703,11 +703,11 @@ x4 <- -x1 + x2 + rnorm(100, sd = 0.25)
 y <- 1 + 0.5 * x1 + 2 * x2 - 3 * x3 - x4 + rnorm(100)
 data <- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, y = y)
 
-# Correlations - none seems suspicious
+# Correlations -- none seems suspicious
 corrplot::corrplot(cor(data), addCoef.col = "grey")
 
 
-## ---- multico-3-----------------------------------------------------------------------------------------------------------
+## ---- multico-3------------------------------------------------
 # Abnormal variance inflation factors: largest for x4, we remove it
 modMultiCo <- lm(y ~ x1 + x2 + x3 + x4)
 car::vif(modMultiCo)
@@ -730,11 +730,11 @@ car::vif(modClean)
 
 
 
-## ---- outl-1, fig.cap = '(ref:outl-1-title)'------------------------------------------------------------------------------
+## ---- outl-1, fig.cap = '(ref:outl-1-title)'-------------------
 plot(mod, 5)
 
 
-## ---- outl-2--------------------------------------------------------------------------------------------------------------
+## ---- outl-2---------------------------------------------------
 # Create data
 set.seed(12345)
 x <- rnorm(100)
@@ -768,7 +768,7 @@ plot(m2, 5)
 summary(m2)
 
 
-## ---- outl-3--------------------------------------------------------------------------------------------------------------
+## ---- outl-3---------------------------------------------------
 # Access leverage statistics
 head(influence(model = m2, do.coef = FALSE)$hat)
 
@@ -795,25 +795,30 @@ points(qnorm(ppoints(n = n)), sort(rs), col = 2, pch = '+') # Manually computed
 
 
 
-## ---- laliga-2, eval = FALSE----------------------------------------------------------------------------------------------
+## ---- laliga-2, eval = FALSE-----------------------------------
 ## laliga <- readxl::read_excel("la-liga-2015-2016.xlsx", sheet = 1, col_names = TRUE)
 ## laliga <- as.data.frame(laliga) # Avoid tibble since it drops row.names
 
 
-## ---- laliga-3------------------------------------------------------------------------------------------------------------
+## ---- laliga-3-------------------------------------------------
 rownames(laliga) <- laliga$Team # Set teams as case names to avoid factors
 laliga$Team <- NULL
 laliga <- laliga[, -c(2, 8)] # Do not add irrelevant information
 summary(laliga)
 
 
-## ---- pca-1---------------------------------------------------------------------------------------------------------------
+## ---- pca-1----------------------------------------------------
 # PCA
-pcaLaliga <- princomp(laliga)
+pcaLaliga <- princomp(laliga, fix_sign = TRUE)
 summary(pcaLaliga)
 # The standard deviations are the square roots of the eigenvalues
 # The cumulative proportion of variance explained accumulates the
 # variance explained starting at the first component
+
+# We use fix_sign = TRUE so that the signs of the loadings are
+# determined by the first element of each loading, set to be
+# non-negative. Otherwise, the signs could change for different OS /
+# R versions yielding to opposite interpretations of the PCs
 
 # Plot of variances of each component (screeplot)
 plot(pcaLaliga, type = "l")
@@ -870,10 +875,10 @@ head(
   )
 
 
-## ---- pca-2, fig.show = 'hold', fig.cap = '(ref:pca-2-title)'-------------------------------------------------------------
+## ---- pca-2, fig.show = 'hold', fig.cap = '(ref:pca-2-title)'----
 # Use cor = TRUE to standardize variables (all have unit variance)
 # and avoid scale distortions
-pcaLaligaStd <- princomp(x = laliga, cor = TRUE)
+pcaLaligaStd <- princomp(x = laliga, cor = TRUE, fix_sign = TRUE)
 summary(pcaLaligaStd)
 
 # The effects of the distorsion can be clearly seen with the biplot
@@ -886,16 +891,16 @@ biplot(pcaLaligaStd, cex = 0.75)
 
 
 
-## ---- pca-4, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:pca-4-title)'----------------------------------------------
+## ---- pca-4, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:pca-4-title)'----
 biplot(pcaLaligaStd, cex = 0.75)
 
 
-## ---- pca3d, eval = knitr:::is_html_output()------------------------------------------------------------------------------
+## ---- pca3d, eval = knitr:::is_html_output()-------------------
 ## pca3d::pca3d(pcaLaligaStd, show.labels = TRUE, biplot = TRUE)
 ## rgl::rglwidget()
 
 
-## ---- pca-5, fig.cap = '(ref:pca-5-title)', fig.show = 'hold'-------------------------------------------------------------
+## ---- pca-5, fig.cap = '(ref:pca-5-title)', fig.show = 'hold'----
 biplot(pcaLaligaStd, choices = c(1, 3)) # 0.7138 proportion of variance
 biplot(pcaLaligaStd, choices = c(2, 3)) # 0.2180 proportion of variance
 
@@ -904,7 +909,7 @@ biplot(pcaLaligaStd, choices = c(2, 3)) # 0.2180 proportion of variance
 
 
 
-## ---- pcr-1---------------------------------------------------------------------------------------------------------------
+## ---- pcr-1----------------------------------------------------
 # A linear model is problematic
 mod <- lm(Points ~ . - Wins - Draws - Loses - Matches.without.conceding,
           data = laliga)
@@ -921,7 +926,7 @@ car::vif(modBIC)
 laligaRed <- subset(laliga, select = -c(Points, Wins, Draws, Loses,
                                         Matches.without.conceding))
 # PCA without Points, Wins, Draws, Loses, and Matches.without.conceding
-pcaLaligaRed <- princomp(x = laligaRed, cor = TRUE)
+pcaLaligaRed <- princomp(x = laligaRed, cor = TRUE, fix_sign = TRUE)
 summary(pcaLaligaRed) # l = 3 gives 86% of variance explained
 
 # Interpretation of PC1 and PC2
@@ -933,7 +938,7 @@ laligaPCA <- data.frame("Points" = laliga$Points, pcaLaligaRed$scores)
 
 # Regression on all the principal components
 modPCA <- lm(Points ~ ., data = laligaPCA)
-summary(modPCA) # Predictors clearly significative - same R^2 as mod
+summary(modPCA) # Predictors clearly significative -- same R^2 as mod
 car::vif(modPCA) # No problems at all
 
 # Using the first three components
@@ -946,7 +951,7 @@ gamma <- pcaLaligaRed$loadings[, 1:3] %*% alpha[-1] # Slopes
 gamma <- c(alpha[1] - pcaLaligaRed$center %*% gamma, gamma) # Intercept
 gamma
 
-# We can overpenalize to have a simpler model - also one single
+# We can overpenalize to have a simpler model -- also one single
 # principal component does quite well
 modPCABIC <- MASS::stepAIC(modPCA, k = 2 * log(nrow(laliga)), trace = 0)
 summary(modPCABIC)
@@ -958,7 +963,7 @@ summary(modPCABIC)
 # Predictions for FCB and RMA (although they are part of the training sample)
 newPredictors <- laligaRed[1:2, ]
 newPredictors <- scale(newPredictors, center = pcaLaligaRed$center,
-                       scale = pcaLaligaRed$scale) # Centred and scaled
+                       scale = pcaLaligaRed$scale) # Centered and scaled
 newScores <- t(apply(newPredictors, 1,
                      function(x) t(pcaLaligaRed$loadings) %*% x))
 
@@ -970,7 +975,7 @@ predict(modPCABIC, newdata = newScores, interval = "prediction")
 laliga[1:2, 1]
 
 
-## ---- pcr-2---------------------------------------------------------------------------------------------------------------
+## ---- pcr-2----------------------------------------------------
 # Create a dataset without the problematic predictors and with the response
 laligaRed2 <- subset(laliga, select = -c(Wins, Draws, Loses,
                                          Matches.without.conceding))
@@ -980,7 +985,8 @@ library(pls)
 modPcr <- pcr(Points ~ ., data = laligaRed2, scale = TRUE)
 # Notice we do not need to create a data.frame with PCA, it is automatically
 # done within pcr. We also have flexibility to remove predictors from the PCA
-# scale = TRUE means that the variables are scaled prior to compute PCA
+# scale = TRUE means that the predictors are scaled internally before computing
+# PCA
 
 # The summary of the model is different
 summary(modPcr)
@@ -989,7 +995,7 @@ summary(modPcr)
 # Note that we have the same R^2 for 3 and 12 components as in the previous
 # approach
 
-# Slots of information in the model - most of them as 3-dim arrays with the
+# Slots of information in the model -- most of them as 3-dim arrays with the
 # third dimension indexing the number of components considered
 names(modPcr)
 
@@ -1028,7 +1034,7 @@ validationplot(modPcrCV10, val.type = "MSEP") # l = 6 gives the minimum CV
 
 
 
-## ---- pcr-3---------------------------------------------------------------------------------------------------------------
+## ---- pcr-3----------------------------------------------------
 # Equality of loadings from princomp() and pcr()
 max(abs(abs(pcaLaligaRed$loadings[, 1:3]) - abs(modPcr$loadings[, 1:3])))
 
@@ -1041,7 +1047,7 @@ max(abs(abs(pcaLaligaRed$scores[, 1:3]) -
 modPcr$coefficients[, , 3] / sqrt(n / (n - 1))
 gamma[-1]
 
-# Coefficients associated to the principal components - same as in modPCA3
+# Coefficients associated to the principal components -- same as in modPCA3
 lm(Points ~ ., data = data.frame("Points" = laliga$Points,
                                  modPcr$scores[, 1:3] * sqrt(n / (n - 1))))
 modPCA3
@@ -1054,8 +1060,8 @@ modPCA3
 
 
 
-## ---- pls-1---------------------------------------------------------------------------------------------------------------
-# Simple call to plsr - very similar to pcr
+## ---- pls-1----------------------------------------------------
+# Simple call to plsr -- very similar to pcr
 modPls <- plsr(Points ~ ., data = laligaRed2, scale = TRUE)
 
 # The summary of the model
@@ -1107,8 +1113,8 @@ validationplot(modPlsCV10, val.type = "MSEP")
 # Create a new dataset with the response + PLS components
 laligaPLS <- data.frame("Points" = laliga$Points, cbind(modPls$scores))
 
-# Regression on all principal components
+# Regression on the first two PLS
 modPLS <- lm(Points ~ Comp.1 + Comp.2, data = laligaPLS)
-summary(modPLS) # Predictors clearly significative - same R^2 as in modPls2
+summary(modPLS) # Predictors clearly significative -- same R^2 as in modPls2
 car::vif(modPLS) # No problems at all
 

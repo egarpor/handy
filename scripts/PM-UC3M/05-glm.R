@@ -7,18 +7,18 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- challenger-load, eval = FALSE---------------------------------------------------------------------------------------
+## ---- challenger-load, eval = FALSE----------------------------
 ## challenger <- read.table(file = "challenger.txt", header = TRUE, sep = "\t")
 
 
-## ---- challengerfigs------------------------------------------------------------------------------------------------------
+## ---- challengerfigs-------------------------------------------
 car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger, subset = nfails.field > 0)
 car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger)
 
 
-## ---- nasadiag------------------------------------------------------------------------------------------------------------
+## ---- nasadiag-------------------------------------------------
 mod <- lm(nfails.field ~ temp, data = challenger)
 plot(mod, 1)
 plot(mod, 2)
@@ -30,7 +30,7 @@ plot(mod, 2)
 
 
 
-## ---- logcurve------------------------------------------------------------------------------------------------------------
+## ---- logcurve-------------------------------------------------
 # Logistic regression: computed with glm and family = "binomial"
 nasa <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 
@@ -49,14 +49,14 @@ points(-0.6, 1, pch = 16)
 text(-0.6, 1, labels = "Challenger", pos = 4)
 
 
-## ---- logsummary----------------------------------------------------------------------------------------------------------
+## ---- logsummary-----------------------------------------------
 # Exponentiated coefficients ("odds ratios")
 exp(coef(nasa))
 
 
 
 
-## ---- modform-1-----------------------------------------------------------------------------------------------------------
+## ---- modform-1------------------------------------------------
 # Data
 set.seed(34567)
 x <- rnorm(50, sd = 1.5)
@@ -71,7 +71,7 @@ y3 <- rbinom(50, size = 1, prob = 1 / (1 + exp(-y3)))
 dataMle <- data.frame(x = x, y1 = y1, y2 = y2, y3 = y3)
 
 
-## ---- modform-2, fig.cap = '(ref:modform-2-title)'------------------------------------------------------------------------
+## ---- modform-2, fig.cap = '(ref:modform-2-title)'-------------
 # Call glm
 mod <- glm(y1 ~ x, family = "binomial", data = dataMle)
 mod$coefficients
@@ -121,11 +121,11 @@ filled.contour(beta0, beta1, -L, color.palette = viridis::viridis,
 
 
 
-## ---- pois-load, eval = FALSE---------------------------------------------------------------------------------------------
+## ---- pois-load, eval = FALSE----------------------------------
 ## species <- read.table("species.txt", header = TRUE)
 
 
-## ---- poiscurve-----------------------------------------------------------------------------------------------------------
+## ---- poiscurve------------------------------------------------
 # Data
 plot(Species ~ Biomass, data = species, col = pH)
 legend("topright", legend = c("Low pH", "Medium pH", "High pH"),
@@ -149,7 +149,7 @@ species2 <- glm(Species ~ Biomass * pH, data = species, family = poisson)
 summary(species2)
 exp(species2$coefficients)
 # - If pH decreases to med (low), then the effect of the biomass in the number
-#   of species decreases by a factor of 0.8564 (0.9686). The higher the pH, the
+#   of species decreases by a factor of 0.9686 (0.8564). The higher the pH, the
 #   stronger the effect of the Biomass in Species
 
 # Draw fits
@@ -184,7 +184,7 @@ lines(bio, exp(species2$coefficients[4] + species2$coefficients[6] * bio  + z),
 
 
 
-## ---- nasa-case-1, message = FALSE----------------------------------------------------------------------------------------
+## ---- nasa-case-1, message = FALSE-----------------------------
 # Summary of the model
 summary(nasa)
 
@@ -198,26 +198,26 @@ confint.default(nasa, level = 0.90)
 exp(confint.default(nasa))
 
 
-## ---- testcoef-1----------------------------------------------------------------------------------------------------------
+## ---- testcoef-1-----------------------------------------------
 # Significances with asymptotic approximation for the standard errors
 summary(nasa)
 
-# CIs with asymptotic approximation - coherent with summary
+# CIs with asymptotic approximation -- coherent with summary
 confint.default(nasa, level = 0.95)
 confint.default(nasa, level = 0.99)
 
-# CIs with profile likelihood - incoherent with summary
+# CIs with profile likelihood -- incoherent with summary
 confint(nasa, level = 0.95) # intercept still significant
 confint(nasa, level = 0.99) # temp still significant
 
 
 
 
-## ---- pred-case-1---------------------------------------------------------------------------------------------------------
+## ---- pred-case-1----------------------------------------------
 predict(nasa, newdata = data.frame(temp = -0.6), type = "response")
 
 
-## ---- pred-case-2---------------------------------------------------------------------------------------------------------
+## ---- pred-case-2----------------------------------------------
 # Function for computing the predictions and CIs for the conditional probability
 predictCIsLogistic <- function(object, newdata, level = 0.95) {
 
@@ -242,7 +242,7 @@ predictCIsLogistic <- function(object, newdata, level = 0.95) {
 }
 
 
-## ---- pred-case-3---------------------------------------------------------------------------------------------------------
+## ---- pred-case-3----------------------------------------------
 # Data for which we want a prediction
 newdata <- data.frame(temp = -0.6)
 
@@ -269,7 +269,7 @@ predictCIsLogistic(nasa, newdata = newdata)
 
 
 
-## ---- deviance-1----------------------------------------------------------------------------------------------------------
+## ---- deviance-1-----------------------------------------------
 # Summary of model
 nasa <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 summaryLog <- summary(nasa)
@@ -281,7 +281,7 @@ null <- glm(fail.field ~ 1, family = "binomial", data = challenger)
 summaryNull <- summary(null)
 summaryNull
 
-# Computation of the R^2 with a function - useful for repetitive computations
+# Computation of the R^2 with a function -- useful for repetitive computations
 r2glm <- function(model) {
 
   summaryLog <- summary(model)
@@ -294,7 +294,7 @@ r2glm(nasa)
 r2glm(null)
 
 
-## ---- deviance-2----------------------------------------------------------------------------------------------------------
+## ---- deviance-2-----------------------------------------------
 # Polynomial predictors
 nasa0 <- glm(fail.field ~ 1, family = "binomial", data = challenger)
 nasa1 <- glm(fail.field ~ temp, family = "binomial", data = challenger)
@@ -321,7 +321,7 @@ r2glm(nasa1)
 r2glm(nasa2)
 r2glm(nasa3)
 
-# Chisq and F tests - same results since phi is known
+# Chisq and F tests -- same results since phi is known
 anova(nasa1, test = "Chisq")
 anova(nasa1, test = "F")
 
@@ -342,7 +342,7 @@ r2glm(species1)
 r2glm(species2)
 
 
-## ---- glmmodsel-1---------------------------------------------------------------------------------------------------------
+## ---- glmmodsel-1----------------------------------------------
 # Models
 nasa1 <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 nasa2 <- glm(fail.field ~ temp + pres.field, family = "binomial",
@@ -357,7 +357,7 @@ AIC(nasa1) # Better
 AIC(nasa2)
 
 
-## ---- glmmodsel-2---------------------------------------------------------------------------------------------------------
+## ---- glmmodsel-2----------------------------------------------
 # Boston dataset
 data(Boston, package = "MASS")
 
@@ -366,13 +366,13 @@ mod <- glm(I(medv > 25) ~ ., data = Boston, family = "binomial")
 summary(mod)
 r2glm(mod)
 
-# With BIC - ends up with only the significant variables and a similar R^2
+# With BIC -- ends up with only the significant variables and a similar R^2
 modBIC <- MASS::stepAIC(mod, trace = 0, k = log(nrow(Boston)))
 summary(modBIC)
 r2glm(modBIC)
 
 
-## ---- glmmodsel-3---------------------------------------------------------------------------------------------------------
+## ---- glmmodsel-3----------------------------------------------
 # Fitted probabilities for Y = 1
 nasa$fitted.values
 
@@ -424,7 +424,7 @@ sum(diag(tab)) / sum(tab)
 
 
 
-## ---- moddiag-1-----------------------------------------------------------------------------------------------------------
+## ---- moddiag-1------------------------------------------------
 # Create predictors with multicollinearity: x4 depends on the rest
 set.seed(45678)
 x1 <- rnorm(100)
@@ -437,7 +437,7 @@ z <- 1 + 0.5 * x1 + 2 * x2 - 3 * x3 - x4
 y <- rbinom(n = 100, size = 1, prob = 1/(1 + exp(-z)))
 data <- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, y = y)
 
-# Correlations - none seems suspicious
+# Correlations -- none seems suspicious
 cor(data)
 
 # Abnormal generalized variance inflation factors: largest for x4, we remove it
@@ -457,7 +457,7 @@ car::vif(modClean)
 
 
 
-## ---- glmshrinkage--------------------------------------------------------------------------------------------------------
+## ---- glmshrinkage---------------------------------------------
 # Load data
 data(Hitters, package = "ISLR")
 
@@ -472,7 +472,7 @@ y <- Hitters$League
 x <- model.matrix(League ~ ., data = Hitters)[, -1]
 
 
-## ---- glmshr-1------------------------------------------------------------------------------------------------------------
+## ---- glmshr-1-------------------------------------------------
 # Ridge and lasso regressions
 library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0, family = "binomial")
@@ -497,7 +497,7 @@ plot(kcvLasso)
 kcvLasso$lambda.min
 kcvLasso$lambda.1se
 
-# Leave-one-out cross-validation - similar result
+# Leave-one-out cross-validation -- similar result
 ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
                       family = "binomial")
 plot(ncvLasso)
@@ -508,11 +508,11 @@ ncvLasso$lambda.1se
 predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
 
 
-## ---- glmshr-2, fig.asp = 1/2---------------------------------------------------------------------------------------------
+## ---- glmshr-2, fig.asp = 1/2----------------------------------
 # Analyse the selected model)
 fit <- glm(League ~ HmRun, data = Hitters, family = "binomial")
 summary(fit)
-# HmRun is significant - but it may be spurious due to the model selection
+# HmRun is significant -- but it may be spurious due to the model selection
 # procedure (see Appendix A.5)
 
 # Let's split the dataset in two, do model-selection in one part and then
@@ -545,7 +545,7 @@ sum(diag(H)) / sum(H) # Worse than tossing a coin!
 
 
 
-## ---- bigglm-1------------------------------------------------------------------------------------------------------------
+## ---- bigglm-1-------------------------------------------------
 # Not really "big data", but for the sake of illustration
 set.seed(12345)
 n <- 1e6
@@ -570,11 +570,11 @@ bigData1ff <- read.table.ffdf(file = "bigData1.csv", header = TRUE, sep = ",")
 bigData2ff <- read.table.ffdf(file = "bigData2.csv", header = TRUE, sep = ",")
 
 # Recall: bigData1.csv is not copied into RAM
-print(object.size(bigData1), units = "Mb")
-print(object.size(bigData1ff), units = "Kb")
+print(object.size(bigData1), units = "MiB")
+print(object.size(bigData1ff), units = "KiB")
 
 # Logistic regression
-# Same comments for the formula framework - this is the hack for automatic
+# Same comments for the formula framework -- this is the hack for automatic
 # inclusion of all the predictors
 library(biglm)
 f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
@@ -583,9 +583,9 @@ bigglmMod <- bigglm.ffdf(formula = f, data = bigData1ff, family = binomial())
 # glm's call
 glmMod <- glm(formula = resp ~ ., data = bigData1, family = binomial())
 
-# Comapre sizes
-print(object.size(bigglmMod), units = "Kb")
-print(object.size(glmMod), units = "Mb")
+# Compare sizes
+print(object.size(bigglmMod), units = "KiB")
+print(object.size(glmMod), units = "MiB")
 
 # Summaries
 s1 <- summary(bigglmMod)
@@ -619,7 +619,7 @@ file.remove(c("bigData1.csv", "bigData2.csv"))
 ## Note that this is also a perfectly **valid approach for linear models**, we just need to specify `family = gaussian()` in the call to `bigglm.ffdf`.
 
 
-## ---- bigglm-2------------------------------------------------------------------------------------------------------------
+## ---- bigglm-2-------------------------------------------------
 # Model selection adapted to big data generalized linear models
 reg <- leaps::regsubsets(bigglmMod, nvmax = p + 1, method = "exhaustive")
 # This takes the QR decomposition, which encodes the linear model associated to
