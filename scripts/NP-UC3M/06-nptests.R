@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- ks-1, fig.cap = '(ref:ks-1-title)', fig.margin = FALSE-------------
+## ---- ks-1, fig.cap = '(ref:ks-1-title)', fig.margin = FALSE-----------------------------------------------------------
 # Sample data with H_0 true
 n <- 20
 mu0 <- 2; sd0 <- 1
@@ -31,7 +31,10 @@ rug(samp)
 legend("topleft", lwd = 2, col = c(1:2, 4), 
        legend = latex2exp::TeX(c("$F_n$", "$F_0$", "sup_x|F_n(x)-F_0(x)|")))
 
-## ---- ks-2---------------------------------------------------------------
+
+
+
+## ---- ks-2-------------------------------------------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 n <- 50
 set.seed(3245678)
@@ -49,7 +52,8 @@ ks.test(x = x, y = "pnorm", mean = 0.5)
 # Kolmogorov-Smirnov test for H_0: F = Exp(2). Strongly rejects.
 ks.test(x = x, y = "pexp", rate = 1/2)
 
-## ---- ks-3---------------------------------------------------------------
+
+## ---- ks-3-------------------------------------------------------------------------------------------------------------
 # Sample data from a Pois(5)
 n <- 100
 set.seed(3245678)
@@ -77,6 +81,9 @@ dgof::ks.test(x = x, y = ppois_stepfun)
 # If data is normally distributed, the test rejects H_0
 dgof::ks.test(x = rnorm(n = n, mean = 5), y = ppois_stepfun)
 
+
+
+
 ## ---- ks-4, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ks-4-title)', out.width = '100%'----
 # Simulation of p-values when H_0 is true
 set.seed(131231)
@@ -103,7 +110,10 @@ hist(pvalues_H1, breaks = seq(0, 1, l = 20), probability = TRUE,
      main = latex2exp::TeX("$H_1$"), ylim = c(0, 3.5))
 abline(h = 1, col = 2)
 
-## ---- cvm-1--------------------------------------------------------------
+
+
+
+## ---- cvm-1------------------------------------------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -133,7 +143,10 @@ dgof::cvm.test(x = x, y = ppois_stepfun)
 # Plot the asymptotic null distribution function
 curve(goftest::pCvM(x), from = 0, to = 1, n = 300)
 
-## ---- ad-1---------------------------------------------------------------
+
+
+
+## ---- ad-1-------------------------------------------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -160,7 +173,14 @@ dgof::cvm.test(x = x, y = ppois_stepfun, type = "A2")
 # Plot the asymptotic null distribution function
 curve(goftest::pAD(x), from = 0, to = 5, n = 300)
 
-## ---- norm-1-------------------------------------------------------------
+
+
+
+
+
+
+
+## ---- norm-1-----------------------------------------------------------------------------------------------------------
 # Sample data from a N(10, 1)
 set.seed(123456)
 n <- 100
@@ -185,7 +205,8 @@ ks.test(x = x, y = "pnorm", mean = mean(x), sd = sd(x))
 goftest::cvm.test(x = x, null = "pnorm", mean = mean(x), sd = sd(x))
 goftest::ad.test(x = x, null = "pnorm", mean = mean(x), sd = sd(x))
 
-## ---- qq, fig.cap = '(ref:qq-title)'-------------------------------------
+
+## ---- qq, fig.cap = '(ref:qq-title)'-----------------------------------------------------------------------------------
 n <- 100
 mu <- 10; sigma <- 2
 set.seed(12345678)
@@ -193,7 +214,8 @@ x <- rnorm(n, mean = mu, sd = sigma)
 qqnorm(x)
 abline(a = mu, b = sigma, col = 2)
 
-## ---- conf-qq, echo = FALSE, fig.cap = '(ref:conf-qq-title)'-------------
+
+## ---- conf-qq, echo = FALSE, fig.cap = '(ref:conf-qq-title)'-----------------------------------------------------------
 M <- 1e3
 n <- 100
 plot(0, 0, xlim = c(-3.5, 3.5), ylim = c(-3.5, 3.5), type = "n",
@@ -210,7 +232,8 @@ lines(xi, xi - qnorm(0.975) / sqrt(n) * sqrt(p * (1 - p)) / dnorm(xi),
 lines(xi, xi + qnorm(0.975) / sqrt(n) * sqrt(p * (1 - p)) / dnorm(xi),
       col = 2, lwd = 2)
 
-## ---- norm-2-------------------------------------------------------------
+
+## ---- norm-2-----------------------------------------------------------------------------------------------------------
 # Does not reject H0
 set.seed(123456)
 n <- 100
@@ -224,7 +247,8 @@ nortest::sf.test(x)
 # Test statistic
 cor(x = sort(x), y = qnorm(ppoints(n, a = 3/8)))^2
 
-## ---- gof-1--------------------------------------------------------------
+
+## ---- gof-1------------------------------------------------------------------------------------------------------------
 # A goodness-of-fit test of the exponential distribution using the Cramér-von 
 # Mises statistic
 cvm_exp_test <- function(x, B = 5e3, plot_boot = TRUE) {
@@ -291,7 +315,8 @@ cvm_exp_test(x = x, B = 1e3)
 x <- rgamma(n = 100, shape = 2, scale = 1)
 cvm_exp_test(x = x, B = 1e3)
 
-## ---- gof-2--------------------------------------------------------------
+
+## ---- gof-2------------------------------------------------------------------------------------------------------------
 # A goodness-of-fit test of a mixture of m normals using the Cramér-von Mises 
 # statistic
 cvm_nm_test <- function(x, m, B = 1e3, plot_boot = TRUE) {

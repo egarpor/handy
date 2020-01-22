@@ -7,55 +7,58 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- mult-1-------------------------------------------------------------
-# Sample data from a bivariate regression
-n <- 300
-set.seed(123456)
-X <- mvtnorm::rmvnorm(n = n, mean = c(0, 0), 
-                      sigma = matrix(c(2, 0.5, 0.5, 1.5), nrow = 2, ncol = 2))
+## ---- mult-1, eval = knitr:::is_html_output()--------------------------------------------------------------------------
+## # Sample data from a bivariate regression
+## n <- 300
+## set.seed(123456)
+## X <- mvtnorm::rmvnorm(n = n, mean = c(0, 0),
+##                       sigma = matrix(c(2, 0.5, 0.5, 1.5), nrow = 2, ncol = 2))
+## 
+## m <- function(x) 0.5 * (x[, 1]^2 + x[, 2]^2)
+## epsilon <- rnorm(n)
+## Y <- m(x = X) + epsilon
+## 
+## # Plot sample and regression function
+## rgl::plot3d(x = X[, 1], y = X[, 2], z = Y, xlim = c(-3, 3), ylim = c(-3, 3),
+##             zlim = c(-4, 10), xlab = "X1", ylab = "X2", zlab = "Y")
+## lx <- ly <- 50
+## x_grid <- seq(-3, 3, l = lx)
+## y_grid <- seq(-3, 3, l = ly)
+## xy_grid <- as.matrix(expand.grid(x_grid, y_grid))
+## rgl::surface3d(x = x_grid, y = y_grid,
+##                z = matrix(m(xy_grid), nrow = lx, ncol = ly),
+##                col = "lightblue", alpha = 1, lit = FALSE)
+## 
+## # Local constant fit
+## 
+## # An alternative for calling np::npregbw without formula
+## out <- capture.output(bw0 <- np::npregbw(xdat = X, ydat = Y, regtype = "lc"))
+## # capture.output() to remove the multistart messages
+## kre0 <- np::npreg(bws = bw0, exdat = xy_grid) # Evaluation grid is now a matrix
+## rgl::surface3d(x = x_grid, y = y_grid,
+##                z = matrix(kre0$mean, nrow = lx, ncol = ly),
+##                col = "red", alpha = 0.25, lit = FALSE)
+## 
+## # Local linear fit
+## out <- capture.output(bw1 <- np::npregbw(xdat = X, ydat = Y, regtype = "ll"))
+## kre1 <- np::npreg(bws = bw1, exdat = xy_grid)
+## rgl::surface3d(x = x_grid, y = y_grid,
+##                z = matrix(kre1$mean, nrow = lx, ncol = ly),
+##                col = "green", alpha = 0.25, lit = FALSE)
+## rgl::rglwidget()
 
-m <- function(x) 0.5 * (x[, 1]^2 + x[, 2]^2)
-epsilon <- rnorm(n)
-Y <- m(x = X) + epsilon
 
-# Plot sample and regression function
-rgl::plot3d(x = X[, 1], y = X[, 2], z = Y, xlim = c(-3, 3), ylim = c(-3, 3), 
-            zlim = c(-4, 10), xlab = "X1", ylab = "X2", zlab = "Y")
-lx <- ly <- 50
-x_grid <- seq(-3, 3, l = lx)
-y_grid <- seq(-3, 3, l = ly)
-xy_grid <- as.matrix(expand.grid(x_grid, y_grid))
-rgl::surface3d(x = x_grid, y = y_grid, 
-               z = matrix(m(xy_grid), nrow = lx, ncol = ly),
-               col = "lightblue", alpha = 1, lit = FALSE)
 
-# Local constant fit 
 
-# An alternative for calling np::npregbw without formula
-out <- capture.output(bw0 <- np::npregbw(xdat = X, ydat = Y, regtype = "lc")) 
-# capture.output() to remove the multistart messages
-kre0 <- np::npreg(bws = bw0, exdat = xy_grid) # Evaluation grid is now a matrix
-rgl::surface3d(x = x_grid, y = y_grid, 
-               z = matrix(kre0$mean, nrow = lx, ncol = ly),
-               col = "red", alpha = 0.25, lit = FALSE)
-
-# Local linear fit
-out <- capture.output(bw1 <- np::npregbw(xdat = X, ydat = Y, regtype = "ll"))
-kre1 <- np::npreg(bws = bw1, exdat = xy_grid)
-rgl::surface3d(x = x_grid, y = y_grid, 
-               z = matrix(kre1$mean, nrow = lx, ncol = ly),
-               col = "green", alpha = 0.25, lit = FALSE)
-rgl::rglwidget()
-
-## ---- mult-3-------------------------------------------------------------
+## ---- mult-3-----------------------------------------------------------------------------------------------------------
 # Employing the wine dataset
 # wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
 
-# Bandwidth by CV for local linear estimator -- a product kernel with 
+# Bandwidth by CV for local linear estimator -- a product kernel with
 # 4 bandwidths
 # Employs 4 random starts for minimizing the CV surface
 out <- capture.output(
-  bw_wine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST + 
+  bw_wine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST +
                            HarvestRain, data = wine, regtype = "ll")
   )
 bw_wine
@@ -67,8 +70,8 @@ summary(fit_wine)
 # Plot the "marginal effects of each predictor" on the response
 plot(fit_wine)
 
-# These marginal effects are the p profiles of the estimated regression surface 
-# \hat{m}(x_1, ..., x_p) that are obtained by fixing the predictors to each of 
+# These marginal effects are the p profiles of the estimated regression surface
+# \hat{m}(x_1, ..., x_p) that are obtained by fixing the predictors to each of
 # their median values. For example, the profile for Age is the curve
 # \hat{m}(x, median_WinterRain, median_AGST, median_HarvestRain). The medians
 # are:
@@ -81,41 +84,43 @@ apply(wine, 2, median)
 #   quadratic pattern
 # - HarvestRain is negatively related with Price (almost linearly)
 
-## ---- mult-4-------------------------------------------------------------
-# The argument "xq" controls the conditioning quantile of the predictors, by 
-# default the median (xq = 0.5). But xq can be a vector of p quantiles, for 
+
+## ---- mult-4-----------------------------------------------------------------------------------------------------------
+# The argument "xq" controls the conditioning quantile of the predictors, by
+# default the median (xq = 0.5). But xq can be a vector of p quantiles, for
 # example (0.25, 0.5, 0.25, 0.75) for (Age, WinterRain, AGST, HarvestRain)
 plot(fit_wine, xq = c(0.25, 0.5, 0.25, 0.75))
 
-# With "plot.behavior = data" the plot() function returns a list with the data 
+# With "plot.behavior = data" the plot() function returns a list with the data
 # for performing the plots
 res <- plot(fit_wine, xq = 0.5, plot.behavior = "data")
 str(res, 1)
 
 # Plot the marginal effect of AGST ($r3) alone
 head(res$r3$eval) # All the predictors are constant (medians, except age)
-plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST", 
+plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST",
      ylab = "Marginal effect")
 
-# Plot the marginal effects of AGST for varying quantiles in the rest of 
+# Plot the marginal effects of AGST for varying quantiles in the rest of
 # predictors (all with the same quantile)
 tau <- seq(0.1, 0.9, by = 0.1)
 res <- plot(fit_wine, xq = tau[1], plot.behavior = "data")
 col <- viridis::viridis(length(tau))
-plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST", 
-     ylab = "Marginal effect", col = col[1], ylim = c(6, 9), 
+plot(res$r3$eval$V3, res$r3$mean, type = "l", xlab = "AGST",
+     ylab = "Marginal effect", col = col[1], ylim = c(6, 9),
      main = "Marginal effects of AGST for varying quantiles in the predictors")
 for (i in 2:length(tau)) {
   res <- plot(fit_wine, xq = tau[i], plot.behavior = "data")
   lines(res$r3$eval$V3, res$r3$mean, col = col[i])
 }
-legend("topleft", legend = latex2exp::TeX(paste0("$\\tau =", tau, "$")), 
+legend("topleft", legend = latex2exp::TeX(paste0("$\\tau =", tau, "$")),
        col = col, lwd = 2)
 
 # These quantiles are
 apply(wine[c("Price", "WinterRain", "HarvestRain")], 2, quantile, prob = tau)
 
-## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2---------------------------
+
+## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2-------------------------------------------------------------------------
 # Bandwidth by CV for local linear estimator
 # Recall that Species is a factor!
 out <- capture.output(
@@ -138,7 +143,8 @@ plot(fit_iris, plot.par.mfrow = FALSE)
 par(mfrow = c(1, 2))
 plot(fit_iris, xq = 0.9, plot.par.mfrow = FALSE)
 
-## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3-----
+
+## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3---------------------------------------------------
 # Load data
 data(oecdpanel, package = "np")
 
@@ -159,7 +165,12 @@ summary(fit_OECD)
 par(mfrow = c(2, 3))
 plot(fit_OECD, plot.par.mfrow = FALSE)
 
-## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----
+
+
+
+
+
+## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3--------------------------------------------------
 # Asymptotic confidence bands for the marginal effects of each predictor on the
 # response
 par(mfrow = c(2, 3))
@@ -188,7 +199,10 @@ pred <- predict(fit_OECD, newdata = oecdpanel[1:3, ], se.fit = TRUE)
 alpha <- 0.05
 pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 
-## ---- exr-pred-sol, echo = FALSE, eval = FALSE---------------------------
+
+
+
+## ---- exr-pred-sol, echo = FALSE, eval = FALSE-------------------------------------------------------------------------
 ## # Data
 ## data(Auto, package = "ISLR")
 ## set.seed(12345)
@@ -215,7 +229,10 @@ pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 ## mean((validation$mpg - predict(kre1, newdata = validation))^2)
 ## mean((validation$mpg - predict(lm_mod, newdata = validation))^2)
 
-## ---- ll-1, eval = TRUE--------------------------------------------------
+
+
+
+## ---- ll-1, eval = TRUE------------------------------------------------------------------------------------------------
 # Simulate some data
 n <- 200
 logistic <- function(x) 1 / (1 + exp(-x))
@@ -262,7 +279,8 @@ plot(fit_locfit, add = TRUE, col = 4)
 legend("topright", legend = c("p(x)", "glm", "nlm", "locfit"), lwd = 2,
        col = c(1, 2, 3, 4), lty = c(1, 1, 2, 1))
 
-## ---- ll-2, eval = TRUE--------------------------------------------------
+
+## ---- ll-2, eval = TRUE------------------------------------------------------------------------------------------------
 # Exact LCV - recall that we *maximize* the LCV!
 h <- seq(0.1, 2, by = 0.1)
 suppressWarnings(
