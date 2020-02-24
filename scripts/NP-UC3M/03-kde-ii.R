@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- kde-2d-1-------------------------------------------------------------------------------------------------------------------
+## ---- kde-2d-1----------------------------------------------------------------------
 # Simulated data from a bivariate normal
 n <- 200
 set.seed(35233)
@@ -60,7 +60,7 @@ abs(max(ks::kde(x = x, H = H, eval.points = x, binned = TRUE)$estimate -
           ks::kde(x = x, H = H, eval.points = x, binned = FALSE)$estimate))
 
 
-## ---- kde-2d-2-------------------------------------------------------------------------------------------------------------------
+## ---- kde-2d-2----------------------------------------------------------------------
 # Contourplot
 plot(kde, display = "slice", cont = c(25, 50, 75), xlab = "x", ylab = "y")
 # "cont" specifies the density contours, which are upper percentages of highest
@@ -83,7 +83,7 @@ plot(kde, display = "slice", cont = seq(5, 95, by = 10), add = TRUE)
 plot(kde, display = "persp", col.fun = viridis::viridis, xlab = "x", ylab = "y")
 
 
-## ---- kde-3d, eval = knitr:::is_html_output()------------------------------------------------------------------------------------
+## ---- kde-3d, eval = knitr:::is_html_output()---------------------------------------
 ## # Simulated data from a trivariate normal
 ## n <- 500
 ## set.seed(213212)
@@ -116,14 +116,14 @@ plot(kde, display = "persp", col.fun = viridis::viridis, xlab = "x", ylab = "y")
 ## head(ks::kde(x = x, H = H, eval.points = x)$estimate) # Numerical instabilities
 
 
-## ---- ks-bug, eval = FALSE-------------------------------------------------------------------------------------------------------
+## ---- ks-bug, eval = FALSE----------------------------------------------------------
 ## # Sample test data
 ## p <- 4
 ## data <- mvtnorm::rmvnorm(n = 10, mean = rep(0, p))
 ## kde <- ks::kde(x = data, H = diag(rep(1, p))) # Error on the verbose argument
 
 
-## ---- ks-bug-patch, eval = FALSE-------------------------------------------------------------------------------------------------
+## ---- ks-bug-patch, eval = FALSE----------------------------------------------------
 ## # Create a copy of the funcion you want to modify
 ## kde.points.fixed <- ks:::kde.points
 ## 
@@ -147,7 +147,7 @@ plot(kde, display = "persp", col.fun = viridis::viridis, xlab = "x", ylab = "y")
 
 
 
-## ---- kdde-1, fig.cap = '(ref:kdde-1-title)', fig.margin = FALSE-----------------------------------------------------------------
+## ---- kdde-1, fig.cap = '(ref:kdde-1-title)', fig.margin = FALSE--------------------
 # Simulated univariate data
 n <- 1e3
 set.seed(324178)
@@ -183,7 +183,7 @@ plot(kdde_2, xlab = "x", main = "Density second derivative estimation")
 abline(v = extrema, col = c(3, 2, 3))
 
 
-## ---- kdde-2---------------------------------------------------------------------------------------------------------------------
+## ---- kdde-2------------------------------------------------------------------------
 # Simulated bivariate data
 n <- 1e3
 mu_1 <- rep(1, 2)
@@ -229,6 +229,41 @@ for(i in 1:4) {
 
 
 
+## ---- grad-hess-norm----------------------------------------------------------------
+# Gradient of a N(mu, Sigma) density (vectorized on x)
+grad_norm <- function(x, mu, Sigma) {
+
+  # Check dimensions
+  x <- rbind(x)
+  p <- length(mu)
+  stopifnot(ncol(x) == p | nrow(Sigma) == p | ncol(Sigma) == p)
+
+  # Gradient
+  grad <- -mvtnorm::dmvnorm(x = x, mean = mu, sigma = Sigma) * t(t(x) - mu) %*% 
+    solve(Sigma)
+  return(grad)
+
+}
+
+# Hessian of a N(mu, Sigma) density (vectorized on x)
+Hess_norm <- function(x, mu, Sigma) {
+
+  # Check dimensions
+  x <- rbind(x)
+  p <- length(mu)
+  stopifnot(ncol(x) == p | nrow(Sigma) == p | ncol(Sigma) == p)
+
+  # Hessian
+  Sigma_inv <- solve(Sigma)
+  H <- apply(x, 1, function(y) {
+    mvtnorm::dmvnorm(x = y, mean = mu, sigma = Sigma) *
+      (Sigma_inv %*% tcrossprod(y - mu) %*% Sigma_inv - Sigma_inv)
+  })
+
+  # As an array
+  return(array(data = c(H), dim = c(p, p, nrow(x))))
+
+}
 
 
 
@@ -241,7 +276,11 @@ for(i in 1:4) {
 
 
 
-## ---- bwd-pi, fig.margin = FALSE-------------------------------------------------------------------------------------------------
+
+
+
+
+## ---- bwd-pi, fig.margin = FALSE----------------------------------------------------
 # Simulated data
 n <- 500
 Sigma_1 <- matrix(c(1, -0.75, -0.75, 2), nrow = 2, ncol = 2)
@@ -274,7 +313,7 @@ plot(ks::kde(x = samp, H = Hpi_diag), display = "filled.contour2",
      abs.cont = cont, col.fun = col, main = "PI diagonal")
 
 
-## ---- bwd-pi-der, fig.margin = FALSE---------------------------------------------------------------------------------------------
+## ---- bwd-pi-der, fig.margin = FALSE------------------------------------------------
 # Normal scale bandwidth
 Hns <- ks::Hns(x = samp, deriv.order = 1)
 
@@ -297,7 +336,7 @@ plot(ks::kdde(x = samp, H = Hpi_diag, deriv.order = 1),
      display = "filled.contour2", main = "PI diagonal", abs.cont = cont)
 
 
-## ---- bwd-cv, fig.margin = FALSE-------------------------------------------------------------------------------------------------
+## ---- bwd-cv, fig.margin = FALSE----------------------------------------------------
 # LSCV bandwidth unsconstrained
 Hlscv <- ks::Hlscv(x = samp)
 
@@ -326,7 +365,7 @@ plot(ks::kde(x = samp, H = Hbcv_diag), display = "filled.contour2",
 
 
 
-## ---- level-set-1, fig.cap = '(ref:level-set-1-title)'---------------------------------------------------------------------------
+## ---- level-set-1, fig.cap = '(ref:level-set-1-title)'------------------------------
 # Simulated sample
 n <- 100
 set.seed(12345)
@@ -394,7 +433,7 @@ legend("topright", legend = c("True density", "Kde", "True level set",
        lwd = 2, col = c(1, 2, rgb(0:1, 0, 0, alpha = 0.5), 4))
 
 
-## ---- level-set-2, eval = FALSE--------------------------------------------------------------------------------------------------
+## ---- level-set-2, eval = FALSE-----------------------------------------------------
 ## # Simulated sample
 ## n <- 100
 ## set.seed(12345)
@@ -428,7 +467,7 @@ legend("topright", legend = c("True density", "Kde", "True level set",
 
 
 
-## ---- level-set-3, fig.cap = '(ref:level-set-3-title)'---------------------------------------------------------------------------
+## ---- level-set-3, fig.cap = '(ref:level-set-3-title)'------------------------------
 # Simulate sample
 n <- 200
 set.seed(12345)
@@ -467,7 +506,7 @@ legend("topright", legend = expression("True density", "Kde", "True level set",
        lty = c(rep(1, 4), rep(2, 4)))
 
 
-## ---- level-set-4----------------------------------------------------------------------------------------------------------------
+## ---- level-set-4-------------------------------------------------------------------
 # N(0, 1) case
 alpha <- 0.3
 x_c <- qnorm(1 - alpha / 2)
@@ -490,7 +529,7 @@ mean(dnorm(samp) >= c_alpha)
 
 
 
-## ---- level-set-5----------------------------------------------------------------------------------------------------------------
+## ---- level-set-5-------------------------------------------------------------------
 # Simulated sample from a mixture of normals
 n <- 200
 set.seed(123456)
@@ -525,7 +564,7 @@ ks::contourSizes(kde, abs.cont = c)
 
 
 
-## ---- level-set-6a, eval = knitr:::is_html_output()------------------------------------------------------------------------------
+## ---- level-set-6a, eval = knitr:::is_html_output()---------------------------------
 ## # Simulate a sample from a mixture of normals
 ## n <- 5e2
 ## set.seed(123456)
@@ -547,7 +586,7 @@ ks::contourSizes(kde, abs.cont = c)
 ## rgl::rglwidget()
 
 
-## ---- level-set-6b, eval = knitr:::is_html_output()------------------------------------------------------------------------------
+## ---- level-set-6b, eval = knitr:::is_html_output()---------------------------------
 ## # Simulate a large sample from a single normal
 ## n <- 5e4
 ## set.seed(123456)
@@ -565,7 +604,7 @@ ks::contourSizes(kde, abs.cont = c)
 ## rgl::rglwidget()
 
 
-## ---- level-set-7----------------------------------------------------------------------------------------------------------------
+## ---- level-set-7-------------------------------------------------------------------
 # Compute kde of unicef dataset
 data("unicef", package = "ks")
 kde <- ks::kde(x = unicef)
@@ -577,7 +616,7 @@ sup <- ks::ksupp(fhat = kde, cont = 95) # Effective support up to a 5% of data
 plot(sup)
 
 
-## ---- level-set-8----------------------------------------------------------------------------------------------------------------
+## ---- level-set-8-------------------------------------------------------------------
 # The convex hull boundary of the level set can be computed with chull()
 # It returns the indexes of the points passed that form the corners of the
 # polygon of the convex hull
@@ -587,7 +626,7 @@ lines(sup[c(ch, ch[1]), ], col = 2, lwd = 2)
 # One extra point for closing the polygon
 
 
-## ---- level-set-9----------------------------------------------------------------------------------------------------------------
+## ---- level-set-9-------------------------------------------------------------------
 # Compute the convex hull of sup via geometry::convhulln()
 C <- geometry::convhulln(p = sup)
 # The output of geometry::convhulln() is different from chull()
@@ -634,16 +673,14 @@ ks::kde(x = samp, H = H, eval.points = new_points)$estimate > c
 
 
 
-
-
-## ---- ref:level-set-11-----------------------------------------------------------------------------------------------------------
+## ---- ref:level-set-11--------------------------------------------------------------
 alpha <- 0.4
 p <- 2
 c_alpha <- exp(-0.5 * qchisq(p = 1 - alpha, df = p)) /
   (sqrt(det(Sigma)) * (2 * pi)^(p / 2))
 
 
-## ---- kmeans, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:kmeans-title)'---------------------------------------------------
+## ---- kmeans, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:kmeans-title)'------
 # Data with 3 clusters
 set.seed(23456789)
 n <- 20
@@ -660,7 +697,7 @@ for (k in 1:4) {
 }
 
 
-## ---- kmeans-claw, echo = FALSE, fig.cap = '(ref:kmeans-claw-title)'-------------------------------------------------------------
+## ---- kmeans-claw, echo = FALSE, fig.cap = '(ref:kmeans-claw-title)'----------------
 set.seed(23456789)
 n <- 1e3
 x <- nor1mix::rnorMix(n = n, obj = nor1mix::MW.nm10)
@@ -669,7 +706,7 @@ plot(nor1mix::MW.nm10, main = "")
 points(x, rep(0, n), col = cl$cluster, pch = 15)
 
 
-## ---- gravity, fig.cap = '(ref:gravity-title)'-----------------------------------------------------------------------------------
+## ---- gravity, fig.cap = '(ref:gravity-title)'--------------------------------------
 # Planets
 th <- 2 * pi / 3
 r <- 2
@@ -709,7 +746,7 @@ arrows(x0 = xy$x, y0 = xy$y, x1 = xy$x + dir[1, ], y1 = xy$y + dir[2, ],
 points(rbind(xi_1, xi_2, xi_3), pch = 19, cex = 1.5)
 
 
-## ---- euler, fig.margin = FALSE, fig.cap = '(ref:euler-title)'-------------------------------------------------------------------
+## ---- euler, fig.margin = FALSE, fig.cap = '(ref:euler-title)'----------------------
 # Mixture parameters
 mu_1 <- rep(1, 2)
 mu_2 <- rep(-1.5, 2)
@@ -774,7 +811,38 @@ text(rbind(xi_1, xi_2), labels = expression(xi[1], xi[2]), col = 2, pos = 2)
 
 
 
-## ---- kms-1----------------------------------------------------------------------------------------------------------------------
+## ---- gradfields, fig.cap = '(ref:gradfields-title)', fig.show = 'hold', fig.margin = FALSE----
+# Evaluate the vector fields
+x <- seq(-5, 5, l = 15)
+xy <- expand.grid(x = x, y = x)
+grad_un <- apply(xy, 1, function(x) Df(x))
+grad_no <- apply(xy, 1, function(x) Df(x) / f(x))
+grad_un <- 2 * grad_un / max(sqrt(colSums(grad_un^2)))
+grad_no <- 2 * grad_no / max(sqrt(colSums(grad_no^2)))
+
+# Unnormalized gradient field
+par(mfrow = c(1, 2))
+ks::plotmixt(mus = rbind(mu_1, mu_2), Sigmas = rbind(Sigma_1, Sigma_2),
+             props = c(w, 1 - w), display = "filled.contour2",
+             gridsize = rep(251, 2), xlim = c(-5, 5), ylim = c(-5, 5),
+             cont = seq(0, 90, by = 10), col.fun = viridis::viridis)
+arrows(x0 = xy$x, y0 = xy$y, x1 = xy$x + grad_un[1, ], y1 = xy$y + grad_un[2, ],
+       angle = 10, length = 0.1, col = 1, lwd = 2)
+points(rbind(xi_1, xi_2), pch = 16, col = 2)
+text(rbind(xi_1, xi_2), labels = expression(xi[1], xi[2]), col = 2, pos = 2)
+
+# Normalized gradient field
+ks::plotmixt(mus = rbind(mu_1, mu_2), Sigmas = rbind(Sigma_1, Sigma_2),
+             props = c(w, 1 - w), display = "filled.contour2",
+             gridsize = rep(251, 2), xlim = c(-5, 5), ylim = c(-5, 5),
+             cont = seq(0, 90, by = 10), col.fun = viridis::viridis)
+arrows(x0 = xy$x, y0 = xy$y, x1 = xy$x + grad_no[1, ], y1 = xy$y + grad_no[2, ],
+       angle = 10, length = 0.1, col = 1, lwd = 2)
+points(rbind(xi_1, xi_2), pch = 16, col = 2)
+text(rbind(xi_1, xi_2), labels = expression(xi[1], xi[2]), col = 2, pos = 2)
+
+
+## ---- kms-1-------------------------------------------------------------------------
 # A simulated example for which the population clusters are known
 # Extracted from ?ks::dmvnorm.mixt
 mus <- rbind(c(-1, 0), c(1, 2 / sqrt(3)), c(1, -2 / sqrt(3)))
@@ -812,7 +880,7 @@ for (i in 1:nrow(x)) lines(kms$path[[i]], col = cols[i])
 points(kms$mode, pch = 8, cex = 2, lwd = 2)
 
 
-## ---- kms-2----------------------------------------------------------------------------------------------------------------------
+## ---- kms-2-------------------------------------------------------------------------
 # Partition of the whole sample space
 kms_part <- ks::kms.part(x = x, H = H, xmin = c(-3, -3), xmax = c(3, 4),
                          gridsize = c(150, 150))
@@ -834,7 +902,7 @@ modes
 mus
 
 
-## ---- kms-3a---------------------------------------------------------------------------------------------------------------------
+## ---- kms-3a------------------------------------------------------------------------
 # Obtain PI bandwidth
 H <- ks::Hpi(x = iris[, 1:3], deriv.order = 1)
 
@@ -852,7 +920,7 @@ plot(kms_iris, pch = as.numeric(iris$Species) + 1,
      col = viridis::viridis(kms_iris$nclust))
 
 
-## ---- kms-3b, eval = knitr:::is_html_output()------------------------------------------------------------------------------------
+## ---- kms-3b, eval = knitr:::is_html_output()---------------------------------------
 ## # See ascending paths
 ## kms_iris <- ks::kms(x = iris[, 1:3], H = H, min.clust.size = 15,
 ##                     keep.path = TRUE)
@@ -869,9 +937,7 @@ plot(kms_iris, pch = as.numeric(iris$Species) + 1,
 
 
 
-
-
-## ---- kda-1, fig.cap = '(ref:kda-1-title)'---------------------------------------------------------------------------------------
+## ---- kda-1, fig.cap = '(ref:kda-1-title)'------------------------------------------
 # Univariate example
 x <- iris$Sepal.Length
 groups <- iris$Species
@@ -889,7 +955,7 @@ kda_1$prior.prob
 # Classification
 head(kda_1$x.group.estimate)
 
-# Classification error
+# (Training) classification error
 ks::compare(x.group = kda_1$x.group, est.group = kda_1$x.group.estimate)
 
 # Classification regions (points on the bottom)
@@ -900,7 +966,7 @@ legend("topright", legend = c("Setosa", "Versicolor", "Virginica"),
 
 
 
-## ---- kda-2, fig.cap = '(ref:kda-2-title)'---------------------------------------------------------------------------------------
+## ---- kda-2, fig.cap = '(ref:kda-2-title)', fig.show = 'hold'-----------------------
 # Bivariate example
 x <- iris[, 1:2]
 groups <- iris$Species
@@ -918,11 +984,23 @@ ks::compare(x.group = kda_2$x.group, est.group = kda_2$x.group.estimate)
 # Plot of classification regions
 plot(kda_2, col = rainbow(3), lwd = 2, col.pt = 1, cont = seq(5, 85, by = 20),
      col.part = rainbow(3, alpha = 0.25), drawpoints = TRUE)
+# The artifacts on the corners (low density regions) are caused by
+# numerically-unstable divisions close to 0/0 
+
+# The artifacts can be avoided by enlarging the effective support of the normal
+# kernel that ks considers with supp (by default it is 3.7). Setting supp to
+# a larger value (~10) will avoid the normal kernel to reach the value 0 exactly 
+# (but it may be required that the default gridsize has to be enlarged to
+# display the surface adequately if supp is quite large). This is a useful
+# practical tweak!
+kda_2 <- ks::kda(x = x, x.group = groups, Hs = Hs, supp = 10)
+plot(kda_2, col = rainbow(3), lwd = 2, col.pt = 1, cont = seq(5, 85, by = 20),
+     col.part = rainbow(3, alpha = 0.25), drawpoints = TRUE)
 
 
 
 
-## ---- kda-3, eval = knitr:::is_html_output()-------------------------------------------------------------------------------------
+## ---- kda-3, eval = knitr:::is_html_output()----------------------------------------
 ## # Trivariate example
 ## x <- iris[, 1:3]
 ## groups <- iris$Species
@@ -936,4 +1014,328 @@ plot(kda_2, col = rainbow(3), lwd = 2, col.pt = 1, cont = seq(5, 85, by = 20),
 ## # Classification regions
 ## plot(kda_3, drawpoints = TRUE, col.pt = c(2, 3, 4), cont = seq(5, 85, by = 20))
 ## rgl::rglwidget()
+
+
+
+
+
+
+
+
+
+
+## ---- proj-grad-hess----------------------------------------------------------------
+# Projected gradient into the Hessian s-th eigenvector subspace
+proj_grad_Hess <- function(x, mu, Sigma, s = 2) {
+
+  # Check dimensions
+  x <- rbind(x)
+  p <- length(mu)
+  stopifnot(ncol(x) == p | nrow(Sigma) == p | ncol(Sigma) == p)
+
+  # Gradient
+  grad <- grad_norm(x = x, mu = mu, Sigma = Sigma)
+
+  # Hessian
+  Hess <-  Hess_norm(x = x, mu = mu, Sigma = Sigma)
+
+  # Eigenvectors Hessian
+  eig_Hess <- t(apply(Hess, 3, function(A) {
+    eigen(x = A, symmetric = TRUE)$vectors[, s]
+  }))
+
+  # Projected gradient
+  proj_grad <- t(sapply(1:nrow(eig_Hess), function(i) {
+    tcrossprod(eig_Hess[i, ]) %*% grad[i, ]
+  }))
+
+  # As an array
+  return(proj_grad)
+
+}
+
+
+
+
+
+
+
+
+## ---- euler-ridge-1, fig.margin = FALSE, fig.cap = '(ref:euler-ridge-1-title)', fig.show = 'hold'----
+mu <- c(0, 0)
+Sigma <- matrix(c(1, -0.71, -0.71, 2), nrow = 2, ncol = 2)
+ks::plotmixt(mus = mu, Sigmas = Sigma, props = 1, display = "filled.contour2",
+             gridsize = rep(251, 2), xlim = c(-5, 5), ylim = c(-5, 5),
+             cont = seq(0, 90, by = 10), col.fun = viridis::viridis)
+
+# Euler solution
+x0 <- as.matrix(expand.grid(seq(-3, 3, l = 12), seq(-3, 3, l = 12)))
+x <- matrix(NA, nrow = nrow(x0), ncol = 2)
+N <- 500
+h <- 0.5
+phi <- matrix(nrow = N + 1, ncol = 2)
+eps <- 1e-4
+for (i in 1:nrow(x0)) {
+
+  # Move along the flow curve
+  phi[1, ] <- x0[i, ]
+  for (t in 1:N) {
+
+    # Euler update
+    phi[t + 1, ] <- phi[t, ] + 
+      h * proj_grad_Hess(phi[t, ], mu = mu, Sigma = Sigma) /
+      mvtnorm::dmvnorm(x = phi[t, ], mean = mu, sigma = Sigma)
+
+    # Stopping criterion (to save computing time!)
+    abs_tol <- max(abs(phi[t + 1, ] - phi[t, ]))
+    rel_tol <- abs_tol / max(abs(phi[t, ]))
+    if (abs_tol < eps | rel_tol < eps) break
+
+  }
+
+  # Save final point
+  x[i, ] <- phi[t + 1, , drop = FALSE]
+  
+  # Plot lines and x0
+  lines(phi[1:(t + 1), ], type = "l")
+  points(x0[i, , drop = FALSE], pch = 19)
+
+}
+
+# Plot final points
+points(x, pch = 19, col = 2)
+
+# Join the ridge points with lines in an automatic and sensible way:
+# an Euclidean Minimum Spanning Tree (EMST) problem!
+emst <- emstreeR::ComputeMST(x = x, verbose = FALSE)
+segments(x0 = x[emst$from, 1], y0 = x[emst$from, 2],
+         x1 = x[emst$to, 1], y1 = x[emst$to, 2], col = 2, lwd = 2)
+
+
+## ---- euler-ridge-2-----------------------------------------------------------------
+# "Oval" density
+f_oval <- function(x, mu = 2, sigma = 0.35, 
+                   Sigma = rbind(c(1, -0.71), c(-0.71, 2))) {
+
+  # x always as a matrix
+  x <- rbind(x)
+  
+  # Rotate x with distortion
+  Sigma_inv_sqrt <- solve(chol(Sigma))
+  x <- x %*% Sigma_inv_sqrt
+
+  # Polar coordinates
+  r <- sqrt(rowSums(x^2))
+
+  # Density as conditional * marginal
+  f_theta <- 1 / (2 * pi)
+  f_r_theta <- dnorm(x = r, mean = mu, sd = sigma)
+  jacobian <-  det(Sigma_inv_sqrt) / r
+  f <- f_r_theta * f_theta * jacobian
+  return(f)
+
+}
+
+# "Croissant" density
+f_croissant <- function(x, mu = 2, sigma = 0.5, mu_theta = pi / 2, kappa = 1) {
+
+  # x always as a matrix
+  x <- rbind(x)
+
+  # Polar coordinates
+  theta <- atan2(x[, 2], x[, 1])
+  r <- sqrt(rowSums(x^2))
+
+  # Density as conditional * marginal
+  f_theta <- exp(kappa * cos(theta - mu_theta)) / 
+    (2 * pi * besselI(kappa, nu = 0))
+  f_r_theta <- dnorm(x = r, mean = mu, sd = sigma)
+  jacobian <- 1 / r
+  f <- f_r_theta * f_theta * jacobian
+  return(f)
+
+}
+
+# "Sin" density
+f_sin <- function(x, a = 0.5, b = 1.75, sigma_x = 2, sigma_y = 0.5) {
+
+  # x always as a matrix
+  x <- rbind(x)
+
+  # Density as conditional * marginal
+  f_y <- dnorm(x = x[, 1], mean = 0, sd = sigma_x)
+  f_x_y <- dnorm(x = x[, 2], mean = a * (1 + x[, 1]) * sin(b * x[, 1]),
+                 sd = sigma_y)
+  f <- f_x_y * f_y
+  return(f)
+
+}
+
+
+
+
+
+
+## ---- kdr-1-------------------------------------------------------------------------
+# Simulation from the "oval" density
+r_oval <- function(n, mu = 2, sigma = 0.35, 
+                   Sigma = rbind(c(1, -0.71), c(-0.71, 2))) {
+
+  # Sampling in polar coordinates
+  r <- rnorm(n = n, mean = mu, sd = sigma)
+  theta <- runif(n, 0, 2 * pi)
+  x <- r * cbind(cos(theta), sin(theta))
+
+  # Data rotation
+  Sigma_sqrt <- chol(Sigma)
+  return(x %*% Sigma_sqrt)
+
+}
+
+# Simulation from the "croissant" density
+r_croissant <- function(n, mu = 2, sigma = 0.5, mu_theta = pi / 2, kappa = 1) {
+
+  # Sampling in polar coordinates as conditional * marginal
+  theta <- circular:::RvonmisesRad(n = n, mu = mu_theta, kappa = kappa)
+  r <- rnorm(n = n, mean = mu, sd = sigma)
+  x <- r * cbind(cos(theta), sin(theta))
+  return(x)
+
+}
+
+# Simulation from the "sin" density
+r_sin <- function(n, a = 0.5, b = 1.75, sigma_x = 2, sigma_y = 0.5) {
+
+  # Sampling as conditional * marginal
+  x <- rnorm(n = n, mean = 0, sd = sigma_x)
+  y <- rnorm(n = n, mean = a * (1 + x) * sin(b * x), sd = sigma_y)
+  return(cbind(x, y))
+
+}
+
+# Oval
+samp_oval <- r_oval(n = 1e3)
+kdr_oval <- ks::kdr(x = samp_oval)
+plot(samp_oval)
+points(kdr_oval$end.points, 
+       col = rainbow(max(kdr_oval$label))[kdr_oval$label])
+emst <- emstreeR::ComputeMST(x = kdr_oval$end.points, verbose = FALSE)
+segments(x0 = kdr_oval$end.points[emst$from, 1],
+         y0 = kdr_oval$end.points[emst$from, 2],
+         x1 = kdr_oval$end.points[emst$to, 1],
+         y1 = kdr_oval$end.points[emst$to, 2], lwd = 2)
+# The $label output of ks::kdr is very useful, as it allows handling
+# the components of the ridges easily
+
+# Croissant
+samp_croissant <- r_croissant(n = 1e3)
+kdr_croissant <- ks::kdr(x = samp_croissant)
+plot(samp_croissant)
+points(kdr_croissant$end.points,
+       col = rainbow(max(kdr_croissant$label))[kdr_croissant$label])
+emst <- emstreeR::ComputeMST(x = kdr_croissant$end.points, verbose = FALSE)
+segments(x0 = kdr_croissant$end.points[emst$from, 1],
+         y0 = kdr_croissant$end.points[emst$from, 2],
+         x1 = kdr_croissant$end.points[emst$to, 1],
+         y1 = kdr_croissant$end.points[emst$to, 2], lwd = 2)
+
+# Sin
+samp_sin <- r_sin(n = 1e3)
+kdr_sin <- ks::kdr(x = samp_sin)
+plot(samp_sin)
+points(kdr_sin$end.points, 
+       col = rainbow(max(kdr_sin$label))[kdr_sin$label])
+emst <- emstreeR::ComputeMST(x = kdr_sin$end.points, verbose = FALSE)
+segments(x0 = kdr_sin$end.points[emst$from, 1],
+         y0 = kdr_sin$end.points[emst$from, 2],
+         x1 = kdr_sin$end.points[emst$to, 1],
+         y1 = kdr_sin$end.points[emst$to, 2], lwd = 2)
+
+
+## ---- kdr-2-------------------------------------------------------------------------
+# By default, ks::kdr employs H = ks::Hpi(..., deriv.order = 2)
+H <- ks::Hns(x = samp_oval, deriv.order = 2)
+
+# The initial values are chosen automatically, but they can be specified,
+# gives faster computations
+y <- expand.grid(seq(-3, 3, l = 20), seq(-3, 3, l = 20))
+
+# Use H, y, and save paths
+kdr_oval_1 <- ks::kdr(x = samp_oval, y = y, H = H, keep.path = TRUE)
+plot(samp_oval)
+paths <- kdr_oval_1$path
+points(kdr_oval_1$y, col = 4, pch = 19, cex = 0.5)
+for (i in seq_along(paths)) {
+  lines(paths[[i]], col = 4, cex = 0.5)
+}
+points(kdr_oval_1$end.points, col = 2, pch = 19)
+length(paths) # Ascension done only for 224 out of the 400 y's
+
+# If we want to get rid of the points outside the oval, we can identify
+# them using the density level set for alpha = 0.15
+plot(samp_oval)
+points(kdr_oval_1$end.points, col = 2, pch = 19)
+alpha <- 0.15
+supp <- ks::ksupp(fhat = ks::kde(x = samp_oval, H = H),
+                  cont = (1 - alpha) * 100)
+points(supp, col = 3, cex = 0.5)
+
+# Two ways of excluding the "spurious" ridges: via convex hull and via
+# fhat < c_alpha
+C <- geometry::convhulln(p = supp)
+out_chull <- !geometry::inhulln(ch = C, p = kdr_oval_1$end.points)
+c_alpha <- quantile(ks::kde(x = samp_oval, H = H,
+                            eval.points = samp_oval)$estimate, probs = alpha)
+out_kde <- ks::kde(x = samp_oval, H = H,
+                   eval.points = kdr_oval_1$end.points)$estimate < c_alpha
+points(kdr_oval_1$end.points[out_chull, ], col = 4, cex = 0.75, pch = 19)
+points(kdr_oval_1$end.points[out_kde, ], col = 5, cex = 0.75, pch = 19)
+
+# The initial grid can also be specified with xmax, xmin, and gridsize
+kdr_oval_2 <- ks::kdr(x = samp_oval, H = H, xmin = c(-3, -3), xmax = c(3, 3), 
+                      gridsize = c(20, 20), keep.path = TRUE)
+plot(samp_oval)
+points(kdr_oval_2$end.points, col = 2, pch = 19)
+paths <- kdr_oval_2$path
+points(kdr_oval_2$y, col = 4, pch = 19, cex = 0.5)
+for (i in seq_along(paths)) {
+  lines(paths[[i]], col = 4, cex = 0.5)
+}
+
+# Save also computing time by increasing density.cutoff
+alpha <- 0.5
+c_alpha <- quantile(ks::kde(x = samp_oval, H = H,
+                            eval.points = samp_oval)$estimate, probs = alpha)
+kdr_oval_3 <- ks::kdr(x = samp_oval, y = y, H = H, density.cutoff = c_alpha)
+plot(samp_oval)
+points(kdr_oval_3$y, col = 4, pch = 19, cex = 0.5)
+points(kdr_oval_3$end.points, col = 2, pch = 19)
+
+
+## ---- kdr-3, fig.margin = FALSE, fig.cap = '(ref:kdr-3-title)'----------------------
+# Load data
+data(quake, package = "ks") # Earthquakes locations
+data(plate, package = "ks") # Tectonic plate boundaries
+
+# Select the Pacific Ring of Fire and disregard other variables
+# except location of craters
+quake <- quake[quake$prof == 1, c("long", "lat")]
+
+# Fix negative longitude
+quake$long[quake$long < 0] <- quake$long[quake$long < 0] + 360
+
+# Select relevant plates
+plate <- plate[plate$long < -20 | plate$long > 20, ]
+plate$long[plate$long < 0 & !is.na(plate$long)] <- 
+  plate$long[plate$long < 0 & !is.na(plate$long)] + 360
+
+# Display raw data
+maps::map("world2", xlim = c(85, 305), ylim = c(-70, 70),
+          mar = c(0, 0, 0, 0), interior = FALSE, lty = 2)
+lines(plate[, 1:2], col = 3, lwd = 2)
+points(quake, cex = 0.5, pch = 16, col = 2)
+
+# Density ridges
+kdr_quake <- ks::kdr(x = quake, xmin = c(70, -70), xmax = c(310, 80))
+points(kdr_quake$end.points, cex = 0.5, pch = 16, col = 4)
 
