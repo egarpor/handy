@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE--------------------------------------------------------------------
+## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE------------------------
 # A naive implementation of the Nadaraya-Watson estimator
 nw <- function(x, X, Y, h, K = dnorm) {
 
@@ -54,7 +54,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- nw-2, eval = FALSE-------------------------------------------------------------------------------------------------------
+## ---- nw-2, eval = FALSE-----------------------------------------------------------
 ## # Simple plot of N-W for varying h's
 ## manipulate::manipulate({
 ## 
@@ -79,7 +79,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- lp-1---------------------------------------------------------------------------------------------------------------------
+## ---- lp-1-------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 100
@@ -130,7 +130,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- lp-2, eval = FALSE-------------------------------------------------------------------------------------------------------
+## ---- lp-2, eval = FALSE-----------------------------------------------------------
 ## # Simple plot of local polynomials for varying h's
 ## manipulate::manipulate({
 ## 
@@ -158,7 +158,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'-------------------------------------------------------------------------------------
+## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'-----------------------------------------
 # Evaluation grid
 x_grid <- seq(0, 5, l = 500)
 
@@ -226,7 +226,7 @@ legend("topright", legend = c("True regression", "Local linear (RT)",
 
 
 
-## ---- bwd-2--------------------------------------------------------------------------------------------------------------------
+## ---- bwd-2------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 250
@@ -257,7 +257,7 @@ legend("topleft", legend = c("True regression", "Local linear (DPI)",
                               "Local linear (RT)"), lwd = 2, col = 1:3)
 
 
-## ---- bwd-3--------------------------------------------------------------------------------------------------------------------
+## ---- bwd-3------------------------------------------------------------------------
 # Grid for representing (4.22)
 h_grid <- seq(0.1, 1, l = 200)^2
 error <- sapply(h_grid, function(h) {
@@ -276,7 +276,7 @@ abline(v = h_grid[which.min(error)], col = 2)
 
 
 
-## ---- bw-4---------------------------------------------------------------------------------------------------------------------
+## ---- bw-4-------------------------------------------------------------------------
 # Generate some data to test the implementation
 set.seed(12345)
 n <- 200
@@ -300,11 +300,11 @@ bw_cv_grid <- function(X, Y,
                        K = dnorm, plot_cv = FALSE) {
 
   # Minimize the CV function on a grid
-	obj <- sapply(h_grid, function(h) cv_nw(X = X, Y = Y, h = h, K = K))
-	h <- h_grid[which.min(obj)]
+  obj <- sapply(h_grid, function(h) cv_nw(X = X, Y = Y, h = h, K = K))
+  h <- h_grid[which.min(obj)]
 
-	# Add plot of the CV loss
-	if (plot_cv) {
+  # Add plot of the CV loss
+  if (plot_cv) {
 
     plot(h_grid, obj, type = "o")
     rug(h_grid)
@@ -312,8 +312,8 @@ bw_cv_grid <- function(X, Y,
 
   }
 
-	# CV bandwidth
-	return(h)
+  # CV bandwidth
+  return(h)
 
 }
 
@@ -330,7 +330,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 
-## ---- bw-5---------------------------------------------------------------------------------------------------------------------
+## ---- bw-5-------------------------------------------------------------------------
 # Slow objective function
 cv_nw_slow <- function(X, Y, h, K = dnorm) {
 
@@ -346,11 +346,11 @@ bw_cv_grid_slow <- function(X, Y, h_grid =
                             K = dnorm, plot_cv = FALSE) {
 
   # Minimize the CV function on a grid
-	obj <- sapply(h_grid, function(h) cv_nw_slow(X = X, Y = Y, h = h, K = K))
-	h <- h_grid[which.min(obj)]
+  obj <- sapply(h_grid, function(h) cv_nw_slow(X = X, Y = Y, h = h, K = K))
+  h <- h_grid[which.min(obj)]
 
-	# Add plot of the CV loss
-	if (plot_cv) {
+  # Add plot of the CV loss
+  if (plot_cv) {
 
     plot(h_grid, obj, type = "o")
     rug(h_grid)
@@ -358,8 +358,8 @@ bw_cv_grid_slow <- function(X, Y, h_grid =
 
   }
 
-	# CV bandwidth
-	return(h)
+  # CV bandwidth
+  return(h)
 
 }
 
@@ -373,7 +373,7 @@ h
 #                                times = 10)
 
 
-## ---- bw-6---------------------------------------------------------------------------------------------------------------------
+## ---- bw-6-------------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -397,7 +397,7 @@ lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 
 
 
-## ---- np-1, message = FALSE----------------------------------------------------------------------------------------------------
+## ---- np-1, message = FALSE--------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -432,7 +432,7 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-2---------------------------------------------------------------------------------------------------------------------
+## ---- np-2-------------------------------------------------------------------------
 # Local linear fit -- find first the CV bandwidth
 bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll")
 
@@ -445,7 +445,7 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-3---------------------------------------------------------------------------------------------------------------------
+## ---- np-3-------------------------------------------------------------------------
 # Summary of the npregression object
 summary(kre0)
 
@@ -480,7 +480,7 @@ legend("top", legend = c("Nadaraya-Watson", "Local linear"),
 
 
 
-## ---- np-4---------------------------------------------------------------------------------------------------------------------
+## ---- np-4-------------------------------------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100
