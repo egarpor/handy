@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- hist-1-----------------------------------------------------------------------
+## ---- hist-1------------------------------------------------------------------------
 # The faithful dataset is included in R
 head(faithful)
 
@@ -34,7 +34,7 @@ rug(faith_eruptions) # Plotting the sample
 
 
 
-## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'--------------------
+## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'---------------------
 # Sample from a U(0, 1)
 set.seed(1234567)
 u <- runif(n = 100)
@@ -56,7 +56,7 @@ rug(u)
 abline(h = 1, col = 2)
 
 
-## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'--------------------
+## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'---------------------
 # Sample 75 points from a N(0, 1) and 50 from a N(3, 0.25)
 set.seed(1234567)
 samp <- c(rnorm(n = 50, mean = 0, sd = 1),
@@ -96,7 +96,7 @@ rug(samp)
 
 
 
-## ---- kde-1------------------------------------------------------------------------
+## ---- kde-1-------------------------------------------------------------------------
 # Sample 100 points from a N(0, 1)
 set.seed(1234567)
 samp <- rnorm(n = 100, mean = 0, sd = 1)
@@ -127,7 +127,7 @@ rug(samp)
 
 
 
-## ---- R-kernels--------------------------------------------------------------------
+## ---- R-kernels---------------------------------------------------------------------
 # Implementation of the Epanechnikov based on the theory
 K_Epa <- function(z, h = 1) 3 / (4 * h) * (1 - (z / h)^2) * (abs(z) < h)
 mu2_K_Epa <- integrate(function(z) z^2 * K_Epa(z), lower = -1, upper = 1)$value
@@ -181,7 +181,7 @@ lines(density(0, kernel = "epanechnikov", bw = h))
 
 
 
-## ---- bwnrd------------------------------------------------------------------------
+## ---- bwnrd-------------------------------------------------------------------------
 # Data
 set.seed(667478)
 n <- 100
@@ -198,7 +198,7 @@ iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 
 
 
-## ---- SJ---------------------------------------------------------------------------
+## ---- SJ----------------------------------------------------------------------------
 # Data
 set.seed(672641)
 x <- rnorm(100)
@@ -214,7 +214,7 @@ ks::hpi(x) # Default is two-stages
 
 
 
-## ---- bw-ucv-mod-------------------------------------------------------------------
+## ---- bw-ucv-mod--------------------------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -269,7 +269,7 @@ bw.ucv.mod(x = x, plot_cv = TRUE)
 abline(v = bw.ucv(x = x), col = 3)
 
 
-## ---- bw-bcv-mod-------------------------------------------------------------------
+## ---- bw-bcv-mod--------------------------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -325,7 +325,7 @@ bw.bcv.mod(x = x, plot_cv = TRUE)
 abline(v = bw.bcv(x = x), col = 3)
 
 
-## ---- nor1mix----------------------------------------------------------------------
+## ---- nor1mix-----------------------------------------------------------------------
 # Available models
 ?nor1mix::MarronWand
 
@@ -356,7 +356,7 @@ lines(nor1mix::MW.nm7, col = 2) # Also possible
 
 
 
-## ---- transf-1---------------------------------------------------------------------
+## ---- transf-1----------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp <- rlnorm(n = 500)
@@ -369,7 +369,7 @@ rug(samp)
 
 
 
-## ---- transf-2---------------------------------------------------------------------
+## ---- transf-2----------------------------------------------------------------------
 # kde with log-transformed data
 kde <- density(log(samp))
 plot(kde, main = "Kde of transformed data")
@@ -400,7 +400,7 @@ rug(samp)
 
 ## 
 
-## ---- samp-------------------------------------------------------------------------
+## ---- samp--------------------------------------------------------------------------
 # Sample the Claw
 n <- 100
 set.seed(23456)
@@ -439,9 +439,10 @@ legend("topright", legend = c("Kde", "Kde of sampled kde"),
 
 ## 
 
-## ---- kde-eval-1-------------------------------------------------------------------
+## ---- kde-eval-1--------------------------------------------------------------------
 # Sample
-n <- 25
+n <- 5
+set.seed(123456)
 samp_t <- rt(n, df = 2)
 
 # Comparison: same output and same parametrization for bandwidth
@@ -456,19 +457,19 @@ kde <- ks::kde(x = samp_t)
 # Manual plot -- recall $eval.points and $estimate
 lines(kde$eval.points, kde$estimate, col = 4)
 
-# Evaluating the kde at specific points, e.g., the first 5 sample points
-ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:5])
+# Evaluating the kde at specific points, e.g., the first 2 sample points
+ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:2])
 
 # By default ks::kde() computes the *binned* kde (much faster) and then employs
 # an interpolation to evaluate the kde at the given grid; if the exact kde is
 # desired, this can be specified with binned = FALSE
-ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:5], binned = FALSE)
+ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:2], binned = FALSE)
 
 # Changing the size of the evaluation grid
 length(ks::kde(x = samp_t, h = bw, gridsize = 1e3)$estimate)
 
 
-## ---- kde-eval-2-------------------------------------------------------------------
+## ---- kde-eval-2--------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp_ln <- rlnorm(n = 200)
@@ -492,7 +493,7 @@ legend("topright", legend = c("True density", paste("adj.positive =", c(0, a))),
        col = c(2, col), lwd = 2)
 
 
-## ---- kde-eval-3-------------------------------------------------------------------
+## ---- kde-eval-3--------------------------------------------------------------------
 # Untransformed kde
 plot(kde <- ks::kde(x = log(samp_ln)), col = 4)
 samp_kde <- ks::rkde(n = 5e4, fhat = kde)
