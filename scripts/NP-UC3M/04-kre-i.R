@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE-------------------------
+## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE---------------------
 # A naive implementation of the Nadaraya-Watson estimator
 nw <- function(x, X, Y, h, K = dnorm) {
 
@@ -54,7 +54,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- nw-2, eval = FALSE------------------------------------------------------------
+## ---- nw-2, eval = FALSE--------------------------------------------------------
 ## # Simple plot of N-W for varying h's
 ## manipulate::manipulate({
 ## 
@@ -79,7 +79,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- lp-1--------------------------------------------------------------------------
+## ---- lp-1----------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 100
@@ -130,7 +130,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- lp-2, eval = FALSE------------------------------------------------------------
+## ---- lp-2, eval = FALSE--------------------------------------------------------
 ## # Simple plot of local polynomials for varying h's
 ## manipulate::manipulate({
 ## 
@@ -158,7 +158,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'------------------------------------------
+## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'--------------------------------------
 # Evaluation grid
 x_grid <- seq(0, 5, l = 500)
 
@@ -226,7 +226,7 @@ legend("topright", legend = c("True regression", "Local linear (RT)",
 
 
 
-## ---- bwd-2-------------------------------------------------------------------------
+## ---- bwd-2---------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 250
@@ -257,7 +257,7 @@ legend("topleft", legend = c("True regression", "Local linear (DPI)",
                               "Local linear (RT)"), lwd = 2, col = 1:3)
 
 
-## ---- bwd-3-------------------------------------------------------------------------
+## ---- bwd-3---------------------------------------------------------------------
 # Grid for representing (4.22)
 h_grid <- seq(0.1, 1, l = 200)^2
 error <- sapply(h_grid, function(h) {
@@ -276,7 +276,7 @@ abline(v = h_grid[which.min(error)], col = 2)
 
 
 
-## ---- bw-4--------------------------------------------------------------------------
+## ---- bw-4----------------------------------------------------------------------
 # Generate some data to test the implementation
 set.seed(12345)
 n <- 200
@@ -330,7 +330,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 
-## ---- bw-5--------------------------------------------------------------------------
+## ---- bw-5----------------------------------------------------------------------
 # Slow objective function
 cv_nw_slow <- function(X, Y, h, K = dnorm) {
 
@@ -373,7 +373,7 @@ h
 #                                times = 10)
 
 
-## ---- bw-6--------------------------------------------------------------------------
+## ---- bw-6----------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -397,7 +397,7 @@ lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 
 
 
-## ---- np-1--------------------------------------------------------------------------
+## ---- np-1----------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -408,10 +408,12 @@ Y <- Auto$mpg
 # in multivariate regression)
 bw0 <- np::npregbw(formula = Y ~ X)
 
+# The spinner can be omitted with
+options(np.messages = FALSE)
+
 # Multiple initial points can be employed for minimizing the CV function (for
-# one predictor, defaults to 1) and avoiding local minima. The progress
-# messages can be cleared with capture.output()
-out <- capture.output(bw0 <- np::npregbw(formula = Y ~ X, nmulti = 2))
+# one predictor, defaults to 1) and avoiding local minima
+bw0 <- np::npregbw(formula = Y ~ X, nmulti = 2)
 
 # The "rbandwidth" object contains many useful information, see ?np::npregbw for
 # all the returned objects
@@ -433,9 +435,9 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-2--------------------------------------------------------------------------
+## ---- np-2----------------------------------------------------------------------
 # Local linear fit -- find first the CV bandwidth
-out <- capture.output(bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll"))
+bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll")
 
 # Fit
 kre1 <- np::npreg(bws = bw1)
@@ -446,7 +448,7 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-3--------------------------------------------------------------------------
+## ---- np-3----------------------------------------------------------------------
 # Summary of the npregression object
 summary(kre0)
 
@@ -481,7 +483,7 @@ legend("top", legend = c("Nadaraya-Watson", "Local linear"),
 
 
 
-## ---- np-4--------------------------------------------------------------------------
+## ---- np-4----------------------------------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100
@@ -491,22 +493,18 @@ X <- c(rnorm(n, mean = -2, sd = 0.5), rnorm(n, mean = 2, sd = 0.5))
 Y <- m(X) + eps
 x_grid <- seq(-10, 10, l = 500)
 
-out <- capture.output({
+# Constant bandwidth
+bwc <- np::npregbw(formula = Y ~ X, bwtype = "fixed",
+                   regtype = "ll")
+krec <- np::npreg(bwc, exdat = x_grid)
 
-  # Constant bandwidth
-  bwc <- np::npregbw(formula = Y ~ X, bwtype = "fixed",
-                     regtype = "ll")
-  krec <- np::npreg(bwc, exdat = x_grid)
-
-  # Variable bandwidths
-  bwg <- np::npregbw(formula = Y ~ X, bwtype = "generalized_nn",
-                     regtype = "ll")
-  kreg <- np::npreg(bwg, exdat = x_grid)
-  bwa <- np::npregbw(formula = Y ~ X, bwtype = "adaptive_nn",
-                     regtype = "ll")
-  krea <- np::npreg(bwa, exdat = x_grid)
-
-})
+# Variable bandwidths
+bwg <- np::npregbw(formula = Y ~ X, bwtype = "generalized_nn",
+                   regtype = "ll")
+kreg <- np::npreg(bwg, exdat = x_grid)
+bwa <- np::npregbw(formula = Y ~ X, bwtype = "adaptive_nn",
+                   regtype = "ll")
+krea <- np::npreg(bwa, exdat = x_grid)
 
 # Comparison
 plot(X, Y)

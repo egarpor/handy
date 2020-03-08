@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- mult-1, eval = knitr:::is_html_output()---------------------------------------
+## ---- mult-1, eval = knitr:::is_html_output()-----------------------------------
 ## # Sample data from a bivariate regression
 ## n <- 300
 ## set.seed(123456)
@@ -32,15 +32,14 @@
 ## # Local constant fit
 ## 
 ## # An alternative for calling np::npregbw without formula
-## out <- capture.output(bw0 <- np::npregbw(xdat = X, ydat = Y, regtype = "lc"))
-## # capture.output() to remove the multistart messages
+## bw0 <- np::npregbw(xdat = X, ydat = Y, regtype = "lc")
 ## kre0 <- np::npreg(bws = bw0, exdat = xy_grid) # Evaluation grid is now a matrix
 ## rgl::surface3d(x = x_grid, y = y_grid,
 ##                z = matrix(kre0$mean, nrow = lx, ncol = ly),
 ##                col = "red", alpha = 0.25, lit = FALSE)
 ## 
 ## # Local linear fit
-## out <- capture.output(bw1 <- np::npregbw(xdat = X, ydat = Y, regtype = "ll"))
+## bw1 <- np::npregbw(xdat = X, ydat = Y, regtype = "ll")
 ## kre1 <- np::npreg(bws = bw1, exdat = xy_grid)
 ## rgl::surface3d(x = x_grid, y = y_grid,
 ##                z = matrix(kre1$mean, nrow = lx, ncol = ly),
@@ -48,17 +47,15 @@
 ## rgl::rglwidget()
 
 
-## ---- mult-2------------------------------------------------------------------------
+## ---- mult-2--------------------------------------------------------------------
 # Employing the wine dataset
 wine <- read.table(file = "datasets/wine.csv", header = TRUE, sep = ",")
 
 # Bandwidth by CV for local linear estimator -- a product kernel with
 # 4 bandwidths
 # Employs 4 random starts for minimizing the CV surface
-out <- capture.output(
-  bw_wine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST +
-                           HarvestRain, data = wine, regtype = "ll")
-  )
+bw_wine <- np::npregbw(formula = Price ~ Age + WinterRain + AGST +
+                         HarvestRain, data = wine, regtype = "ll")
 bw_wine
 
 # Regression
@@ -83,7 +80,7 @@ apply(wine, 2, median)
 # - HarvestRain is negatively related with Price (almost linearly)
 
 
-## ---- mult-3------------------------------------------------------------------------
+## ---- mult-3--------------------------------------------------------------------
 # The argument "xq" controls the conditioning quantile of the predictors, by
 # default the median (xq = 0.5). But xq can be a vector of p quantiles, for
 # example (0.25, 0.5, 0.25, 0.75) for (Age, WinterRain, AGST, HarvestRain)
@@ -120,13 +117,11 @@ apply(wine[c("Price", "WinterRain", "HarvestRain")], 2, quantile, prob = tau)
 
 
 
-## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2--------------------------------------
+## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2----------------------------------
 # Bandwidth by CV for local linear estimator
 # Recall that Species is a factor!
-out <- capture.output(
-  bw_iris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species,
-                         data = iris)
-)
+bw_iris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species,
+                       data = iris)
 bw_iris
 # Product kernel with 2 bandwidths
 
@@ -144,17 +139,15 @@ par(mfrow = c(1, 2))
 plot(fit_iris, xq = 0.9, plot.par.mfrow = FALSE)
 
 
-## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----------------
+## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3------------
 # Load data
 data(oecdpanel, package = "np")
 
 # Bandwidth by CV for local constant -- use only two starts to reduce the
 # computation time
-out <- capture.output(
-  bw_OECD <- np::npregbw(formula = growth ~ factor(oecd) + ordered(year) +
-                          initgdp + popgro + inv + humancap, data = oecdpanel,
-                         regtype = "lc", nmulti = 2)
-)
+bw_OECD <- np::npregbw(formula = growth ~ factor(oecd) + ordered(year) +
+                         initgdp + popgro + inv + humancap, data = oecdpanel,
+                       regtype = "lc", nmulti = 2)
 bw_OECD
 
 # Regression
@@ -170,7 +163,7 @@ plot(fit_OECD, plot.par.mfrow = FALSE)
 
 
 
-## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3---------------
+## ---- predci, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3-----------
 # Asymptotic confidence bands for the marginal effects of each predictor on the
 # response
 par(mfrow = c(2, 3))
@@ -202,7 +195,7 @@ pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 
 
 
-## ---- exr-pred-sol, echo = FALSE, eval = FALSE--------------------------------------
+## ---- exr-pred-sol, echo = FALSE, eval = FALSE----------------------------------
 ## # Data
 ## data(Auto, package = "ISLR")
 ## set.seed(12345)
@@ -232,7 +225,7 @@ pred$fit + (qnorm(1 - alpha / 2) * pred$se.fit) %o% c(-1, 1)
 
 
 
-## ---- ll-1, eval = TRUE-------------------------------------------------------------
+## ---- ll-1, eval = TRUE---------------------------------------------------------
 # Simulate some data
 n <- 200
 logistic <- function(x) 1 / (1 + exp(-x))
@@ -280,7 +273,7 @@ legend("topright", legend = c("p(x)", "glm", "nlm", "locfit"), lwd = 2,
        col = c(1, 2, 3, 4), lty = c(1, 1, 2, 1))
 
 
-## ---- ll-2, eval = TRUE-------------------------------------------------------------
+## ---- ll-2, eval = TRUE---------------------------------------------------------
 # Exact LCV - recall that we *maximize* the LCV!
 h <- seq(0.1, 2, by = 0.1)
 suppressWarnings(
