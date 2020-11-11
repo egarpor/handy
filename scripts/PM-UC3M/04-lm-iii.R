@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- norms-3, echo = FALSE, eval = knitr:::is_html_output()----
+## ---- norms-3, echo = FALSE, eval = knitr:::is_html_output()---------------------
 ## # Graphing function
 ## M <- plot3D::mesh(x = seq(0, 1, l = 20), y = seq(-pi, pi, l = 4 * 4 + 1))
 ## x <- M$x
@@ -37,7 +37,7 @@
 
 
 
-## ---- shrinkage------------------------------------------------
+## ---- shrinkage------------------------------------------------------------------
 # Load data -- baseball players statistics
 data(Hitters, package = "ISLR")
 
@@ -63,7 +63,7 @@ y <- Hitters$Salary
 
 
 
-## ---- modelmatrix----------------------------------------------
+## ---- modelmatrix----------------------------------------------------------------
 # Data with NA in the first observation
 data_na <- data.frame("x1" = rnorm(3), "x2" = rnorm(3), "y" = rnorm(3))
 data_na$x1[1] <- NA
@@ -78,7 +78,7 @@ model.matrix(y ~ 0 + ., data = data_na, na.action = "na.pass")
 model.matrix.lm(y ~ 0 + ., data = data_na, na.action = "na.pass")
 
 
-## ---- ridge-1--------------------------------------------------
+## ---- ridge-1--------------------------------------------------------------------
 # Call to the main function -- use alpha = 0 for ridge regression
 library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0)
@@ -139,7 +139,7 @@ plot(log(ridgeMod$lambda), sqrt(colSums(ridgeMod$beta^2)), type = "l",
      xlab = "log(lambda)", ylab = "l2 norm")
 
 
-## ---- ridge-2--------------------------------------------------
+## ---- ridge-2--------------------------------------------------------------------
 # If we want, we can choose manually the grid of penalty parameters to explore
 # The grid should be descending
 ridgeMod2 <- glmnet(x = x, y = y, alpha = 0, lambda = 100:1)
@@ -154,7 +154,7 @@ set.seed(12345)
 kcvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = 10)
 # The lambda grid in which CV is done
 
-# The lambda that minimises the CV error is
+# The lambda that minimizes the CV error is
 kcvRidge$lambda.min
 
 # Equivalent to
@@ -180,7 +180,7 @@ kcvRidge2$lambda.min
 # But the CV curve is random, since it depends on the sample. Its variability
 # can be estimated by considering the CV curves of each fold. An alternative
 # approach to select lambda is to choose the largest within one standard
-# deviation of the minimum error, in order to favour simplicity of the model
+# deviation of the minimum error, in order to favor simplicity of the model
 # around the optimal lambda value. This is know as the "one standard error rule"
 kcvRidge2$lambda.1se
 
@@ -202,7 +202,7 @@ ncvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = nrow(Hitters),
 plot(ncvRidge)
 
 
-## ---- ridge-3--------------------------------------------------
+## ---- ridge-3--------------------------------------------------------------------
 # The glmnet fit is inside the output of cv.glmnet
 modRidgeCV <- kcvRidge2$glmnet.fit
 
@@ -227,7 +227,7 @@ plot(log(modRidgeCV$lambda),
 
 
 
-## ---- ridge-4--------------------------------------------------
+## ---- ridge-4--------------------------------------------------------------------
 # Random data
 p <- 5
 n <- 200
@@ -250,7 +250,7 @@ X <- model.matrix(y ~ x) # A way of constructing a design matrix that is a
 solve(crossprod(X)) %*% t(X) %*% y
 
 # Restricted fit
-# glmnet considers as the reguarization parameter "lambda" the value
+# glmnet considers as the regularization parameter "lambda" the value
 # lambda / n (lambda being here the penalty parameter employed in the theory)
 lambda <- 2
 fit <- glmnet(x, y, alpha = 0, lambda = lambda / n, intercept = TRUE,
@@ -262,7 +262,7 @@ betaLambdaHat
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
 
 
-## ---- lasso-1--------------------------------------------------
+## ---- lasso-1--------------------------------------------------------------------
 # Get the Hitters data back
 x <- model.matrix(Salary ~ 0 + ., data = Hitters) 
 y <- Hitters$Salary
@@ -287,7 +287,7 @@ plot(log(lassoMod$lambda), colSums(abs(lassoMod$beta)), type = "l",
 set.seed(12345)
 kcvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = 10)
 
-# The lambda that minimises the CV error is
+# The lambda that minimizes the CV error is
 kcvLasso$lambda.min
 
 # The "one standard error rule" for lambda
@@ -313,7 +313,7 @@ ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
 plot(ncvLasso)
 
 
-## ---- lasso-2--------------------------------------------------
+## ---- lasso-2--------------------------------------------------------------------
 # Inspect the best models
 modLassoCV <- kcvLasso$glmnet.fit
 plot(modLassoCV, label = TRUE, xvar = "lambda")
@@ -330,7 +330,7 @@ predict(modLassoCV, type = "response",
         newx = x[1:2, ])
 
 
-## ---- lasso-3--------------------------------------------------
+## ---- lasso-3--------------------------------------------------------------------
 # We can use lasso for model selection!
 selPreds <- predict(modLassoCV, type = "coefficients",
                     s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se))[-1, ] != 0
@@ -375,7 +375,7 @@ BIC(modLassoSel1, modLassoSel2, modBICFromLasso, modBIC)
 
 
 
-## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'-----------------
+## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'-----------------------------------
 # Random data with predictors unrelated with the response
 p <- 100
 n <- 300
@@ -388,7 +388,7 @@ lambdaGrid <- exp(seq(-10, 3, l = 200))
 plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
 
 
-## ---- constr-1-------------------------------------------------
+## ---- constr-1-------------------------------------------------------------------
 # Simulate data
 set.seed(123456)
 n <- 50
@@ -437,7 +437,7 @@ beta_hat_A_0
 
 
 
-## ---- multr-1--------------------------------------------------
+## ---- multr-1--------------------------------------------------------------------
 # Dimensions and sample size
 p <- 3
 q <- 2
@@ -458,7 +458,7 @@ Y <- X %*% B + E
 mod <- lm(Y ~ X)
 mod
 # Note that the intercept is markedly different from zero -- that is because
-# X is not centred
+# X is not centered
 
 # Compare with B
 B
@@ -472,7 +472,7 @@ summary(lm(Y[, 1] ~ X))
 summary(lm(Y[, 2] ~ X))
 
 
-## ---- multr-2--------------------------------------------------
+## ---- multr-2--------------------------------------------------------------------
 # When we want to add several variables of a dataset as responses through a 
 # formula interface, we have to use cbind() in the response. Doing 
 # "Petal.Width + Petal.Length ~ ..." is INCORRECT, as lm will understand 
@@ -483,7 +483,7 @@ modIris <- lm(cbind(Petal.Width, Petal.Length) ~
                 Sepal.Length + Sepal.Width + Species, data = iris)
 summary(modIris)
 
-# The fitted values and resiuals are now matrices
+# The fitted values and residuals are now matrices
 head(modIris$fitted.values)
 head(modIris$residuals)
 
@@ -494,7 +494,7 @@ summary(modIris1)
 summary(modIris2)
 
 
-## ---- multr-3--------------------------------------------------
+## ---- multr-3--------------------------------------------------------------------
 # Confidence intervals for the parameters
 confint(modIris)
 # Warning! Do not confuse Petal.Width:Sepal.Length with an interaction term!
@@ -517,7 +517,7 @@ anova(modIris2)
 anova(modIris)
 
 
-## ---- multr-4--------------------------------------------------
+## ---- multr-4--------------------------------------------------------------------
 # Simulate data
 n <- 500
 p <- 50
@@ -561,7 +561,7 @@ preds <- predict(kcvLassoMfit, type = "response",
 preds
 
 
-## ---- multr-5, eval = FALSE------------------------------------
+## ---- multr-5, eval = FALSE------------------------------------------------------
 ## manipulate::manipulate({
 ## 
 ##   # Plot true B
@@ -578,7 +578,7 @@ preds
 ##                           initial = 10, label = "j in lambda(j)"))
 
 
-## ---- biglm-1--------------------------------------------------
+## ---- biglm-1--------------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
 set.seed(12345)
 n <- 1e6
@@ -593,7 +593,7 @@ y2 <- 1 + x2 %*% beta + rnorm(100)
 bigData1 <- data.frame("resp" = y1, "pred" = x1)
 bigData2 <- data.frame("resp" = y2, "pred" = x2)
 
-# biglm has a very similar syntaxis to lm -- but the formula interface does not
+# biglm has a very similar syntax to lm -- but the formula interface does not
 # work always as expected
 # biglm::biglm(formula = resp ~ ., data = bigData1) # Does not work
 # biglm::biglm(formula = y ~ x) # Does not work
@@ -645,12 +645,12 @@ AIC(biglmMod, k = log(n))
 s2$sigma^2
 
 
-## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'-----------------
+## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'-----------------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
 plot(reg) # Plot best model (top row) to worst model (bottom row)
 
-# Summarize (otherwise regsubsets's outptut is hard to decypher)
+# Summarize (otherwise regsubsets's output is hard to decipher)
 subs <- summary(reg)
 subs
 
@@ -675,7 +675,7 @@ MASS::stepAIC(lm(resp ~ ., data = bigData1), trace = 0,
               direction = "backward", k = log(n))
 
 
-## ---- biglm-3--------------------------------------------------
+## ---- biglm-3--------------------------------------------------------------------
 # Size of the response
 print(object.size(rnorm(1e6)) * 1e2, units = "GiB")
 
@@ -683,7 +683,7 @@ print(object.size(rnorm(1e6)) * 1e2, units = "GiB")
 print(object.size(rnorm(1e6)) * 1e2 * 10, units = "GiB")
 
 
-## ---- biglm-4--------------------------------------------------
+## ---- biglm-4--------------------------------------------------------------------
 # Linear regression with n = 10^8 and p = 10
 n <- 10^8
 p <- 10
