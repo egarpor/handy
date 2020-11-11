@@ -32,15 +32,19 @@ lm(yExp ~ x, data = leastSquares)
 mod <- lm(yLin ~ x, data = leastSquares)
 mod
 
-# mod is a list of objects whose names are
-names(mod)
-
-# We can access these elements by $
-mod$coefficients
-
 # We can produce a plot with the linear fit easily
 plot(x, yLin)
 abline(coef = mod$coefficients, col = 2)
+
+# Access coefficients with $coefficients
+mod$coefficients
+
+# Compute the minimized RSS
+sum((yLin - mod$coefficients[1] - mod$coefficients[2] * x)^2)
+sum(mod$residuals^2)
+
+# mod is a list of objects whose names are
+names(mod)
 
 
 
