@@ -21,7 +21,6 @@ yExp <- -0.5 + 1.5 * 2^x + eps
 # Data
 leastSquares <- data.frame(x = x, yLin = yLin, yQua = yQua, yExp = yExp)
 
-
 ## ---- lscheck-2, fig.cap = '(ref:lscheck-2-title)'-------------------------------
 # Call lm
 lm(yLin ~ x, data = leastSquares)
@@ -46,9 +45,6 @@ sum(mod$residuals^2)
 # mod is a list of objects whose names are
 names(mod)
 
-
-
-
 ## ---- lmcov----------------------------------------------------------------------
 # Covariance
 Sxy <- cov(x, yLin)
@@ -65,13 +61,9 @@ c(beta0, beta1)
 mod <- lm(yLin ~ x, data = leastSquares)
 mod$coefficients
 
-
-
-
 ## ---- wintab-1, eval = FALSE-----------------------------------------------------
 ## # Read data
 ## wine <- read.table(file = "wine.csv", header = TRUE, sep = ",")
-
 
 ## ---- wintab-2, fig.margin = FALSE, fig.fullwidth = TRUE, out.width = .tex_web('85%', '100%'), fig.cap = '(ref:wintab-2-title)'----
 # Numerical -- marginal distributions
@@ -81,12 +73,10 @@ summary(wine)
 car::scatterplotMatrix(wine, col = 1, regLine = list(col = 2),
                        smooth = list(col.smooth = 4, col.spread = 4))
 
-
 ## ---- wintab-3-------------------------------------------------------------------
 # Set row names to Year -- useful for outlier identification
 row.names(wine) <- wine$Year
 wine$Year <- NULL
-
 
 ## ---- pred-----------------------------------------------------------------------
 # Price ~ AGST
@@ -102,21 +92,11 @@ names(sumModAGST)
 # R^2
 sumModAGST$r.squared
 
-
-
-
 ## ---- mods, echo = FALSE---------------------------------------------------------
 modFrancePop <- lm(Price ~ FrancePop, data = wine)
 modAge <- lm(Price ~ Age, data = wine)
 modWinterRain <- lm(Price ~ WinterRain, data = wine)
 modHarvestRain <- lm(Price ~ HarvestRain, data = wine)
-
-
-
-
-
-
-
 
 ## ---- lscheck3d-1, echo = FALSE--------------------------------------------------
 # Generates 50 points from a N(0, 1): predictors and error
@@ -135,10 +115,8 @@ yExp <- -0.5 + 0.5 * exp(x2) + x3 + eps
 leastSquares3D <- data.frame(x1 = x1, x2 = x2, yLin = yLin,
                              yQua = yQua, yExp = yExp)
 
-
 ## ---- lscheck3d-2, eval = FALSE--------------------------------------------------
 ## load(file = "least-Squares-3D.RData")
-
 
 ## ---- ls3dcheck-3----------------------------------------------------------------
 # Output from lm
@@ -158,16 +136,12 @@ beta <- solve(t(X) %*% X) %*% t(X) %*% Y
 # t() transposes a matrix
 beta
 
-
-
-
 ## ---- fitres, eval = FALSE-------------------------------------------------------
 ## # Fitted values
 ## mod$fitted.values
 ## 
 ## # Residuals
 ## mod$residuals
-
 
 ## ---- datamarg-------------------------------------------------------------------
 set.seed(212542)
@@ -176,13 +150,6 @@ x1 <- rnorm(n, sd = 2)
 x2 <- rnorm(n, mean = x1, sd = 3)
 y <- 1 + 2 * x1 - x2 + rnorm(n, sd = 1)
 data <- data.frame(x1 = x1, x2 = x2, y = y)
-
-
-
-
-
-
-
 
 ## ---- case1-1--------------------------------------------------------------------
 # Regression on all the predictors
@@ -195,31 +162,6 @@ modWine1
 
 # Summary
 summary(modWine1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## ---- case1-2--------------------------------------------------------------------
 # Fit
@@ -235,15 +177,12 @@ sumModWine1$sigma
 # Which is the same as
 sqrt(sum(modWine1$residuals^2) / modWine1$df.residual)
 
-
 ## ---- case1-3--------------------------------------------------------------------
 modWine2 <- lm(Price ~ . - FrancePop, data = wine)
 summary(modWine2)
 
-
 ## ---- case1-4--------------------------------------------------------------------
 car::compareCoefs(modWine1, modWine2)
-
 
 ## ---- case1-5--------------------------------------------------------------------
 # Fit a new model
@@ -263,13 +202,6 @@ confint(modWine1)
 confint(modWine2)
 confint(modWine3)
 
-
-
-
-
-
-
-
 ## ---- case1-5b-------------------------------------------------------------------
 # By default, scale centers (subtracts the mean) and scales (divides by the
 # standard deviation) the columns of a matrix
@@ -280,11 +212,6 @@ modWine3Cen <- lm(Price ~ Age + WinterRain, data = wineCen)
 
 # Summary
 summary(modWine3Cen)
-
-
-
-
-
 
 ## ---- case1-6, error = TRUE------------------------------------------------------
 # Fit a linear model for the price on WinterRain, HarvestRain, and AGST
@@ -330,15 +257,6 @@ weather2 <- data.frame(WinterRain = c(500, 200), HarvestRain = c(123, 200),
                        AGST = c(17, 18))
 predict(modWine4, newdata = weather2, interval = "prediction")
 
-
-
-
-
-
-
-
-
-
 ## ---- simpleAnova----------------------------------------------------------------
 # This function computes the simplified anova from a linear model
 simpleAnova <- function(object, ...) {
@@ -365,7 +283,6 @@ simpleAnova <- function(object, ...) {
 
 }
 
-
 ## ---- case1-7--------------------------------------------------------------------
 # Models
 modWine1 <- lm(Price ~ ., data = wine)
@@ -379,13 +296,6 @@ simpleAnova(modWine2)
 
 # R's ANOVA table -- warning this is not what we saw in lessons
 anova(modWine1)
-
-
-
-
-
-
-
 
 ## ---- R2bad-1, fig.cap = '(ref:R2bad-1-title)'-----------------------------------
 # Simple linear model
@@ -409,7 +319,6 @@ summary(reg)
 # But prediction is obviously problematic
 car::scatterplot(y ~ x, col = 1, regLine = list(col = 2), smooth = FALSE)
 
-
 ## ---- R2bad-2--------------------------------------------------------------------
 # Multiple linear model
 
@@ -426,20 +335,10 @@ y <- 1 - 3 * x1 * (1 + 0.25 * sin(4 * pi * x1)) + 0.25 * cos(x2) + eps
 reg <- lm(y ~ x1 + x2)
 summary(reg)
 
-
 ## ---- R2bad-4, eval = knitr:::is_html_output()-----------------------------------
 ## # But prediction is obviously problematic
 ## car::scatter3d(y ~ x1 + x2, fit = "linear")
 ## rgl::rglwidget()
-
-
-
-
-
-
-
-
-
 
 ## ---- R2bad-3, eval = FALSE------------------------------------------------------
 ## # Generate data
@@ -458,9 +357,6 @@ summary(reg)
 ## # R^2 increases and adjusted R^2 decreases
 ## summary(lm(y ~ X[, 1:22], data = data))
 
-
-
-
 ## ---- R2Adjneg-------------------------------------------------------------------
 # Three independent variables
 set.seed(234599)
@@ -470,11 +366,6 @@ y <- 1 + rnorm(100)
 
 # Negative adjusted R^2
 summary(lm(y ~ x1 + x2))
-
-
-
-
-
 
 ## ---- R2danger-2-----------------------------------------------------------------
 # Model with intercept
@@ -541,9 +432,6 @@ summary(modCen0)
 
 # But only if we center predictor and response...
 summary(lm(iris$Sepal.Length ~ 0 + irisCen$Petal.Width))
-
-
-
 
 ## ---- case1-8--------------------------------------------------------------------
 # Fit models

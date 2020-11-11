@@ -34,9 +34,6 @@
 ##                                nrow = 4, ncol = 4, byrow = TRUE))
 ## rgl::rglwidget()
 
-
-
-
 ## ---- shrinkage------------------------------------------------------------------
 # Load data -- baseball players statistics
 data(Hitters, package = "ISLR")
@@ -60,9 +57,6 @@ head(x[, 14:19])
 # We also need the vector of responses
 y <- Hitters$Salary
 
-
-
-
 ## ---- modelmatrix----------------------------------------------------------------
 # Data with NA in the first observation
 data_na <- data.frame("x1" = rnorm(3), "x2" = rnorm(3), "y" = rnorm(3))
@@ -76,7 +70,6 @@ model.matrix(y ~ 0 + ., data = data_na, na.action = "na.pass")
 
 # Does not ignore NA's
 model.matrix.lm(y ~ 0 + ., data = data_na, na.action = "na.pass")
-
 
 ## ---- ridge-1--------------------------------------------------------------------
 # Call to the main function -- use alpha = 0 for ridge regression
@@ -137,7 +130,6 @@ points(rep(log(ridgeMod$lambda[50]), nrow(ridgeMod$beta)), ridgeMod$beta[, 50],
 # The squared l2-norm of the coefficients decreases as lambda increases
 plot(log(ridgeMod$lambda), sqrt(colSums(ridgeMod$beta^2)), type = "l",
      xlab = "log(lambda)", ylab = "l2 norm")
-
 
 ## ---- ridge-2--------------------------------------------------------------------
 # If we want, we can choose manually the grid of penalty parameters to explore
@@ -201,7 +193,6 @@ ncvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvRidge)
 
-
 ## ---- ridge-3--------------------------------------------------------------------
 # The glmnet fit is inside the output of cv.glmnet
 modRidgeCV <- kcvRidge2$glmnet.fit
@@ -223,9 +214,6 @@ predict(modRidgeCV, type = "response", s = kcvRidge2$lambda.1se,
 plot(log(modRidgeCV$lambda),
      predict(modRidgeCV, type = "response", newx = x[1, , drop = FALSE]),
      type = "l", xlab = "log(lambda)", ylab = " Prediction")
-
-
-
 
 ## ---- ridge-4--------------------------------------------------------------------
 # Random data
@@ -260,7 +248,6 @@ betaLambdaHat
 
 # Analytical form with intercept
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
-
 
 ## ---- lasso-1--------------------------------------------------------------------
 # Get the Hitters data back
@@ -312,7 +299,6 @@ ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvLasso)
 
-
 ## ---- lasso-2--------------------------------------------------------------------
 # Inspect the best models
 modLassoCV <- kcvLasso$glmnet.fit
@@ -328,7 +314,6 @@ predict(modLassoCV, type = "coefficients",
 predict(modLassoCV, type = "response",
         s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se),
         newx = x[1:2, ])
-
 
 ## ---- lasso-3--------------------------------------------------------------------
 # We can use lasso for model selection!
@@ -370,11 +355,6 @@ summary(modBICFromLasso)
 # Comparison in terms of BIC, slight improvement with modBICFromLasso
 BIC(modLassoSel1, modLassoSel2, modBICFromLasso, modBIC)
 
-
-
-
-
-
 ## ---- lasso-4, fig.cap = '(ref:lasso-4-title)'-----------------------------------
 # Random data with predictors unrelated with the response
 p <- 100
@@ -386,7 +366,6 @@ y <- 1 + rnorm(n)
 # CV
 lambdaGrid <- exp(seq(-10, 3, l = 200))
 plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
-
 
 ## ---- constr-1-------------------------------------------------------------------
 # Simulate data
@@ -428,15 +407,6 @@ beta_hat_A
 beta_hat_A_0 <- mean(y) - c(mean(x1), mean(x2), mean(x3)) %*% beta_hat_A
 beta_hat_A_0
 
-
-
-
-
-
-
-
-
-
 ## ---- multr-1--------------------------------------------------------------------
 # Dimensions and sample size
 p <- 3
@@ -471,7 +441,6 @@ summary(mod)
 summary(lm(Y[, 1] ~ X))
 summary(lm(Y[, 2] ~ X))
 
-
 ## ---- multr-2--------------------------------------------------------------------
 # When we want to add several variables of a dataset as responses through a 
 # formula interface, we have to use cbind() in the response. Doing 
@@ -492,7 +461,6 @@ modIris1 <- lm(Petal.Width ~Sepal.Length + Sepal.Width + Species, data = iris)
 modIris2 <- lm(Petal.Length ~Sepal.Length + Sepal.Width + Species, data = iris)
 summary(modIris1)
 summary(modIris2)
-
 
 ## ---- multr-3--------------------------------------------------------------------
 # Confidence intervals for the parameters
@@ -515,7 +483,6 @@ anova(modIris2)
 # *sequential* ANOVA table briefly covered in Section 2.6. The hypothesis test
 # is by default conducted with the Pillai statistic (an extension of the F-test)
 anova(modIris)
-
 
 ## ---- multr-4--------------------------------------------------------------------
 # Simulate data
@@ -560,7 +527,6 @@ preds <- predict(kcvLassoMfit, type = "response",
                  newx = X[1:2, ])
 preds
 
-
 ## ---- multr-5, eval = FALSE------------------------------------------------------
 ## manipulate::manipulate({
 ## 
@@ -576,7 +542,6 @@ preds
 ## 
 ## }, j = manipulate::slider(min = 1, max = ncol(mfit$beta$y1), step = 1,
 ##                           initial = 10, label = "j in lambda(j)"))
-
 
 ## ---- biglm-1--------------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
@@ -644,7 +609,6 @@ AIC(biglmMod, k = log(n))
 (s1$nullrss * (1 - s1$rsq)) / s1$obj$df.resid
 s2$sigma^2
 
-
 ## ---- biglm-2, fig.cap = '(ref:biglm-2-title)'-----------------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
@@ -674,14 +638,12 @@ subs$which[which.min(subs$bic), ]
 MASS::stepAIC(lm(resp ~ ., data = bigData1), trace = 0,
               direction = "backward", k = log(n))
 
-
 ## ---- biglm-3--------------------------------------------------------------------
 # Size of the response
 print(object.size(rnorm(1e6)) * 1e2, units = "GiB")
 
 # Size of the predictors
 print(object.size(rnorm(1e6)) * 1e2 * 10, units = "GiB")
-
 
 ## ---- biglm-4--------------------------------------------------------------------
 # Linear regression with n = 10^8 and p = 10

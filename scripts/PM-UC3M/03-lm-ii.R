@@ -14,16 +14,13 @@
 ## # # Alternatively
 ## # data(Boston, package = "MASS")
 
-
 ## ---- case2-3--------------------------------------------------------------------
 summary(Boston)
-
 
 ## ---- scat2, fig.cap = '(ref:scat2-title)', fig.margin = FALSE-------------------
 car::scatterplotMatrix(~ crim + dis + medv + nox + rm, regLine = list(col = 2),
                        col = 1, smooth = list(col.smooth = 4, col.spread = 4),
                        data = Boston)
-
 
 ## ---- lmitcasesn, results = 'hide'-----------------------------------------------
 # Data: n observations and p = n - 1 predictors
@@ -39,9 +36,6 @@ summary(lm(y ~ ., data = df))
 # Case p = n - 2 = 1: both beta and sigma^2 can be estimated (hence, inference
 # can be performed)
 summary(lm(y ~ . - x.1, data = df))
-
-
-
 
 ## ---- case2-4--------------------------------------------------------------------
 # Two models with different predictors
@@ -60,13 +54,9 @@ AIC(mod2) # Smaller -> better
 summary(mod1)
 summary(mod2)
 
-
-
-
 ## ---- case2-6, eval = FALSE------------------------------------------------------
 ## # Load data -- notice that "Year" is also included
 ## wine <- read.csv(file = "wine.csv", header = TRUE)
-
 
 ## ---- bic-1----------------------------------------------------------------------
 # Full model
@@ -79,9 +69,6 @@ summary(modBIC)
 # With AIC
 modAIC <- MASS::stepAIC(mod, k = 2)
 summary(modAIC)
-
-
-
 
 ## ---- type-aic-------------------------------------------------------------------
 # Same BICs, different scale
@@ -103,9 +90,6 @@ n * (log(2 * pi) + 1) + log(n)
 # Same for the AIC
 AIC(modAIC) - extractAIC(modAIC)[2]
 n * (log(2 * pi) + 1) + 2
-
-
-
 
 ## ---- bic-2----------------------------------------------------------------------
 # Add an irrelevant predictor to the wine dataset
@@ -161,17 +145,9 @@ MASS::stepAIC(modAll, direction = "both", k = log(n))
 MASS::stepAIC(modAll, direction = "both", trace = 0,
               scope = list(lower = modZero, upper = modAll), k = log(n))
 
-
-
-
-
-
-
-
 ## ---- case2-7--------------------------------------------------------------------
 modHouse <- lm(medv ~ ., data = Boston)
 summary(modHouse)
-
 
 ## ---- case2-8--------------------------------------------------------------------
 # Best models
@@ -184,9 +160,6 @@ summary(modBIC)
 
 # Confidence intervals
 confint(modBIC)
-
-
-
 
 ## ---- qua------------------------------------------------------------------------
 # iris dataset -- factors in the last column
@@ -223,11 +196,6 @@ contrasts(iris$Species)
 iris$Species <- relevel(iris$Species, ref = "setosa")
 contrasts(iris$Species)
 
-
-
-
-
-
 ## ---- case2-9--------------------------------------------------------------------
 # Load the Boston dataset
 data(Boston, package = "MASS")
@@ -252,15 +220,6 @@ summary(modBIC)
 # The coefficient associated to chas is 2.71871. If the suburb is close to
 # the river, the mean of medv increases in 2.71871 units
 # chas is significant as well in the presence of more predictors
-
-
-
-
-
-
-
-
-
 
 ## ---- datatra--------------------------------------------------------------------
 # Data
@@ -289,11 +248,6 @@ summary(mod1)
 summary(mod2)
 # mod2 has a larger R^2. Also notice the intercept is not significative
 
-
-
-
-
-
 ## ---- pol-1-1, fig.cap = '(ref:pol-1-1-title)'-----------------------------------
 x1 <- seq(-1, 1, l = 4)
 poly(x = x1, degree = 2, raw = TRUE) # (X, X^2)
@@ -306,13 +260,11 @@ matplot(x, poly(x, degree = degree, raw = TRUE), type = "l", lty = 1,
         ylab = expression(x^k))
 legend("bottomright", legend = paste("k =", 1:degree), col = 1:degree, lwd = 2)
 
-
 ## ---- pol-1-2, fig.cap = '(ref:pol-1-2-title)'-----------------------------------
 # Depiction of orthogonal polynomials
 matplot(x, poly(x, degree = degree), type = "l", lty = 1,
         ylab = expression(p[k](x)))
 legend("bottomright", legend = paste("k =", 1:degree), col = 1:degree, lwd = 2)
-
 
 ## ---- pol-2-1, fig.cap = '(ref:pol-2-1-title)'-----------------------------------
 # Data containing speed (mph) and stopping distance (ft) of cars from 1920
@@ -349,7 +301,6 @@ plot(cars, xlab = "Speed (mph)", ylab = "Stopping distance (ft)")
 lines(d, predict(mod2, new = data.frame(speed = d)), col = 1)
 lines(d, predict(mod2Raw, new = data.frame(speed = d)), col = 2)
 
-
 ## ---- pol-2-2, fig.cap = '(ref:pol-2-2-title)', fig.show = 'hold'----------------
 # However: different coefficient estimates, but same R^2. How is this possible?
 summary(mod2)
@@ -363,9 +314,6 @@ car::scatterplotMatrix(mod2Raw$model[, -1],col = 1, regLine = list(col = 2),
                        smooth = list(col.smooth = 4, col.spread = 4))
 cor(mod2$model[, -1])
 cor(mod2Raw$model[, -1])
-
-
-
 
 ## ---- int-1----------------------------------------------------------------------
 # Interaction between lstat and age
@@ -383,9 +331,6 @@ summary(lm(medv ~ lstat * age, data = Boston))
 # Second order interaction
 summary(lm(medv ~ lstat * age * indus, data = Boston))
 
-
-
-
 ## ---- int-2----------------------------------------------------------------------
 # Include first-order interactions in the search for the best model in
 # terms of BIC, not just single predictors
@@ -399,7 +344,6 @@ MASS::dropterm(modIntBIC, k = log(nobs(modIntBIC)), sorted = TRUE)
 # Neither by including other terms interactions
 MASS::addterm(modIntBIC, scope = lm(medv ~ .^2, data = Boston),
               k = log(nobs(modIntBIC)), sorted = TRUE)
-
 
 ## ---- int-3----------------------------------------------------------------------
 # Group settings
@@ -451,7 +395,6 @@ plot(medv ~ lstat, data = Boston, col = col, pch = 16, cex = cex, main = "7")
 abline(a = mod7$coefficients[1], b = 0, col = 3, lwd = 2)
 abline(a = mod7$coefficients[1], b = mod7$coefficients[2], col = 4, lwd = 2)
 
-
 ## ---- int-4----------------------------------------------------------------------
 # Model using a dummy variable in the full dataset
 lm(medv ~ lstat + chas + lstat:chas, data = Boston)
@@ -464,7 +407,6 @@ lm(medv ~ lstat, data = Boston, subset = chas == 0)
 lm(medv ~ lstat, data = Boston, subset = chas == 1)
 # Notice that the intercept and lstat coefficient equal the ones from the
 # joint model, plus the specific terms associated to chas
-
 
 ## ---- int-5, fig.cap = '(ref:int-5-title)'---------------------------------------
 # Does not take into account the groups in the data
@@ -489,41 +431,25 @@ abline(a = modIrisSpecies$coefficients[1] + modIrisSpecies$coefficients[4],
        b = modIrisSpecies$coefficients[2] + modIrisSpecies$coefficients[6],
        col = 4, lwd = 2)
 
-
-
-
-
-
-
-
 ## ---- case2-11, eval = FALSE-----------------------------------------------------
 ## load("wine.RData")
 ## mod <- lm(Price ~ Age + AGST + HarvestRain + WinterRain, data = wine)
 ## summary(mod)
 
-
-
-
 ## ---- diag-1, fig.cap = '(ref:diag-1-title)'-------------------------------------
 plot(mod, 1)
-
-
-
 
 ## ---- diag-2, fig.cap = '(ref:diag-2-title)'-------------------------------------
 par(mfrow = c(2, 2)) # We have 4 predictors
 termplot(mod, partial.resid = TRUE)
-
 
 ## ---- diag-3, fig.cap = '(ref:diag-3-title)', fig.asp = 1/2----------------------
 par(mfrow = c(1, 2))
 plot(lm(y ~ x, data = nonLinear), 1) # Nonlinear
 plot(lm(y ~ I(x^2), data = nonLinear), 1) # Linear
 
-
 ## ---- diag-4, fig.cap = '(ref:diag-4-title)'-------------------------------------
 plot(mod, 2)
-
 
 ## ---- diag-5---------------------------------------------------------------------
 # Shapiro-Wilk test of normality
@@ -535,13 +461,6 @@ shapiro.test(mod$residuals)
 # Lilliefors test -- the Kolmogorov-Smirnov adaptation for testing normality
 nortest::lillie.test(mod$residuals)
 # We do not reject normality
-
-
-
-
-
-
-
 
 ## ---- box-yeo, fig.asp = 1/2, fig.margin = FALSE---------------------------------
 # Test data
@@ -598,20 +517,13 @@ par(mfrow = c(1, 2))
 plot(lm(Y ~ X1 + X2), 2)
 plot(lm(YTransf ~ X1 + X2), 2) # Slightly better
 
-
 ## ---- diag-6, fig.cap = '(ref:diag-6-title)'-------------------------------------
 plot(mod, 3)
-
-
-
 
 ## ---- diag-7---------------------------------------------------------------------
 # Breusch-Pagan test
 car::ncvTest(mod)
 # We do not reject homoscedasticity
-
-
-
 
 ## ---- breusch, fig.cap = '(ref:breusch-title)', fig.show = 'hold'----------------
 # Heteroskedastic models
@@ -629,7 +541,6 @@ plot(modHet1, 3)
 # Heteroskedasticity correctly detected
 car::ncvTest(modHet2)
 plot(modHet2, 3)
-
 
 ## ---- diag-8, fig.cap = '(ref:diag-8-title)', fig.show = 'hold'------------------
 # Artificial data with heteroskedasticity
@@ -660,28 +571,18 @@ YJ <- car::powerTransform(lm(Y ~ X), family = "yjPower")
 YTransf <- car::yjPower(U = Y, lambda = lambdaYJ)
 plot(lm(YTransf ~ X), 3) # Slightly less hereroskedastic
 
-
 ## ---- diag-9, fig.cap = '(ref:diag-9-title)'-------------------------------------
 plot(mod$residuals, type = "o")
-
 
 ## ---- diag-10--------------------------------------------------------------------
 lag.plot(mod$residuals, lags = 1, do.lines = FALSE)
 # No serious serial trend, but some negative autocorrelation is appreciated
 cor(mod$residuals[-1], mod$residuals[-length(mod$residuals)])
 
-
 ## ---- diag-11--------------------------------------------------------------------
 # Durbin-Watson test
 car::durbinWatsonTest(mod)
 # Does not reject at alpha = 0.05
-
-
-
-
-
-
-
 
 ## ---- multico-1, message = FALSE, fig.cap = '(ref:multico-1-title)'--------------
 # Numerically
@@ -689,7 +590,6 @@ cor(wine)
 
 # Graphically
 corrplot::corrplot(cor(wine), addCoef.col = "grey")
-
 
 ## ---- multico-2, fig.cap = '(ref:multico-2-title)'-------------------------------
 # Create predictors with multicollinearity: x4 depends on the rest
@@ -705,7 +605,6 @@ data <- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, y = y)
 
 # Correlations -- none seems suspicious
 corrplot::corrplot(cor(data), addCoef.col = "grey")
-
 
 ## ---- multico-3------------------------------------------------------------------
 # Abnormal variance inflation factors: largest for x4, we remove it
@@ -727,12 +626,8 @@ summary(modClean)
 # Variance inflation factors are normal
 car::vif(modClean)
 
-
-
-
 ## ---- outl-1, fig.cap = '(ref:outl-1-title)'-------------------------------------
 plot(mod, 5)
-
 
 ## ---- outl-2---------------------------------------------------------------------
 # Create data
@@ -767,7 +662,6 @@ abline(coef = m2$coefficients, col = 2)
 plot(m2, 5)
 summary(m2)
 
-
 ## ---- outl-3---------------------------------------------------------------------
 # Access leverage statistics
 head(influence(model = m2, do.coef = FALSE)$hat)
@@ -786,26 +680,15 @@ rs <- rstandard(m2)
 plot(m2, 2) # QQ-plot
 points(qnorm(ppoints(n = n)), sort(rs), col = 2, pch = '+') # Manually computed
 
-
-
-
-
-
-
-
-
-
 ## ---- laliga-2, eval = FALSE-----------------------------------------------------
 ## laliga <- readxl::read_excel("la-liga-2015-2016.xlsx", sheet = 1, col_names = TRUE)
 ## laliga <- as.data.frame(laliga) # Avoid tibble since it drops row.names
-
 
 ## ---- laliga-3-------------------------------------------------------------------
 rownames(laliga) <- laliga$Team # Set teams as case names to avoid factors
 laliga$Team <- NULL
 laliga <- laliga[, -c(2, 8)] # Do not add irrelevant information
 summary(laliga)
-
 
 ## ---- pca-1----------------------------------------------------------------------
 # PCA
@@ -874,7 +757,6 @@ head(
   sweep(pcaLaliga$scores %*% t(pcaLaliga$loadings), 2, pcaLaliga$center, "+")
   )
 
-
 ## ---- pca-2, fig.show = 'hold', fig.cap = '(ref:pca-2-title)'--------------------
 # Use cor = TRUE to standardize variables (all have unit variance)
 # and avoid scale distortions
@@ -888,26 +770,16 @@ biplot(pcaLaliga, cex = 0.75)
 # The effects of the variables are more balanced
 biplot(pcaLaligaStd, cex = 0.75)
 
-
-
-
 ## ---- pca-4, echo = FALSE, fig.margin = FALSE, fig.cap = '(ref:pca-4-title)'-----
 biplot(pcaLaligaStd, cex = 0.75)
-
 
 ## ---- pca3d, eval = knitr:::is_html_output()-------------------------------------
 ## pca3d::pca3d(pcaLaligaStd, show.labels = TRUE, biplot = TRUE)
 ## rgl::rglwidget()
 
-
 ## ---- pca-5, fig.cap = '(ref:pca-5-title)', fig.show = 'hold'--------------------
 biplot(pcaLaligaStd, choices = c(1, 3)) # 0.7138 proportion of variance
 biplot(pcaLaligaStd, choices = c(2, 3)) # 0.2180 proportion of variance
-
-
-
-
-
 
 ## ---- pcr-1----------------------------------------------------------------------
 # A linear model is problematic
@@ -974,7 +846,6 @@ predict(modPCABIC, newdata = newScores, interval = "prediction")
 # Reality
 laliga[1:2, 1]
 
-
 ## ---- pcr-2----------------------------------------------------------------------
 # Create a dataset without the problematic predictors and with the response
 laligaRed2 <- subset(laliga, select = -c(Wins, Draws, Loses,
@@ -1031,9 +902,6 @@ modPcrCV10 <- pcr(Points ~ ., data = laligaRed2, scale = TRUE,
 summary(modPcrCV10)
 validationplot(modPcrCV10, val.type = "MSEP") # l = 6 gives the minimum CV
 
-
-
-
 ## ---- pcr-3----------------------------------------------------------------------
 # Equality of loadings from princomp() and pcr()
 max(abs(abs(pcaLaligaRed$loadings[, 1:3]) - abs(modPcr$loadings[, 1:3])))
@@ -1052,13 +920,6 @@ lm(Points ~ ., data = data.frame("Points" = laliga$Points,
                                  modPcr$scores[, 1:3] * sqrt(n / (n - 1))))
 modPCA3
 # Of course, flipping of signs is always possible with PCA
-
-
-
-
-
-
-
 
 ## ---- plsr-1---------------------------------------------------------------------
 # Simple call to plsr -- very similar to pcr
