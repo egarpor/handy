@@ -7,21 +7,21 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- challenger-load, eval = FALSE----------------------------------------------
+## ---- challenger-load, eval = FALSE-------------------------------
 ## challenger <- read.table(file = "challenger.txt", header = TRUE, sep = "\t")
 
-## ---- challengerfigs-------------------------------------------------------------
+## ---- challengerfigs----------------------------------------------
 car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger, subset = nfails.field > 0)
 car::scatterplot(nfails.field ~ temp, smooth = FALSE, boxplots = FALSE,
                  data = challenger)
 
-## ---- nasadiag-------------------------------------------------------------------
+## ---- nasadiag----------------------------------------------------
 mod <- lm(nfails.field ~ temp, data = challenger)
 plot(mod, 1)
 plot(mod, 2)
 
-## ---- logcurve-------------------------------------------------------------------
+## ---- logcurve----------------------------------------------------
 # Logistic regression: computed with glm and family = "binomial"
 nasa <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 
@@ -39,11 +39,11 @@ lines(x, y, col = 2, lwd = 2)
 points(-0.6, 1, pch = 16)
 text(-0.6, 1, labels = "Challenger", pos = 4)
 
-## ---- logsummary-----------------------------------------------------------------
+## ---- logsummary--------------------------------------------------
 # Exponentiated coefficients ("odds ratios")
 exp(coef(nasa))
 
-## ---- modform-1------------------------------------------------------------------
+## ---- modform-1---------------------------------------------------
 # Data
 set.seed(34567)
 x <- rnorm(50, sd = 1.5)
@@ -57,7 +57,7 @@ y3 <- rbinom(50, size = 1, prob = 1 / (1 + exp(-y3)))
 # Data
 dataMle <- data.frame(x = x, y1 = y1, y2 = y2, y3 = y3)
 
-## ---- modform-2, fig.cap = '(ref:modform-2-title)'-------------------------------
+## ---- modform-2, fig.cap = '(ref:modform-2-title)'----------------
 # Call glm
 mod <- glm(y1 ~ x, family = "binomial", data = dataMle)
 mod$coefficients
@@ -92,11 +92,12 @@ filled.contour(beta0, beta1, -L, color.palette = viridis::viridis,
 # The plot.axes argument is a hack to add graphical information within the
 # coordinates of the main panel (behind filled.contour there is a layout()...)
 
-## ---- pois-load, eval = FALSE----------------------------------------------------
+## ---- pois-load, eval = FALSE-------------------------------------
 ## species <- read.table("species.txt", header = TRUE)
 
-## ---- poiscurve------------------------------------------------------------------
+## ---- poiscurve---------------------------------------------------
 # Data
+species$pH <- as.factor(species$pH)
 plot(Species ~ Biomass, data = species, col = pH)
 legend("topright", legend = c("Low pH", "Medium pH", "High pH"),
        col = 1:3, lwd = 2)
@@ -140,10 +141,10 @@ z <- species2$coefficients[1] + species2$coefficients[2] * bio
 lines(bio, exp(z), col = 1, lty = 2)
 lines(bio, exp(species2$coefficients[3] + species2$coefficients[5] * bio + z),
       col = 2, lty = 2)
-lines(bio, exp(species2$coefficients[4] + species2$coefficients[6] * bio  + z),
+lines(bio, exp(species2$coefficients[4] + species2$coefficients[6] * bio + z),
       col = 3, lty = 2)
 
-## ---- nasa-case-1, message = FALSE-----------------------------------------------
+## ---- nasa-case-1, message = FALSE--------------------------------
 # Summary of the model
 summary(nasa)
 
@@ -156,7 +157,7 @@ confint.default(nasa, level = 0.90)
 # Confidence intervals for the factors affecting the odds
 exp(confint.default(nasa))
 
-## ---- testcoef-1-----------------------------------------------------------------
+## ---- testcoef-1--------------------------------------------------
 # Significances with asymptotic approximation for the standard errors
 summary(nasa)
 
@@ -168,10 +169,10 @@ confint.default(nasa, level = 0.99)
 confint(nasa, level = 0.95) # intercept still significant
 confint(nasa, level = 0.99) # temp still significant
 
-## ---- pred-case-1----------------------------------------------------------------
+## ---- pred-case-1-------------------------------------------------
 predict(nasa, newdata = data.frame(temp = -0.6), type = "response")
 
-## ---- pred-case-2----------------------------------------------------------------
+## ---- pred-case-2-------------------------------------------------
 # Function for computing the predictions and CIs for the conditional probability
 predictCIsLogistic <- function(object, newdata, level = 0.95) {
 
@@ -195,7 +196,7 @@ predictCIsLogistic <- function(object, newdata, level = 0.95) {
 
 }
 
-## ---- pred-case-3----------------------------------------------------------------
+## ---- pred-case-3-------------------------------------------------
 # Data for which we want a prediction
 newdata <- data.frame(temp = -0.6)
 
@@ -211,7 +212,7 @@ predictCIsLogistic(nasa, newdata = newdata)
 # that makes the prediction more variable (and also because we only
 # have 23 observations)
 
-## ---- deviance-1-----------------------------------------------------------------
+## ---- deviance-1--------------------------------------------------
 # Summary of model
 nasa <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 summaryLog <- summary(nasa)
@@ -235,7 +236,7 @@ r2glm <- function(model) {
 r2glm(nasa)
 r2glm(null)
 
-## ---- deviance-2-----------------------------------------------------------------
+## ---- deviance-2--------------------------------------------------
 # Polynomial predictors
 nasa0 <- glm(fail.field ~ 1, family = "binomial", data = challenger)
 nasa1 <- glm(fail.field ~ temp, family = "binomial", data = challenger)
@@ -282,7 +283,7 @@ anova(species1, species2, test = "Chisq")
 r2glm(species1)
 r2glm(species2)
 
-## ---- glmmodsel-1----------------------------------------------------------------
+## ---- glmmodsel-1-------------------------------------------------
 # Models
 nasa1 <- glm(fail.field ~ temp, family = "binomial", data = challenger)
 nasa2 <- glm(fail.field ~ temp + pres.field, family = "binomial",
@@ -296,7 +297,7 @@ summary(nasa2)
 AIC(nasa1) # Better
 AIC(nasa2)
 
-## ---- glmmodsel-2----------------------------------------------------------------
+## ---- glmmodsel-2-------------------------------------------------
 # Boston dataset
 data(Boston, package = "MASS")
 
@@ -310,7 +311,7 @@ modBIC <- MASS::stepAIC(mod, trace = 0, k = log(nrow(Boston)))
 summary(modBIC)
 r2glm(modBIC)
 
-## ---- glmmodsel-3----------------------------------------------------------------
+## ---- glmmodsel-3-------------------------------------------------
 # Fitted probabilities for Y = 1
 nasa$fitted.values
 
@@ -327,7 +328,7 @@ tab
 # Hit ratio (ratio of correct classification)
 sum(diag(tab)) / sum(tab)
 
-## ---- moddiag-1------------------------------------------------------------------
+## ---- moddiag-1---------------------------------------------------
 # Create predictors with multicollinearity: x4 depends on the rest
 set.seed(45678)
 x1 <- rnorm(100)
@@ -357,7 +358,7 @@ summary(modClean)
 # Generalized variance inflation factors normal
 car::vif(modClean)
 
-## ---- glmshrinkage---------------------------------------------------------------
+## ---- glmshrinkage------------------------------------------------
 # Load data
 data(Hitters, package = "ISLR")
 
@@ -371,7 +372,7 @@ Hitters <- na.omit(Hitters)
 y <- Hitters$League
 x <- model.matrix(League ~ ., data = Hitters)[, -1]
 
-## ---- glmshr-1-------------------------------------------------------------------
+## ---- glmshr-1----------------------------------------------------
 # Ridge and lasso regressions
 library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0, family = "binomial")
@@ -406,7 +407,7 @@ ncvLasso$lambda.1se
 # Model selected
 predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
 
-## ---- glmshr-2, fig.asp = 1/2----------------------------------------------------
+## ---- glmshr-2, fig.asp = 1/2-------------------------------------
 # Analyze the selected model)
 fit <- glm(League ~ HmRun, data = Hitters, family = "binomial")
 summary(fit)
@@ -440,111 +441,111 @@ H <- table(pred > 0.5, y[!train] == "A") # ("A" was the reference level)
 H
 sum(diag(H)) / sum(H) # Worse than tossing a coin!
 
-## ---- bigglm-1-------------------------------------------------------------------
-# Not really "big data", but for the sake of illustration
-set.seed(12345)
-n <- 1e6
-p <- 10
-beta <- seq(-1, 1, length.out = p)^5
-x1 <- matrix(rnorm(n * p), nrow = n, ncol = p)
-x1[, p] <- 2 * x1[, 1] + rnorm(n, sd = 0.1) # Add some dependence to predictors
-x1[, p - 1] <- 2 - x1[, 2] + rnorm(n, sd = 0.5)
-y1 <- rbinom(n, size = 1, prob = 1 / (1 + exp(-(1 + x1 %*% beta))))
-x2 <- matrix(rnorm(100 * p), nrow = 100, ncol = p)
-y2 <- rbinom(100, size = 1, prob = 1 / (1 + exp(-(1 + x2 %*% beta))))
-bigData1 <- data.frame("resp" = y1, "pred" = x1)
-bigData2 <- data.frame("resp" = y2, "pred" = x2)
-
-# Save files to disk to emulate the situation with big data
-write.csv(x = bigData1, file = "bigData1.csv", row.names = FALSE)
-write.csv(x = bigData2, file = "bigData2.csv", row.names = FALSE)
-
-# Read files using ff
-library(ffbase) # Imports ff
-bigData1ff <- read.table.ffdf(file = "bigData1.csv", header = TRUE, sep = ",")
-bigData2ff <- read.table.ffdf(file = "bigData2.csv", header = TRUE, sep = ",")
-
-# Recall: bigData1.csv is not copied into RAM
-print(object.size(bigData1), units = "MiB")
-print(object.size(bigData1ff), units = "KiB")
-
-# Logistic regression
-# Same comments for the formula framework -- this is the hack for automatic
-# inclusion of all the predictors
-library(biglm)
-f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
-bigglmMod <- bigglm.ffdf(formula = f, data = bigData1ff, family = binomial())
-
-# glm's call
-glmMod <- glm(formula = resp ~ ., data = bigData1, family = binomial())
-
-# Compare sizes
-print(object.size(bigglmMod), units = "KiB")
-print(object.size(glmMod), units = "MiB")
-
-# Summaries
-s1 <- summary(bigglmMod)
-s2 <- summary(glmMod)
-s1
-s2
-
-# Further information
-s1$mat # Coefficients and their inferences
-s1$rsq # R^2
-s1$nullrss # Null deviance
-
-# Extract coefficients
-coef(bigglmMod)
-
-# Prediction works as usual
-predict(bigglmMod, newdata = bigData2[1:5, ], type = "response")
-# predict(bigglmMod, newdata = bigData2[1:5, -1]) # Error
-
-# Update the model with training data
-update(bigglmMod, moredata = bigData2)
-
-# AIC and BIC
-AIC(bigglmMod, k = 2)
-AIC(bigglmMod, k = log(n))
-
-# Delete the csv files in disk
-file.remove(c("bigData1.csv", "bigData2.csv"))
+## ---- bigglm-1, eval = FALSE--------------------------------------
+## # Not really "big data", but for the sake of illustration
+## set.seed(12345)
+## n <- 1e6
+## p <- 10
+## beta <- seq(-1, 1, length.out = p)^5
+## x1 <- matrix(rnorm(n * p), nrow = n, ncol = p)
+## x1[, p] <- 2 * x1[, 1] + rnorm(n, sd = 0.1) # Add some dependence to predictors
+## x1[, p - 1] <- 2 - x1[, 2] + rnorm(n, sd = 0.5)
+## y1 <- rbinom(n, size = 1, prob = 1 / (1 + exp(-(1 + x1 %*% beta))))
+## x2 <- matrix(rnorm(100 * p), nrow = 100, ncol = p)
+## y2 <- rbinom(100, size = 1, prob = 1 / (1 + exp(-(1 + x2 %*% beta))))
+## bigData1 <- data.frame("resp" = y1, "pred" = x1)
+## bigData2 <- data.frame("resp" = y2, "pred" = x2)
+## 
+## # Save files to disk to emulate the situation with big data
+## write.csv(x = bigData1, file = "bigData1.csv", row.names = FALSE)
+## write.csv(x = bigData2, file = "bigData2.csv", row.names = FALSE)
+## 
+## # Read files using ff
+## library(ffbase) # Imports ff
+## bigData1ff <- read.table.ffdf(file = "bigData1.csv", header = TRUE, sep = ",")
+## bigData2ff <- read.table.ffdf(file = "bigData2.csv", header = TRUE, sep = ",")
+## 
+## # Recall: bigData1.csv is not copied into RAM
+## print(object.size(bigData1), units = "MiB")
+## print(object.size(bigData1ff), units = "KiB")
+## 
+## # Logistic regression
+## # Same comments for the formula framework -- this is the hack for automatic
+## # inclusion of all the predictors
+## library(biglm)
+## f <- formula(paste("resp ~", paste(names(bigData1)[-1], collapse = " + ")))
+## bigglmMod <- bigglm.ffdf(formula = f, data = bigData1ff, family = binomial())
+## 
+## # glm's call
+## glmMod <- glm(formula = resp ~ ., data = bigData1, family = binomial())
+## 
+## # Compare sizes
+## print(object.size(bigglmMod), units = "KiB")
+## print(object.size(glmMod), units = "MiB")
+## 
+## # Summaries
+## s1 <- summary(bigglmMod)
+## s2 <- summary(glmMod)
+## s1
+## s2
+## 
+## # Further information
+## s1$mat # Coefficients and their inferences
+## s1$rsq # R^2
+## s1$nullrss # Null deviance
+## 
+## # Extract coefficients
+## coef(bigglmMod)
+## 
+## # Prediction works as usual
+## predict(bigglmMod, newdata = bigData2[1:5, ], type = "response")
+## # predict(bigglmMod, newdata = bigData2[1:5, -1]) # Error
+## 
+## # Update the model with training data
+## update(bigglmMod, moredata = bigData2)
+## 
+## # AIC and BIC
+## AIC(bigglmMod, k = 2)
+## AIC(bigglmMod, k = log(n))
+## 
+## # Delete the csv files in disk
+## file.remove(c("bigData1.csv", "bigData2.csv"))
 
 ## Note that this is also a perfectly **valid approach for linear models**, we just need to specify `family = gaussian()` in the call to `bigglm.ffdf`.
 
-## ---- bigglm-2-------------------------------------------------------------------
-# Model selection adapted to big data generalized linear models
-reg <- leaps::regsubsets(bigglmMod, nvmax = p + 1, method = "exhaustive")
-# This takes the QR decomposition, which encodes the linear model associated to
-# the last iteration of the IRLS algorithm. However, the reported BICs are *not*
-# the true BICs of the generalized linear models, but a sufficient
-# approximation to obtain a list of candidate models in a fast way
-
-# Get the model with lowest BIC
-plot(reg)
-subs <- summary(reg)
-subs$which
-subs$bic
-subs$which[which.min(subs$bic), ]
-
-# Let's compute the true BICs for the p models. This implies fitting p bigglm's
-bestModels <- list()
-for (i in 1:nrow(subs$which)) {
-  f <- formula(paste("resp ~", paste(names(which(subs$which[i, -1])),
-                                     collapse = " + ")))
-  bestModels[[i]] <- bigglm.ffdf(formula = f, data = bigData1ff,
-                                 family = binomial(), maxit = 20)
-  # Did not converge with the default iteration limit, maxit = 8
-
-}
-
-# The approximate BICs and the true BICs are very similar (in this example)
-exactBICs <- sapply(bestModels, AIC, k = log(n))
-plot(subs$bic, exactBICs, type = "o", xlab = "Exact", ylab = "Approximate")
-cor(subs$bic, exactBICs, method = "pearson") # Correlation
-
-# Both give the same model selection and same order
-subs$which[which.min(subs$bic), ] # Approximate
-subs$which[which.min(exactBICs), ] # Exact
-cor(subs$bic, exactBICs, method = "spearman") # Order correlation
+## ---- bigglm-2, eval = FALSE--------------------------------------
+## # Model selection adapted to big data generalized linear models
+## reg <- leaps::regsubsets(bigglmMod, nvmax = p + 1, method = "exhaustive")
+## # This takes the QR decomposition, which encodes the linear model associated to
+## # the last iteration of the IRLS algorithm. However, the reported BICs are *not*
+## # the true BICs of the generalized linear models, but a sufficient
+## # approximation to obtain a list of candidate models in a fast way
+## 
+## # Get the model with lowest BIC
+## plot(reg)
+## subs <- summary(reg)
+## subs$which
+## subs$bic
+## subs$which[which.min(subs$bic), ]
+## 
+## # Let's compute the true BICs for the p models. This implies fitting p bigglm's
+## bestModels <- list()
+## for (i in 1:nrow(subs$which)) {
+##   f <- formula(paste("resp ~", paste(names(which(subs$which[i, -1])),
+##                                      collapse = " + ")))
+##   bestModels[[i]] <- bigglm.ffdf(formula = f, data = bigData1ff,
+##                                  family = binomial(), maxit = 20)
+##   # Did not converge with the default iteration limit, maxit = 8
+## 
+## }
+## 
+## # The approximate BICs and the true BICs are very similar (in this example)
+## exactBICs <- sapply(bestModels, AIC, k = log(n))
+## plot(subs$bic, exactBICs, type = "o", xlab = "Exact", ylab = "Approximate")
+## cor(subs$bic, exactBICs, method = "pearson") # Correlation
+## 
+## # Both give the same model selection and same order
+## subs$which[which.min(subs$bic), ] # Approximate
+## subs$which[which.min(exactBICs), ] # Exact
+## cor(subs$bic, exactBICs, method = "spearman") # Order correlation
 
