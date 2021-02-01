@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- hist-1--------------------------------------------------------------------
+## ---- hist-1--------------------------------------------------------------
 # The faithful dataset is included in R
 head(faithful)
 
@@ -34,7 +34,7 @@ rug(faith_eruptions) # Plotting the sample
 
 
 
-## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'-----------------
+## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'-----------
 # Sample from a U(0, 1)
 set.seed(1234567)
 u <- runif(n = 100)
@@ -56,7 +56,7 @@ rug(u)
 abline(h = 1, col = 2)
 
 
-## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'-----------------
+## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'-----------
 # Sample 75 points from a N(0, 1) and 50 from a N(3, 0.25)
 set.seed(1234567)
 samp <- c(rnorm(n = 50, mean = 0, sd = 1),
@@ -96,7 +96,7 @@ rug(samp)
 
 
 
-## ---- kde-1---------------------------------------------------------------------
+## ---- kde-1---------------------------------------------------------------
 # Sample 100 points from a N(0, 1)
 set.seed(1234567)
 samp <- rnorm(n = 100, mean = 0, sd = 1)
@@ -108,7 +108,7 @@ plot(density(x = samp))
 # Select a particular bandwidth (0.5) and kernel (Epanechnikov)
 lines(density(x = samp, bw = 0.5, kernel = "epanechnikov"), col = 2)
 
-# density automatically chooses the interval for plotting the kde
+# density() automatically chooses the interval for plotting the kde
 # (observe that the black line goes to roughly between -3 and 3)
 # This can be tuned using "from" and "to"
 plot(density(x = samp, from = -4, to = 4), xlim = c(-5, 5))
@@ -127,7 +127,7 @@ rug(samp)
 
 
 
-## ---- R-kernels-----------------------------------------------------------------
+## ---- R-kernels-----------------------------------------------------------
 # Implementation of the Epanechnikov based on the theory
 K_Epa <- function(z, h = 1) 3 / (4 * h) * (1 - (z / h)^2) * (abs(z) < h)
 mu2_K_Epa <- integrate(function(z) z^2 * K_Epa(z), lower = -1, upper = 1)$value
@@ -181,7 +181,9 @@ lines(density(0, kernel = "epanechnikov", bw = h))
 
 
 
-## ---- bwnrd---------------------------------------------------------------------
+
+
+## ---- bwnrd---------------------------------------------------------------
 # Data
 set.seed(667478)
 n <- 100
@@ -198,7 +200,7 @@ iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 
 
 
-## ---- SJ------------------------------------------------------------------------
+## ---- SJ------------------------------------------------------------------
 # Data
 set.seed(672641)
 x <- rnorm(100)
@@ -207,14 +209,18 @@ x <- rnorm(100)
 bw.SJ(x = x, method = "dpi")
 
 # Similar to
-ks::hpi(x) # Default is two-stages
+ks::hpi(x) # Default is two-stage
 
 
 
 
 
 
-## ---- bw-ucv-mod----------------------------------------------------------------
+
+
+
+
+## ---- bw-ucv-mod, fig.cap = '(ref:ucv-title)'-----------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -269,7 +275,7 @@ bw.ucv.mod(x = x, plot_cv = TRUE)
 abline(v = bw.ucv(x = x), col = 3)
 
 
-## ---- bw-bcv-mod----------------------------------------------------------------
+## ---- bw-bcv-mod, fig.cap = '(ref:bcv-title)'-----------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -325,7 +331,7 @@ bw.bcv.mod(x = x, plot_cv = TRUE)
 abline(v = bw.bcv(x = x), col = 3)
 
 
-## ---- nor1mix-------------------------------------------------------------------
+## ---- nor1mix-------------------------------------------------------------
 # Available models
 ?nor1mix::MarronWand
 
@@ -348,15 +354,13 @@ plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm7, col = 2) # Also possible
 
 
-## Implement the $h_\mathrm{MISE}$ using \@ref(eq:misenorm) for model `nor1mix::MW.nm5`. Then, investigate by simulation the distributions of $\hat{h}_\mathrm{DPI}/h_\mathrm{MISE}-1$, $\hat{h}_\mathrm{LSCV}/h_\mathrm{MISE}-1$, and $\hat{h}_\mathrm{BCV}/h_\mathrm{MISE}-1$.
-
-## 
 
 
 
 
 
-## ---- transf-1------------------------------------------------------------------
+
+## ---- transf-1------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp <- rlnorm(n = 500)
@@ -369,7 +373,7 @@ rug(samp)
 
 
 
-## ---- transf-2------------------------------------------------------------------
+## ---- transf-2------------------------------------------------------------
 # kde with log-transformed data
 kde <- density(log(samp))
 plot(kde, main = "Kde of transformed data")
@@ -391,17 +395,14 @@ curve(dlnorm(x), col = 2, add = TRUE, n = 500)
 rug(samp)
 
 
-## Consider the data given by `set.seed(12345); x <- rbeta(n = 500, shape1 = 2, shape2 = 2)`. Compute:
 
-## 
-##   - The untransformed kde employing the DPI and LSCV selectors. Overlay the true density.
 
-##   - The transformed kde employing a probit transformation and using the DPI and LSCV selectors on the transformed data.
 
-## 
 
-## ---- samp----------------------------------------------------------------------
-# Sample the Claw
+
+
+## ---- samp----------------------------------------------------------------
+# Sample the claw
 n <- 100
 set.seed(23456)
 samp <- nor1mix::rnorMix(n = n, obj = nor1mix::MW.nm10)
@@ -431,15 +432,11 @@ legend("topright", legend = c("Kde", "Kde of sampled kde"),
        lwd = 2, col = 4:3)
 
 
-## Sample data points from the kde of `iris$Petal.Width` that is computed with the NS selector.
 
-## 
 
-## The dataset `sunspot.year` contains the yearly numbers of sunspots from 1700 to 1988 (rounded to one digit). Employing a log-transformed kde with DPI bandwidth, sample new sunspots observations. Check by simulation that the sampling is done appropiately by comparing the log-transformed kde of the sampled data with the original kde. *Beware*: recall the log-transformation before sampling.
 
-## 
 
-## ---- kde-eval-1----------------------------------------------------------------
+## ---- kde-eval-1----------------------------------------------------------
 # Sample
 n <- 5
 set.seed(123456)
@@ -469,20 +466,20 @@ ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:2], binned = FALSE)
 length(ks::kde(x = samp_t, h = bw, gridsize = 1e3)$estimate)
 
 
-## ---- kde-eval-2----------------------------------------------------------------
+## ---- kde-eval-2----------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp_ln <- rlnorm(n = 200)
 
 # Log-kde without shifting
-a <- seq(0.1, 2, by = 0.4) # Sequence of shiftings
+a <- seq(0.1, 2, by = 0.4) # Sequence of shifts
 col <- viridis::viridis(length(a) + 1)
 plot(ks::kde(x = samp_ln, positive = TRUE), col = col[1],
      main = "Log-transformed kde and the effect of adj.positive",
      xlim = c(0, 7.5), ylim = c(0, 0.75))
 # If h is not provided, then ks::hpi() is called on the transformed data
 
-# Shiftings: larger a increases the bias
+# Shifting: larger a increases the bias
 for (i in seq_along(a)) {
   plot(ks::kde(x = samp_ln, positive = TRUE, adj.positive = a[i]),
        add = TRUE, col = col[i])
@@ -493,7 +490,7 @@ legend("topright", legend = c("True density", paste("adj.positive =", c(0, a))),
        col = c(2, col), lwd = 2)
 
 
-## ---- kde-eval-3----------------------------------------------------------------
+## ---- kde-eval-3----------------------------------------------------------
 # Untransformed kde
 plot(kde <- ks::kde(x = log(samp_ln)), col = 4)
 samp_kde <- ks::rkde(n = 5e4, fhat = kde)
