@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- hist-1-----------------------------------------------------------------------------------------------------
+## ---- hist-1---------------------------------------------------------------------------------------
 # The faithful dataset is included in R
 head(faithful)
 
@@ -34,7 +34,7 @@ rug(faith_eruptions) # Plotting the sample
 
 
 
-## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'--------------------------------------------------
+## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'------------------------------------
 # Sample from a U(0, 1)
 set.seed(1234567)
 u <- runif(n = 100)
@@ -56,7 +56,7 @@ rug(u)
 abline(h = 1, col = 2)
 
 
-## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'--------------------------------------------------
+## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'------------------------------------
 # Sample 75 points from a N(0, 1) and 50 from a N(3, 0.25)
 set.seed(1234567)
 samp <- c(rnorm(n = 50, mean = 0, sd = 1),
@@ -96,7 +96,7 @@ rug(samp)
 
 
 
-## ---- kde-1------------------------------------------------------------------------------------------------------
+## ---- kde-1----------------------------------------------------------------------------------------
 # Sample 100 points from a N(0, 1)
 set.seed(1234567)
 samp <- rnorm(n = 100, mean = 0, sd = 1)
@@ -127,7 +127,7 @@ rug(samp)
 
 
 
-## ---- R-kernels--------------------------------------------------------------------------------------------------
+## ---- R-kernels------------------------------------------------------------------------------------
 # Implementation of the Epanechnikov based on the theory
 K_Epa <- function(z, h = 1) 3 / (4 * h) * (1 - (z / h)^2) * (abs(z) < h)
 mu2_K_Epa <- integrate(function(z) z^2 * K_Epa(z), lower = -1, upper = 1)$value
@@ -183,7 +183,7 @@ lines(density(0, kernel = "epanechnikov", bw = h))
 
 
 
-## ---- bwnrd------------------------------------------------------------------------------------------------------
+## ---- bwnrd----------------------------------------------------------------------------------------
 # Data
 set.seed(667478)
 n <- 100
@@ -200,7 +200,7 @@ iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 
 
 
-## ---- SJ---------------------------------------------------------------------------------------------------------
+## ---- SJ-------------------------------------------------------------------------------------------
 # Data
 set.seed(672641)
 x <- rnorm(100)
@@ -220,7 +220,7 @@ ks::hpi(x) # Default is two-stage
 
 
 
-## ---- bw-ucv-mod, fig.cap = '(ref:ucv-title)'--------------------------------------------------------------------
+## ---- bw-ucv-mod, fig.cap = '(ref:ucv-title)'------------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -232,10 +232,11 @@ bw.ucv(x = x)
 bw.ucv(x = x, lower = 0.01, upper = 1)
 
 # bw.ucv.mod replaces the optimization routine of bw.ucv by an exhaustive
-# search on "h.grid" (chosen adaptatively from the sample) and optionally
-# plots the LSCV curve with "plot.cv"
+# search on "h_grid" (chosen adaptatively from the sample) and optionally
+# plots the LSCV curve with "plot_cv"
 bw.ucv.mod <- function(x, nb = 1000L,
-                       h_grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
+                       h_grid = 10^seq(-3, log10(1.2 * sd(x) *
+                                                   length(x)^(-1/5)), l = 200),
                        plot_cv = FALSE) {
   if ((n <- length(x)) < 2L)
     stop("need at least 2 data points")
@@ -260,6 +261,8 @@ bw.ucv.mod <- function(x, nb = 1000L,
   ## Modification
   obj <- sapply(h_grid, function(h) fucv(h))
   h <- h_grid[which.min(obj)]
+  if (h %in% range(h_grid)) 
+    warning("minimum occurred at one end of h_grid")
   if (plot_cv) {
     plot(h_grid, obj, type = "o")
     rug(h_grid)
@@ -269,13 +272,13 @@ bw.ucv.mod <- function(x, nb = 1000L,
 }
 
 # Compute the bandwidth and plot the LSCV curve
-bw.ucv.mod(x = x, plot_cv = TRUE)
+bw.ucv.mod(x = x, plot_cv = TRUE, h_grid = 10^seq(-1.25, 0.5, l = 200))
 
 # We can compare with the default bw.ucv output
 abline(v = bw.ucv(x = x), col = 3)
 
 
-## ---- bw-bcv-mod, fig.cap = '(ref:bcv-title)'--------------------------------------------------------------------
+## ---- bw-bcv-mod, fig.cap = '(ref:bcv-title)'------------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -288,10 +291,11 @@ args(bw.bcv)
 bw.bcv(x = x, lower = 0.01, upper = 1)
 
 # bw.bcv.mod replaces the optimization routine of bw.bcv by an exhaustive
-# search on "h.grid" (chosen adaptatively from the sample) and optionally
-# plots the BCV curve with "plot.cv"
+# search on "h_grid" (chosen adaptatively from the sample) and optionally
+# plots the BCV curve with "plot_cv"
 bw.bcv.mod <- function(x, nb = 1000L,
-                       h_grid = diff(range(x)) * (seq(0.1, 1, l = 200))^2,
+                       h_grid = 10^seq(-3, log10(1.2 * sd(x) *
+                                                   length(x)^(-1/5)), l = 200),
                        plot_cv = FALSE) {
   if ((n <- length(x)) < 2L)
     stop("need at least 2 data points")
@@ -316,6 +320,8 @@ bw.bcv.mod <- function(x, nb = 1000L,
   ## Modification
   obj <- sapply(h_grid, function(h) fbcv(h))
   h <- h_grid[which.min(obj)]
+  if (h %in% range(h_grid)) 
+    warning("minimum occurred at one end of h_grid")
   if (plot_cv) {
     plot(h_grid, obj, type = "o")
     rug(h_grid)
@@ -325,13 +331,13 @@ bw.bcv.mod <- function(x, nb = 1000L,
 }
 
 # Compute the bandwidth and plot the BCV curve
-bw.bcv.mod(x = x, plot_cv = TRUE)
+bw.bcv.mod(x = x, plot_cv = TRUE, h_grid = 10^seq(-1.25, 0.5, l = 200))
 
 # We can compare with the default bw.bcv output
 abline(v = bw.bcv(x = x), col = 3)
 
 
-## ---- nor1mix----------------------------------------------------------------------------------------------------
+## ---- nor1mix--------------------------------------------------------------------------------------
 # Available models
 ?nor1mix::MarronWand
 
@@ -360,7 +366,7 @@ lines(nor1mix::MW.nm7, col = 2) # Also possible
 
 
 
-## ---- transf-1---------------------------------------------------------------------------------------------------
+## ---- transf-1-------------------------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp <- rlnorm(n = 500)
@@ -373,7 +379,7 @@ rug(samp)
 
 
 
-## ---- transf-2---------------------------------------------------------------------------------------------------
+## ---- transf-2-------------------------------------------------------------------------------------
 # kde with log-transformed data
 kde <- density(log(samp))
 plot(kde, main = "Kde of transformed data")
@@ -401,7 +407,7 @@ rug(samp)
 
 
 
-## ---- samp-------------------------------------------------------------------------------------------------------
+## ---- samp-----------------------------------------------------------------------------------------
 # Sample the claw
 n <- 100
 set.seed(23456)
@@ -436,7 +442,7 @@ legend("topright", legend = c("Kde", "Kde of sampled kde"),
 
 
 
-## ---- kde-eval-1-------------------------------------------------------------------------------------------------
+## ---- kde-eval-1-----------------------------------------------------------------------------------
 # Sample
 n <- 5
 set.seed(123456)
@@ -466,7 +472,7 @@ ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:2], binned = FALSE)
 length(ks::kde(x = samp_t, h = bw, gridsize = 1e3)$estimate)
 
 
-## ---- kde-eval-2-------------------------------------------------------------------------------------------------
+## ---- kde-eval-2-----------------------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp_ln <- rlnorm(n = 200)
@@ -490,7 +496,7 @@ legend("topright", legend = c("True density", paste("adj.positive =", c(0, a))),
        col = c(2, col), lwd = 2)
 
 
-## ---- kde-eval-3-------------------------------------------------------------------------------------------------
+## ---- kde-eval-3-----------------------------------------------------------------------------------
 # Untransformed kde
 plot(kde <- ks::kde(x = log(samp_ln)), col = 4)
 samp_kde <- ks::rkde(n = 5e4, fhat = kde)
