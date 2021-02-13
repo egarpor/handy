@@ -53,6 +53,7 @@ bigO_plot <- function(An, ylim1 = c(0, 1), ylim2 = c(0, 3.5), kind = 1) {
           xlab = expression(n),
           ylab = expression(a[list(i, n)] * " vs. " * b[n]), main = main1)
   matlines(n, bn %o% C, col = 1, lwd = lwd, lty = lty)
+  abline(h = 0, col = "gray")
   leg <- c(expression(b[n], C * b[n]),
            substitute(a[list(i, n)], list(i = 3 * (kind - 1) + 1)),
            substitute(a[list(i, n)], list(i = 3 * (kind - 1) + 2)),
@@ -68,6 +69,7 @@ bigO_plot <- function(An, ylim1 = c(0, 1), ylim2 = c(0, 3.5), kind = 1) {
            substitute(frac(a[list(i, n)], b[n]), list(i = 3 * (kind - 1) + 1)),
            substitute(frac(a[list(i, n)], b[n]), list(i = 3 * (kind - 1) + 2)),
            substitute(frac(a[list(i, n)], b[n]), list(i = 3 * (kind - 1) + 3)))
+  abline(h = 0, col = "gray")
   legend("top", legend = leg, lwd = c(2, 1, rep(2, 3)),
          lty = c(1, 3, rep(1, 3)), col = c(1, 1, 2:4), horiz = TRUE,
          x.intersp = 0.5, cex = 0.9, adj = c(0, 0.35), bg = "white")
@@ -102,7 +104,7 @@ bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 3)
 
 
 
-## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE------
+## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE-----------------------------
 # Simulate sequence of random variables
 set.seed(42)
 n <- 1:500
@@ -120,8 +122,8 @@ bigOP_plot <- function(an, ylim, ylab, main) {
        main = main)
   mtext(ylab, side = 2, line = 2.5, cex = 0.75)
   mtext(expression(n), side = 1, line = 2.5, cex = 0.75)
-  abline(h = 0, col = "gray")
   matlines(n, ic(n = n, an = an), col = 2, lty = 1)
+  abline(h = 0, col = "gray")
 
 }
 
