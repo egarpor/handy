@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE------------------------------------
+## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE---------------
 # R(K) for a normal
 Rk <- 1 / (2 * sqrt(pi))
 
@@ -54,7 +54,7 @@ legend("topright", legend = c("Estimate", "CI estimated var",
        col = c("black", "gray", "gray", "red"), lwd = 2, lty = c(1, 1, 2, 1))
 
 
-## ---- ci-2, fig.cap = '(ref:ci-2-title)', fig.margin = FALSE------------------------------------
+## ---- ci-2, fig.cap = '(ref:ci-2-title)', fig.margin = FALSE---------------
 # Simulation setting
 n <- 200; h <- 0.15
 mu <- 0; sigma <- 1 # Normal parameters
@@ -109,7 +109,7 @@ legend(x = "bottom", legend = c("CI estimated var", "CI known var",
 
 
 
-## ---- manipulate-1, eval = FALSE----------------------------------------------------------------
+## ---- manipulate-1, eval = FALSE-------------------------------------------
 ## # Sample
 ## x <- rnorm(100)
 ## 
@@ -130,7 +130,7 @@ legend(x = "bottom", legend = c("CI estimated var", "CI known var",
 
 
 
-## ---- lm----------------------------------------------------------------------------------------
+## ---- lm-------------------------------------------------------------------
 # Generates 50 points from a N(0, 1): predictors and error
 set.seed(34567)
 x1 <- rnorm(50)
@@ -189,7 +189,7 @@ beta
 
 
 
-## ---- glm-1-------------------------------------------------------------------------------------
+## ---- glm-1----------------------------------------------------------------
 # Data
 set.seed(34567)
 x <- rnorm(50, sd = 1.5)
@@ -204,7 +204,7 @@ y3 <- rbinom(50, size = 1, prob = 1 / (1 + exp(-y3)))
 data_mle <- data.frame(x = x, y1 = y1, y2 = y2, y3 = y3)
 
 
-## ---- glm-2-------------------------------------------------------------------------------------
+## ---- glm-2----------------------------------------------------------------
 # Call glm
 # glm employs formula = response ~ predictor1 + predictor2 + ...
 # (names according to the data frame names) for denoting the regression
