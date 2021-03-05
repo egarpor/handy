@@ -7,7 +7,7 @@
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE----------------
+## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE--------------------------------------------------------------------------
 # A naive implementation of the Nadaraya-Watson estimator
 nw <- function(x, X, Y, h, K = dnorm) {
 
@@ -54,7 +54,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- nw-2, eval = FALSE---------------------------------------------------
+## ---- nw-2, eval = FALSE-------------------------------------------------------------------------------------------------------------
 ## # Simple plot of N-W for varying h's
 ## manipulate::manipulate({
 ## 
@@ -81,7 +81,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 
 
 
-## ---- lp-1-----------------------------------------------------------------
+## ---- lp-1---------------------------------------------------------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 100
@@ -97,7 +97,7 @@ lp0 <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h, degree = 0,
                            range.x = c(-10, 10), gridsize = 500)
 lp1 <- KernSmooth::locpoly(x = X, y = Y, bandwidth = h, degree = 1,
                            range.x = c(-10, 10), gridsize = 500)
-# Provide the evaluation points by range.x and gridsize
+# Provide the evaluation points through range.x and gridsize
 
 # loess fits
 span <- 0.25 # The default span is 0.75, which works very bad in this scenario
@@ -132,7 +132,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- lp-2, eval = FALSE---------------------------------------------------
+## ---- lp-2, eval = FALSE-------------------------------------------------------------------------------------------------------------
 ## # Simple plot of local polynomials for varying h's
 ## manipulate::manipulate({
 ## 
@@ -162,7 +162,9 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 
 
 
-## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'---------------------------------
+
+
+## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'-------------------------------------------------------------------------------------------
 # Evaluation grid
 x_grid <- seq(0, 5, l = 500)
 
@@ -230,7 +232,7 @@ legend("topright", legend = c("True regression", "Local linear (RT)",
 
 
 
-## ---- bwd-2----------------------------------------------------------------
+## ---- bwd-2--------------------------------------------------------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 250
@@ -258,10 +260,10 @@ lines(x_grid, m(x_grid), col = 1)
 lines(lp1_DPI$x, lp1_DPI$y, col = 2)
 lines(lp1_RT$x, lp1_RT$y, col = 3)
 legend("topleft", legend = c("True regression", "Local linear (DPI)",
-                              "Local linear (RT)"), lwd = 2, col = 1:3)
+                             "Local linear (RT)"), lwd = 2, col = 1:3)
 
 
-## ---- bwd-3----------------------------------------------------------------
+## ---- bwd-3--------------------------------------------------------------------------------------------------------------------------
 # Grid for representing (4.22)
 h_grid <- seq(0.1, 1, l = 200)^2
 error <- sapply(h_grid, function(h) {
@@ -282,7 +284,7 @@ abline(v = h_grid[which.min(error)], col = 2)
 
 
 
-## ---- bw-4-----------------------------------------------------------------
+## ---- bw-4---------------------------------------------------------------------------------------------------------------------------
 # Generate some data to test the implementation
 set.seed(12345)
 n <- 200
@@ -336,7 +338,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
 
-## ---- bw-5-----------------------------------------------------------------
+## ---- bw-5---------------------------------------------------------------------------------------------------------------------------
 # Slow objective function
 cv_nw_slow <- function(X, Y, h, K = dnorm) {
 
@@ -379,7 +381,7 @@ h
 #                                times = 10)
 
 
-## ---- bw-6-----------------------------------------------------------------
+## ---- bw-6---------------------------------------------------------------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -403,7 +405,7 @@ lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 
 
 
-## ---- np-1, cache = FALSE--------------------------------------------------
+## ---- np-1, cache = FALSE------------------------------------------------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -441,7 +443,7 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-2-----------------------------------------------------------------
+## ---- np-2---------------------------------------------------------------------------------------------------------------------------
 # Local linear fit -- find first the CV bandwidth
 bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll")
 
@@ -454,7 +456,7 @@ points(X, Y)
 rug(X, side = 1); rug(Y, side = 2)
 
 
-## ---- np-3-----------------------------------------------------------------
+## ---- np-3---------------------------------------------------------------------------------------------------------------------------
 # Summary of the npregression object
 summary(kre0)
 
@@ -489,7 +491,7 @@ legend("top", legend = c("Nadaraya-Watson", "Local linear"),
 
 
 
-## ---- np-4-----------------------------------------------------------------
+## ---- np-4---------------------------------------------------------------------------------------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100
