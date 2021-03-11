@@ -1,13 +1,13 @@
 
 ## ------------------------------------------------------------------------
 ## Name: 02-kde-i.R
-## Description: Script for Chapter 2 of "Notes for Predictive Modeling"
+## Description: Script for Chapter 2 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- hist-1---------------------------------------------------------------------------------------------------------
+## ---- hist-1-----------------------------------------------------------------------------------
 # The faithful dataset is included in R
 head(faithful)
 
@@ -29,12 +29,7 @@ Bk <- seq(min(faith_eruptions), max(faith_eruptions), by = 0.25)
 hist(faith_eruptions, probability = TRUE, breaks = Bk)
 rug(faith_eruptions) # Plotting the sample
 
-
-
-
-
-
-## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'------------------------------------------------------
+## ---- hist-2, fig.cap = '(ref:hist-2-title)', fig.show = 'hold'--------------------------------
 # Sample from a U(0, 1)
 set.seed(1234567)
 u <- runif(n = 100)
@@ -55,8 +50,7 @@ hist(u, probability = TRUE, breaks = Bk2, ylim = c(0, 1.5),
 rug(u)
 abline(h = 1, col = 2)
 
-
-## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'------------------------------------------------------
+## ---- hist-3, fig.cap = '(ref:hist-3-title)', fig.show = 'hold'--------------------------------
 # Sample 75 points from a N(0, 1) and 50 from a N(3, 0.25)
 set.seed(1234567)
 samp <- c(rnorm(n = 50, mean = 0, sd = 1),
@@ -81,22 +75,7 @@ curve(2/3 * dnorm(x, mean = 0, sd = 1) +
       n = 200)
 rug(samp)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## ---- kde-1----------------------------------------------------------------------------------------------------------
+## ---- kde-1------------------------------------------------------------------------------------
 # Sample 100 points from a N(0, 1)
 set.seed(1234567)
 samp <- rnorm(n = 100, mean = 0, sd = 1)
@@ -122,12 +101,7 @@ plot(kde$x, kde$y, type = "l")
 curve(dnorm(x), col = 2, add = TRUE) # True density
 rug(samp)
 
-
-
-
-
-
-## ---- R-kernels------------------------------------------------------------------------------------------------------
+## ---- R-kernels--------------------------------------------------------------------------------
 # Implementation of the Epanechnikov based on the theory
 K_Epa <- function(z, h = 1) 3 / (4 * h) * (1 - (z / h)^2) * (abs(z) < h)
 mu2_K_Epa <- integrate(function(z) z^2 * K_Epa(z), lower = -1, upper = 1)$value
@@ -146,44 +120,7 @@ h <- h_tilde * sqrt(mu2_K_Epa)
 curve(K_Epa(x, h = h_tilde), from = -3, to = 3, col = 2)
 lines(density(0, kernel = "epanechnikov", bw = h))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## ---- bwnrd----------------------------------------------------------------------------------------------------------
+## ---- bwnrd------------------------------------------------------------------------------------
 # Data
 set.seed(667478)
 n <- 100
@@ -197,10 +134,7 @@ bw.nrd(x = x)
 iqr <- diff(quantile(x, c(0.25, 0.75))) / diff(qnorm(c(0.25, 0.75)))
 1.06 * n^(-1/5) * min(sd(x), iqr)
 
-
-
-
-## ---- SJ-------------------------------------------------------------------------------------------------------------
+## ---- SJ---------------------------------------------------------------------------------------
 # Data
 set.seed(672641)
 x <- rnorm(100)
@@ -211,16 +145,7 @@ bw.SJ(x = x, method = "dpi")
 # Similar to
 ks::hpi(x) # Default is two-stage
 
-
-
-
-
-
-
-
-
-
-## ---- bw-ucv-mod, fig.cap = '(ref:ucv-title)'------------------------------------------------------------------------
+## ---- bw-ucv-mod, fig.cap = '(ref:ucv-title)'--------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -277,8 +202,7 @@ bw.ucv.mod(x = x, plot_cv = TRUE, h_grid = 10^seq(-1.25, 0.5, l = 200))
 # We can compare with the default bw.ucv output
 abline(v = bw.ucv(x = x), col = 3)
 
-
-## ---- bw-bcv-mod, fig.cap = '(ref:bcv-title)'------------------------------------------------------------------------
+## ---- bw-bcv-mod, fig.cap = '(ref:bcv-title)'--------------------------------------------------
 # Data
 set.seed(123456)
 x <- rnorm(100)
@@ -336,8 +260,7 @@ bw.bcv.mod(x = x, plot_cv = TRUE, h_grid = 10^seq(-1.25, 0.5, l = 200))
 # We can compare with the default bw.bcv output
 abline(v = bw.bcv(x = x), col = 3)
 
-
-## ---- nor1mix--------------------------------------------------------------------------------------------------------
+## ---- nor1mix----------------------------------------------------------------------------------
 # Available models
 ?nor1mix::MarronWand
 
@@ -351,7 +274,8 @@ x <- seq(-4, 4, length.out = 400)
 lines(x, nor1mix::dnorMix(x = x, obj = nor1mix::MW.nm9), col = 2)
 
 # Plot a MW object directly
-# A normal with the same mean and variance is plotted in dashed lines
+# A normal with the same mean and variance is plotted in dashed lines --
+# you can remove it with argument p.norm = FALSE
 par(mfrow = c(2, 2))
 plot(nor1mix::MW.nm5)
 plot(nor1mix::MW.nm7)
@@ -359,14 +283,7 @@ plot(nor1mix::MW.nm10)
 plot(nor1mix::MW.nm12)
 lines(nor1mix::MW.nm7, col = 2) # Also possible
 
-
-
-
-
-
-
-
-## ---- transf-1-------------------------------------------------------------------------------------------------------
+## ---- transf-1---------------------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp <- rlnorm(n = 500)
@@ -376,10 +293,7 @@ plot(density(samp), ylim = c(0, 0.8))
 curve(dlnorm(x), from = -2, to = 10, n = 500, col = 2, add = TRUE)
 rug(samp)
 
-
-
-
-## ---- transf-2-------------------------------------------------------------------------------------------------------
+## ---- transf-2---------------------------------------------------------------------------------
 # kde with log-transformed data
 kde <- density(log(samp))
 plot(kde, main = "Kde of transformed data")
@@ -400,14 +314,7 @@ plot(kde_transf, main = "Transformed kde", xlim = c(0, 15))
 curve(dlnorm(x), col = 2, add = TRUE, n = 500)
 rug(samp)
 
-
-
-
-
-
-
-
-## ---- samp-----------------------------------------------------------------------------------------------------------
+## ---- samp-------------------------------------------------------------------------------------
 # Sample the claw
 n <- 100
 set.seed(23456)
@@ -437,12 +344,7 @@ lines(density(samp_kde), col = 3)
 legend("topright", legend = c("Kde", "Kde of sampled kde"),
        lwd = 2, col = 4:3)
 
-
-
-
-
-
-## ---- kde-eval-1-----------------------------------------------------------------------------------------------------
+## ---- kde-eval-1-------------------------------------------------------------------------------
 # Sample
 n <- 5
 set.seed(123456)
@@ -471,8 +373,7 @@ ks::kde(x = samp_t, h = bw, eval.points = samp_t[1:2], binned = FALSE)
 # Changing the size of the evaluation grid
 length(ks::kde(x = samp_t, h = bw, gridsize = 1e3)$estimate)
 
-
-## ---- kde-eval-2-----------------------------------------------------------------------------------------------------
+## ---- kde-eval-2-------------------------------------------------------------------------------
 # Sample from a LN(0, 1)
 set.seed(123456)
 samp_ln <- rlnorm(n = 200)
@@ -495,8 +396,7 @@ rug(samp_ln)
 legend("topright", legend = c("True density", paste("adj.positive =", c(0, a))),
        col = c(2, col), lwd = 2)
 
-
-## ---- kde-eval-3-----------------------------------------------------------------------------------------------------
+## ---- kde-eval-3-------------------------------------------------------------------------------
 # Untransformed kde
 plot(kde <- ks::kde(x = log(samp_ln)), col = 4)
 samp_kde <- ks::rkde(n = 5e4, fhat = kde)

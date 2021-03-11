@@ -1,13 +1,13 @@
 
 ## ------------------------------------------------------------------------
 ## Name: 05-kre-ii.R
-## Description: Script for Chapter 5 of "Notes for Predictive Modeling"
+## Description: Script for Chapter 5 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
 ## ------------------------------------------------------------------------
 
-## ---- mult-1, eval = knitr:::is_html_output(), cache = TRUE----------------------------------------------------------
+## ---- mult-1, eval = knitr:::is_html_output(), cache = TRUE------------------------------------
 ## # Sample data from a bivariate regression
 ## n <- 300
 ## set.seed(123456)
@@ -45,8 +45,7 @@
 ##                col = "green", alpha = 0.25, lit = FALSE)
 ## rgl::rglwidget()
 
-
-## ---- mult-2---------------------------------------------------------------------------------------------------------
+## ---- mult-2-----------------------------------------------------------------------------------
 # Load the wine dataset
 wine <- read.table(file = "datasets/wine.csv", header = TRUE, sep = ",")
 
@@ -78,8 +77,7 @@ apply(wine[c("Age", "WinterRain", "AGST", "HarvestRain")], 2, median)
 #   quadratic pattern
 # - HarvestRain is negatively related to Price (almost linearly)
 
-
-## ---- mult-3---------------------------------------------------------------------------------------------------------
+## ---- mult-3-----------------------------------------------------------------------------------
 # The argument "xq" controls the conditioning quantile of the predictors, by
 # default the median (xq = 0.5). But xq can be a vector of p quantiles, for
 # example (0.25, 0.5, 0.25, 0.75) for (Age, WinterRain, AGST, HarvestRain)
@@ -113,10 +111,7 @@ legend("topleft", legend = latex2exp::TeX(paste0("$\\tau =", tau, "$")),
 # These quantiles are
 apply(wine[c("WinterRain", "AGST", "HarvestRain")], 2, quantile, prob = tau)
 
-
-
-
-## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2-----------------------------------------------------------------------
+## ---- mix-1, fig.margin = FALSE, fig.asp = 1/2-------------------------------------------------
 # Bandwidth by CV for local linear estimator
 # Recall that Species is a factor!
 bw_iris <- np::npregbw(formula = Petal.Length ~ Sepal.Width + Species,
@@ -137,8 +132,7 @@ plot(fit_iris, plot.par.mfrow = FALSE)
 par(mfrow = c(1, 2))
 plot(fit_iris, xq = 0.9, plot.par.mfrow = FALSE)
 
-
-## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3-------------------------------------------------
+## ---- mix-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3---------------------------
 # Load data
 data(oecdpanel, package = "np")
 
@@ -174,16 +168,7 @@ summary(fit_OECD)
 par(mfrow = c(2, 3))
 plot(fit_OECD, plot.par.mfrow = FALSE)
 
-
-
-
-
-
-
-
-
-
-## ---- predci-1, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----------------------------------------------
+## ---- predci-1, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3------------------------
 # Asymptotic confidence bands for the marginal effects of each predictor on
 # the response
 par(mfrow = c(2, 3))
@@ -217,8 +202,7 @@ cbind(pred$fit - z_alpha2 * pred$se.fit, pred$fit + z_alpha2 * pred$se.fit)
 # Recall that z_alpha2 is almost 2
 z_alpha2
 
-
-## ---- predci-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3----------------------------------------------
+## ---- predci-2, fig.fullwidth = TRUE, fig.margin = FALSE, fig.asp = 2/3------------------------
 # Bootstrap confidence bands (using naive bootstrap, the default)
 # They take more time to compute because a resampling + refitting takes place
 B <- 200
@@ -229,8 +213,7 @@ plot(fit_OECD, plot.errors.method = "bootstrap", common.scale = FALSE,
 # random.seed fixes the seed to always get the same bootstrap errors. It
 # defaults to 42 if not specified
 
-
-## ---- predci-3-------------------------------------------------------------------------------------------------------
+## ---- predci-3---------------------------------------------------------------------------------
 # Univariate local constant regression with CV bandwidth
 bw1 <- np::npregbw(formula = growth ~ initgdp, data = oecdpanel, regtype = "lc")
 fit1 <- np::npreg(bw1)
@@ -382,18 +365,7 @@ filled.contour(x_initgdp, x_popgro, ci_dif, nlevels = 20,
                  points(popgro ~ initgdp, data = oecdpanel, pch = 16)
                  })
 
-
-
-
-
-
-
-
-
-
-
-
-## ---- ll-1, eval = TRUE----------------------------------------------------------------------------------------------
+## ---- ll-1, eval = TRUE------------------------------------------------------------------------
 # Simulate some data
 n <- 200
 logistic <- function(x) 1 / (1 + exp(-x))
@@ -440,8 +412,7 @@ plot(fit_locfit, add = TRUE, col = 4)
 legend("topright", legend = c("p(x)", "glm", "nlm", "locfit"), lwd = 2,
        col = c(1, 2, 3, 4), lty = c(1, 1, 2, 1))
 
-
-## ---- ll-2, eval = TRUE----------------------------------------------------------------------------------------------
+## ---- ll-2, eval = TRUE------------------------------------------------------------------------
 # Exact LCV - recall that we *maximize* the LCV!
 h <- seq(0.1, 2, by = 0.1)
 suppressWarnings(
