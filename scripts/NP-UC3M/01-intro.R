@@ -89,7 +89,7 @@ bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 2)
 An <- cbind(a7n, a8n, a9n)
 bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 3)
 
-## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE----
+## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE----------------------------
 # Simulate sequence of random variables
 set.seed(42)
 n <- 1:500
