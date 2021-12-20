@@ -5,7 +5,7 @@
 ## Link: https://bookdown.org/egarpor/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.9.5
+## Version: 5.9.6
 ## ------------------------------------------------------------------------
 
 ## ---- norms-3, echo = FALSE, eval = knitr:::is_html_output()-----------------------------

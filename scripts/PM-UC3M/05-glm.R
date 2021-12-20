@@ -5,7 +5,7 @@
 ## Link: https://bookdown.org/egarpor/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.9.5
+## Version: 5.9.6
 ## ------------------------------------------------------------------------
 
 ## ---- challenger-load, eval = FALSE------------------------------------------------------
@@ -76,7 +76,7 @@ minusLogLik <- function(beta) {
 opt <- optim(par = c(0, 0), fn = minusLogLik)
 opt
 
-# Visualization of the minusLogLik surface
+# Visualization of the log-likelihood surface
 beta0 <- seq(-3, 3, l = 50)
 beta1 <- seq(-2, 8, l = 50)
 L <- matrix(nrow = length(beta0), ncol = length(beta1))
@@ -88,7 +88,7 @@ for (i in seq_along(beta0)) {
 filled.contour(beta0, beta1, -L, color.palette = viridis::viridis,
                xlab = expression(beta[0]), ylab = expression(beta[1]),
                plot.axes = {
-                 axis(1:2)
+                 axis(1); axis(2)
                  points(mod$coefficients[1], mod$coefficients[2],
                         col = 2, pch = 16)
                  points(opt$par[1], opt$par[2], col = 4)
