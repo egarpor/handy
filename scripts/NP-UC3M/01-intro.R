@@ -8,7 +8,7 @@
 ## Version: 6.5.2
 ## ------------------------------------------------------------------------
 
-## ---- ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 't!'----
+## ---- ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'b!'----
 # Sequence bn
 n <- 1:200
 bn <- 1 / log(n)
