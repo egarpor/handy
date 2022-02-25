@@ -1,12 +1,12 @@
 
-## ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Name: 03-kde-ii.R
 ## Description: Script for Chapter 3 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.2
-## ------------------------------------------------------------------------
+## Version: 6.5.4
+## ----------------------------------------------------------------------------
 
 ## ---- kde-2d-1-------------------------------------------------------
 # Simulated data from a bivariate normal
@@ -588,8 +588,8 @@ plot(ks::ksupp(fhat = kde, cont = 95, convex.hull = TRUE),
 # The plotting method of ks::ksupp calls to polygon()
 
 ## ---- level-set-9----------------------------------------------------
-# Compute the convex hull of sup via geometry::convhulln()
-C <- geometry::convhulln(p = sup)
+# Compute the convex hull of supp via geometry::convhulln()
+C <- geometry::convhulln(p = supp)
 # The output of geometry::convhulln() is different from chull()
 
 # The geometry::inhulln() allows to check if points are inside the convex hull
@@ -1177,16 +1177,13 @@ segments(x0 = kdr_sin$end.points[emst$from, 1],
          x1 = kdr_sin$end.points[emst$to, 1],
          y1 = kdr_sin$end.points[emst$to, 2], lwd = 2)
 
-## ---- kdr-2----------------------------------------------------------
-# By default, ks::kdr employs H = ks::Hpi(..., deriv.order = 2)
-H <- ks::Hpi(x = samp_oval, deriv.order = 2)
-
+## ---- kdr-2, warning = FALSE-----------------------------------------
 # The initial values are chosen automatically, but they can be specified,
 # gives faster computations
-y <- expand.grid(seq(-3, 3, l = 20), seq(-3, 3, l = 20))
+y <- expand.grid(seq(-3, 3, l = 20), seq(-4, 4, l = 20))
 
-# Use H, y, and save paths
-kdr_oval_1 <- ks::kdr(x = samp_oval, y = y, H = H, keep.path = TRUE)
+# Use y and save paths
+kdr_oval_1 <- ks::kdr(x = samp_oval, y = y, keep.path = TRUE)
 plot(samp_oval)
 paths <- kdr_oval_1$path
 points(kdr_oval_1$y, col = 4, pch = 19, cex = 0.5)
@@ -1196,7 +1193,36 @@ for (i in seq_along(paths)) {
 
 }
 points(kdr_oval_1$end.points, col = 2, pch = 19)
-length(paths) # Ascent done only for 224 out of the 400 y's
+length(paths) # Ascent done only for 235 out of the 400 y's
+
+# By default, ks::kdr employs H = ks::Hpi(..., deriv.order = 2). It can be
+# precomputed to reduce the computational cost of ks::kdr(). But care is needed:
+# if H is provided, ks::kdr() needs to be called with pre = FALSE to avoid an
+# internal scaling of the sample that will result in H being not adequate for
+# the scaled sample
+H <- ks::Hpi(x = samp_oval, deriv.order = 2)
+kdr_oval_1a <- ks::kdr(x = samp_oval, H = H, pre = FALSE, keep.path = TRUE)
+
+# There is a bug in ks 1.13.3 that prevents using pre = FALSE and y at the same
+# time. A partial fix is to specify xmin/xmax and gridsize, which will determine
+# y, but keeping in mind that these parameters will also affect the precision of
+# the Hessian estimation (so if they are too small to save computing time, the
+# accuracy of the ridge estimation will decrease)
+kdr_oval_1b <- ks::kdr(x = samp_oval, H = H, xmin = c(-3, -4), xmax = c(3, 4),
+                       gridsize = c(20, 20), pre = FALSE, keep.path = TRUE)
+
+# Compare different approaches -- same main structure, different end points
+# and spurious ridges depending on the size of the initial grid
+plot(samp_oval, ylim = c(-4, 6))
+points(kdr_oval_1a$end.points[, 1:2], col = 2, pch = 19, cex = 1)
+points(kdr_oval_1b$end.points[, 1:2], col = 3, pch = 19, cex = 0.25)
+points(kdr_oval_1$end.points[, 1:2], col = 4, pch = 19, cex = 0.25)
+legend("topright", legend = c("H given, default y",
+                              "xmin/xmax/gridsize/H given",
+                              "y given, default H"), col = 2:4, lwd = 2)
+length(kdr_oval_1$path) # y given, default H
+length(kdr_oval_1a$path) # H given, default y
+length(kdr_oval_1b$path) # xmin/xmax/gridsize/H given
 
 # If we want to get rid of the points outside the oval, we can identify
 # them using the density level set for alpha = 0.15
@@ -1220,8 +1246,9 @@ points(kdr_oval_1$end.points[out_chull, 1:2], col = 4, cex = 0.75, pch = 19)
 points(kdr_oval_1$end.points[out_kde, 1:2], col = 5, cex = 0.75, pch = 19)
 
 # The initial grid can also be specified with xmax, xmin, and gridsize
+# (pre = FALSE because H is precomputed)
 kdr_oval_2 <- ks::kdr(x = samp_oval, H = H, xmin = c(-3, -3), xmax = c(3, 3),
-                      gridsize = c(20, 20), keep.path = TRUE)
+                      gridsize = c(20, 20), keep.path = TRUE, pre = FALSE)
 plot(samp_oval)
 points(kdr_oval_2$end.points[, 1:2], col = 2, pch = 19)
 paths <- kdr_oval_2$path
@@ -1241,7 +1268,7 @@ plot(samp_oval)
 points(kdr_oval_3$y, col = 4, pch = 19, cex = 0.5)
 points(kdr_oval_3$end.points[, 1:2], col = 2, pch = 19)
 
-## ---- kdr-3, fig.margin = FALSE, fig.cap = '(ref:kdr-3-title)', fig.pos = 't'----
+## ---- kdr-3, fig.margin = FALSE, fig.cap = '(ref:kdr-3-title)', fig.show = 'hold'----
 # Load data
 data(quake, package = "ks") # Earthquakes locations
 data(plate, package = "ks") # Tectonic plate boundaries

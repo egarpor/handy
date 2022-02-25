@@ -1,12 +1,12 @@
 
-## ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Name: 01-intro.R
 ## Description: Script for Chapter 1 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.2
-## ------------------------------------------------------------------------
+## Version: 6.5.4
+## ----------------------------------------------------------------------------
 
 ## ---- ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'b!'----
 # Sequence bn

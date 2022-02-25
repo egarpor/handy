@@ -1,12 +1,12 @@
 
-## ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Name: 02-kde-i.R
 ## Description: Script for Chapter 2 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.2
-## ------------------------------------------------------------------------
+## Version: 6.5.4
+## ----------------------------------------------------------------------------
 
 ## ---- hist-1---------------------------------------------------------
 # The faithful dataset is included in R

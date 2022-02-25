@@ -1,12 +1,12 @@
 
-## ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Name: 04-kre-i.R
 ## Description: Script for Chapter 4 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.2
-## ------------------------------------------------------------------------
+## Version: 6.5.4
+## ----------------------------------------------------------------------------
 
 ## ---- nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE----------
 # A naive implementation of the Nadaraya-Watson estimator
@@ -64,7 +64,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 ##   legend("topright", legend = c("True regression", "Nadaraya-Watson"),
 ##          lwd = 2, col = 1:2)
 ## 
-## }, h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
+## }, h = manipulate::slider(min = 0.01, max = 10, initial = 0.5, step = 0.01))
 
 ## ---- lp-1-----------------------------------------------------------
 # Generate some data
@@ -129,7 +129,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 ##          lwd = 2, col = c(1, p + 2))
 ## 
 ## }, p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1),
-## h = manipulate::slider(min = 0.01, max = 2, initial = 0.5, step = 0.01))
+## h = manipulate::slider(min = 0.01, max = 10, initial = 0.5, step = 0.01))
 
 ## ---- bwd-1, fig.cap = '(ref:bwd-1-title)'---------------------------
 # Evaluation grid
@@ -138,7 +138,7 @@ x_grid <- seq(0, 5, l = 500)
 # Quartic-like regression function
 m <- function(x) 5 * dnorm(x, mean = 1.5, sd = 0.25) - x
 
-# # Highly non-linear regression function
+# # Highly nonlinear regression function
 # m <- function(x) x * sin(2 * pi * x)
 
 # # Quartic regression function (but expressed in a orthogonal polynomial)

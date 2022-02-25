@@ -1,12 +1,12 @@
 
-## ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Name: 07-appendix.R
 ## Description: Script for Chapter 7 of "Notes for Nonparametric Statistics"
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.2
-## ------------------------------------------------------------------------
+## Version: 6.5.4
+## ----------------------------------------------------------------------------
 
 ## ---- ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE---------
 # R(K) for a normal
