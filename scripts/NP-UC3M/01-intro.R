@@ -5,10 +5,10 @@
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.5.5
+## Version: 6.5.7
 ## ----------------------------------------------------------------------------
 
-## ---- ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'b!'------------------------------------------
+## ---- ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'b!'----
 # Sequence bn
 n <- 1:200
 bn <- 1 / log(n)
@@ -90,7 +90,7 @@ bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 2)
 An <- cbind(a7n, a8n, a9n)
 bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 3)
 
-## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE-----------------------------------------------------------------------
+## ---- ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE----
 # Simulate sequence of random variables
 set.seed(42)
 n <- 1:500
