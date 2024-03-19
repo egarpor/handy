@@ -5,10 +5,10 @@
 ## Link: https://bookdown.org/egarpor/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.9.12
+## Version: 5.10.0
 ## ----------------------------------------------------------------------------
 
-## ---- ht, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ht-title)'----
+## ----ht, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ht-title)'----
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -40,7 +40,7 @@ hist(pValues_H1, breaks = seq(0, 1, l = 20), probability = TRUE,
      main = expression(H[1]), ylim = c(0, 2.5))
 abline(h = 1, col = 2)
 
-## ---- multn-1-------------------------------------------------------------------
+## ----multn-1----------------------------------------------------------------------------
 # Data from the voting intentions in the 1988 Chilean national plebiscite
 data(Chile, package = "carData")
 summary(Chile)
@@ -85,7 +85,7 @@ predict(mod2, newdata = newdata, type = "probs")
 # Predicted class
 predict(mod2, newdata = newdata, type = "class")
 
-## ---- nas-1, error = TRUE-------------------------------------------------------
+## ----nas-1, error = TRUE----------------------------------------------------------------
 # The airquality dataset contains NA's
 data(airquality)
 head(airquality)
@@ -136,7 +136,7 @@ AIC(lm(Ozone ~ ., data = subset(airquality, select = -Solar.R)))
 # Considers only complete cases including Solar.R
 AIC(lm(Ozone ~ . - Solar.R, data = airquality))
 
-## ---- nas-2, fig.asp = 1/2------------------------------------------------------
+## ----nas-2, fig.asp = 1/2---------------------------------------------------------------
 # The complete cases approach is the default in R
 summary(lm(Ozone ~ ., data = airquality))
 
@@ -209,7 +209,7 @@ complete(mice(data = airquality, m = 1,
 airqualityMice <- complete(mice(data = airquality, m = 1, seed = 123))
 head(airqualityMice)
 
-## ---- notevarsel----------------------------------------------------------------
+## ----notevarsel-------------------------------------------------------------------------
 # Simulation setting
 n <- 2e2
 p <- 4
@@ -281,10 +281,10 @@ apply(pvalues1[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
 apply(pvalues2[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
 apply(pvalues3[, (p0 + 1):p], 2, function(x) ks.test(x, y = "punif")$p.value)
 
-## ---- r-1, echo = FALSE, cache = FALSE------------------------------------------
+## ----r-1, echo = FALSE, cache = FALSE---------------------------------------------------
 rm(list = ls())
 
-## ---- r-2, error = TRUE, cache = FALSE------------------------------------------
+## ----r-2, error = TRUE, cache = FALSE---------------------------------------------------
 # The console can act as a simple calculator
 1.0 + 1.1
 2 * 2
@@ -309,7 +309,7 @@ sqrt(-1)
 1 +
 (1 + 3
 
-## ---- r-3, error = TRUE---------------------------------------------------------
+## ----r-3, error = TRUE------------------------------------------------------------------
 # Any operation that you perform in R can be stored in a variable
 # (or object) with the assignment operator "<-"
 x <- 1
@@ -334,7 +334,7 @@ ls()
 rm(X)
 X
 
-## ---- r-4, error = TRUE---------------------------------------------------------
+## ----r-4, error = TRUE------------------------------------------------------------------
 # We combine numbers with the function "c"
 c(1, 3)
 c(1.5, 0, 5, -3.4)
@@ -382,7 +382,7 @@ myData2[c(-1, 2)]
 # Remove the first element
 myData2 <- myData2[-1]
 
-## ---- r-5-----------------------------------------------------------------------
+## ----r-5--------------------------------------------------------------------------------
 # Functions take arguments between parenthesis and transform them
 # into an output
 sum(myData)
@@ -417,7 +417,7 @@ sort(myData, decreasing = TRUE)
 args(mean)
 ?mean
 
-## ---- r-6, error = TRUE---------------------------------------------------------
+## ----r-6, error = TRUE------------------------------------------------------------------
 # A matrix is an array of vectors
 A <- matrix(1:4, nrow = 2, ncol = 2)
 A
@@ -492,7 +492,7 @@ str(myDf)
 # A less lengthy output
 names(myList)
 
-## ---- r-7-----------------------------------------------------------------------
+## ----r-7--------------------------------------------------------------------------------
 # The iris dataset is already imported in R
 # (beware: locfit has also an iris dataset, with different names
 # and shorter)
@@ -525,7 +525,7 @@ levels(iris$Species)
 # observations (either encapsulated by quotation marks or not),
 # the variable will become a factor when imported into R
 
-## ---- r-8-----------------------------------------------------------------------
+## ----r-8--------------------------------------------------------------------------------
 # The function "seq" creates sequences of numbers equally separated
 seq(0, 1, by = 0.1)
 seq(0, 1, length.out = 5)
@@ -546,7 +546,7 @@ myVec[length(myVec):1]
 # Count repetitions in your data
 table(iris$Species)
 
-## ---- r-9-----------------------------------------------------------------------
+## ----r-9--------------------------------------------------------------------------------
 # Relational operators: x < y, x > y, x <= y, x >= y, x == y, x!= y
 # They return TRUE or FALSE
 
@@ -616,7 +616,7 @@ y[index1]
 index2 <- (y < 2) | (y > 4)
 y[index2]
 
-## ---- r-10, out.width = '70%'---------------------------------------------------
+## ----r-10, out.width = '70%'------------------------------------------------------------
 # "plot" is the main function for plotting in R
 # It has a different behavior depending on the kind of object
 # that it receives
@@ -661,7 +661,7 @@ points(x, y + 10, col = "blue") # Add points
 abline(a = 5, b = 1, col = "orange", lwd = 2) # Add a straight
 # line y = a + b * x
 
-## ---- r-11, out.width = '70%'---------------------------------------------------
+## ----r-11, out.width = '70%'------------------------------------------------------------
 # R allows to sample [r], compute density/probability mass
 # functions [d], compute distribution function [p], and compute
 # quantiles [q] for several continuous and discrete distributions.
@@ -730,7 +730,7 @@ x <- 0:10
 y <- pbinom(q = x, size = 10, prob = 0.5)
 plot(x, y, type = "h")
 
-## ---- r-12, out.width = '70%', error = TRUE-------------------------------------
+## ----r-12, out.width = '70%', error = TRUE----------------------------------------------
 # A function is a way of encapsulating a block of code so it can
 # be reused easily. They are useful for simplifying repetitive
 # tasks and organize analyses
@@ -796,7 +796,7 @@ apply(A, 2, sum) # By columns
 apply(A, 1, sqrt)
 apply(A, 2, function(x) x^2)
 
-## ---- r-13----------------------------------------------------------------------
+## ----r-13-------------------------------------------------------------------------------
 # The "for" statement allows to create loops that run along a
 # given vector
 # Print 3 times a message (i varies in 1:3)

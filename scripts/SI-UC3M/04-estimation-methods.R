@@ -5,7 +5,7 @@
 ## Link: https://bookdown.org/egarpor/inference/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Isabel Molina Peralta and Eduardo García-Portugués
-## Version: 2.4.0
+## Version: 2.4.1
 ## ----------------------------------------------------------------------------
 
 
