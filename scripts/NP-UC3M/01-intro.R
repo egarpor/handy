@@ -5,10 +5,10 @@
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.9.1
+## Version: 6.9.3
 ## ----------------------------------------------------------------------------
 
-## ----ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'b!'----
+## ----ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'h!'----
 # Sequence bn
 n <- 1:200
 bn <- 1 / log(n)
@@ -90,14 +90,14 @@ bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 2)
 An <- cbind(a7n, a8n, a9n)
 bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 3)
 
-## ----ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE----
+## ----ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE--------
 # Simulate sequence of random variables
 set.seed(42)
 n <- 1:500
 Xn <- rnorm(n = length(n), mean = 0, sd = 1 / sqrt(n))
-ic <- function(n, an, alpha = 0.05) {
+ic <- function(n, an, alpha) {
 
-  qnorm(1 - alpha / 2) / cbind(-sqrt(n), sqrt(n)) / an
+  qnorm(alpha, mean = 0, sd = 1 / sqrt(n)) / an
 
 }
 
@@ -108,7 +108,8 @@ bigOP_plot <- function(an, ylim, ylab, main) {
        main = main)
   mtext(ylab, side = 2, line = 2.5, cex = 0.75)
   mtext(expression(n), side = 1, line = 2.5, cex = 0.75)
-  matlines(n, ic(n = n, an = an), col = 2, lty = 1)
+  matlines(n, ic(n = n, an = an, alpha = 0.025), col = 2, lty = 1)
+  matlines(n, ic(n = n, an = an, alpha = 0.975), col = 2, lty = 1)
   abline(h = 0, col = "gray")
 
 }
