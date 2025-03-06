@@ -5,10 +5,10 @@
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.9.3
+## Version: 6.10.2
 ## ----------------------------------------------------------------------------
 
-## ----ks-1, fig.cap = '(ref:ks-1-title)'-------------------------------------------------------------
+## ----ks-1, fig.cap = '(ref:ks-1-title)'---------------------------------------------
 # Sample data
 n <- 10
 mu0 <- 2
@@ -38,7 +38,7 @@ rug(samp)
 legend("topleft", lwd = 2, col = c(1, 4, 3, 2), 
        legend = latex2exp::TeX(c("$F_n$", "$F_0$", "$D_n^+$", "$D_n^-$")))
 
-## ----ks-2-------------------------------------------------------------------------------------------
+## ----ks-2---------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 n <- 50
 set.seed(3245678)
@@ -56,7 +56,7 @@ ks.test(x = x, y = "pnorm", mean = 0.5)
 # Kolmogorov-Smirnov test for H_0: F = Exp(2). Strongly rejects
 ks.test(x = x, y = "pexp", rate = 1/2)
 
-## ----ks-3-------------------------------------------------------------------------------------------
+## ----ks-3---------------------------------------------------------------------------
 # Sample data from a Pois(5)
 n <- 100
 set.seed(3245678)
@@ -104,13 +104,13 @@ pvalues_H1 <- sapply(1:M, function(i) {
 # Comparison of p-values
 par(mfrow = 1:2)
 hist(pvalues_H0, breaks = seq(0, 1, l = 20), probability = TRUE,
-     main = latex2exp::TeX("$H_0$"), ylim = c(0, 4))
+     main = latex2exp::TeX("$H_0$"), ylim = c(0, 10))
 abline(h = 1, col = 2)
 hist(pvalues_H1, breaks = seq(0, 1, l = 20), probability = TRUE,
-     main = latex2exp::TeX("$H_1$"), ylim = c(0, 4))
+     main = latex2exp::TeX("$H_1$"), ylim = c(0, 10))
 abline(h = 1, col = 2)
 
-## ----cvm-1------------------------------------------------------------------------------------------
+## ----cvm-1--------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -140,7 +140,7 @@ dgof::cvm.test(x = x, y = ppois_stepfun)
 # Plot the asymptotic null distribution function
 curve(goftest::pCvM(x), from = 0, to = 1, n = 300)
 
-## ----ad-1-------------------------------------------------------------------------------------------
+## ----ad-1---------------------------------------------------------------------------
 # Sample data from a N(0, 1)
 set.seed(3245678)
 n <- 50
@@ -167,7 +167,7 @@ dgof::cvm.test(x = x, y = ppois_stepfun, type = "A2")
 # Plot the asymptotic null distribution function
 curve(goftest::pAD(x), from = 0, to = 5, n = 300)
 
-## ----norm-1-----------------------------------------------------------------------------------------
+## ----norm-1-------------------------------------------------------------------------
 # Sample data from a N(10, 1)
 set.seed(123456)
 n <- 100
@@ -192,7 +192,7 @@ ks.test(x = x, y = "pnorm", mean = mean(x), sd = sd(x))
 goftest::cvm.test(x = x, null = "pnorm", mean = mean(x), sd = sd(x))
 goftest::ad.test(x = x, null = "pnorm", mean = mean(x), sd = sd(x))
 
-## ----qq, fig.cap = '(ref:qq-title)'-----------------------------------------------------------------
+## ----qq, fig.cap = '(ref:qq-title)'-------------------------------------------------
 n <- 100
 mu <- 10
 sigma <- 2
@@ -201,7 +201,7 @@ x <- rnorm(n, mean = mu, sd = sigma)
 qqnorm(x)
 abline(a = mu, b = sigma, col = 2)
 
-## ----conf-qq, fig.cap = '(ref:conf-qq-title)', fig.margin = FALSE-----------------------------------
+## ----conf-qq, fig.cap = '(ref:conf-qq-title)', fig.margin = FALSE-------------------
 M <- 1e3
 n <- 100
 plot(0, 0, xlim = c(-3.5, 3.5), ylim = c(-3.5, 3.5), type = "n",
@@ -218,7 +218,7 @@ lines(xi, xi - qnorm(0.975) / sqrt(n) * sqrt(p * (1 - p)) / dnorm(xi),
 lines(xi, xi + qnorm(0.975) / sqrt(n) * sqrt(p * (1 - p)) / dnorm(xi),
       col = 2, lwd = 2)
 
-## ----norm-2-----------------------------------------------------------------------------------------
+## ----norm-2-------------------------------------------------------------------------
 # Does not reject H0
 set.seed(123456)
 n <- 100
@@ -232,7 +232,7 @@ nortest::sf.test(x)
 # Test statistic
 cor(x = sort(x), y = qnorm(ppoints(n, a = 3/8)))^2
 
-## ----gof-1------------------------------------------------------------------------------------------
+## ----gof-1--------------------------------------------------------------------------
 # A goodness-of-fit test of the exponential distribution using the
 # Cramér-von Mises statistic
 cvm_exp_gof <- function(x, B = 5e3, plot_boot = TRUE) {
@@ -290,7 +290,9 @@ cvm_exp_gof <- function(x, B = 5e3, plot_boot = TRUE) {
          main = paste("p-value:", result$p.value), 
          xlab = latex2exp::TeX("$T_n^*$"))
     rug(result$statistic_boot)
-    abline(v = result$statistic, col = 2)
+    abline(v = result$statistic, col = 2, lwd = 2)
+    text(x = result$statistic, y = 1.5 * mean(par()$usr[3:4]),
+         labels = latex2exp::TeX("$T_n$"), col = 2, pos = 4)
 
   }
 
@@ -310,7 +312,7 @@ x <- rgamma(n = 100, shape = 2, scale = 1)
 gof1 <- cvm_exp_gof(x = x, B = 1e3)
 gof1
 
-## ----gof-2------------------------------------------------------------------------------------------
+## ----gof-2--------------------------------------------------------------------------
 # A goodness-of-fit test of a mixture of m normals using the
 # Cramér-von Mises statistic
 cvm_nm_gof <- function(x, m, B = 1e3, plot_boot = TRUE) {
@@ -370,7 +372,9 @@ cvm_nm_gof <- function(x, m, B = 1e3, plot_boot = TRUE) {
          main = paste("p-value:", result$p.value), 
          xlab = latex2exp::TeX("$T_n^*$"))
     rug(result$statistic_boot)
-    abline(v = result$statistic, col = 2)
+    abline(v = result$statistic, col = 2, lwd = 2)
+    text(x = result$statistic, y = 1.5 * mean(par()$usr[3:4]),
+         labels = latex2exp::TeX("$T_n$"), col = 2, pos = 4)
 
   }
 
@@ -398,7 +402,7 @@ gof1
 plot(gof1$theta_hat, p.norm = FALSE, ylim = c(0, 0.5))
 plot(ks::kde(x), col = 2, add = TRUE)
 
-## ----comp-ks-2, fig.cap = '(ref:comp-ks-2-title)'---------------------------------------------------
+## ----comp-ks-2, fig.cap = '(ref:comp-ks-2-title)'-----------------------------------
 # Sample data
 n <- 10; m <- 10
 mu1 <- 0; sd1 <- 1
@@ -432,7 +436,7 @@ rug(samp2, col = 4)
 legend("topleft", lwd = 2, col = c(1, 4, 3, 2), legend =
          latex2exp::TeX(c("$F_n$", "$G_m$", "$D_{n,m,1}$", "$D_{n,m,2}$")))
 
-## ----comp-ks-3--------------------------------------------------------------------------------------
+## ----comp-ks-3----------------------------------------------------------------------
 # Check the test for H0 true
 set.seed(123456)
 x0 <- rgamma(n = 50, shape = 1, scale = 1)
@@ -444,7 +448,7 @@ x1 <- rgamma(n = 50, shape = 2, scale = 1)
 y1 <- rgamma(n = 75, shape = 1, scale = 1)
 ks.test(x = x1, y = y1)
 
-## ----comp-ks-4--------------------------------------------------------------------------------------
+## ----comp-ks-4----------------------------------------------------------------------
 # Check the test for H0 true
 set.seed(123456)
 x0 <- rgamma(n = 50, shape = 1, scale = 1)
@@ -468,7 +472,7 @@ ks.test(x = x1, y = y1, alternative = "greater") # H1: F > G
 # plausible. A p-value ~ 1 indicates one is probably conducting the test in
 # the uninteresting direction alternative!
 
-## ----comp-cvm-1-------------------------------------------------------------------------------------
+## ----comp-cvm-1---------------------------------------------------------------------
 # Two-sample Cramér-von Mises statistic
 cvm2_stat <- function(x, y) {
 
@@ -499,7 +503,7 @@ cvm1 <- cvm2_stat(x = x1, y = y1)
 pval1 <- 1 - goftest::pCvM(q = cvm1)
 c("statistic" = cvm1, "p-value"= pval1)
 
-## ----comp-ad-1--------------------------------------------------------------------------------------
+## ----comp-ad-1----------------------------------------------------------------------
 # Two-sample Anderson-Darling statistic
 ad2_stat <- function(x, y) {
 
@@ -532,7 +536,7 @@ ad1 <- ad2_stat(x = x1, y = y1)
 pval1 <- 1 - goftest::pAD(q = ad1)
 c("statistic" = ad1, "p-value"= pval1)
 
-## ----comp-wilcox-4----------------------------------------------------------------------------------
+## ----comp-wilcox-4------------------------------------------------------------------
 # Check the test for H0 true
 set.seed(123456)
 n <- 50
@@ -557,7 +561,7 @@ plot(x, dwilcox(x = x, m = n, n = m), type = "h", ylab = "Density")
 curve(dnorm(x, mean = n * m / 2, sd = sqrt((n * m * (n + m + 1)) / 12)),
       add = TRUE, col = 2)
 
-## ----comp-signed-1----------------------------------------------------------------------------------
+## ----comp-signed-1------------------------------------------------------------------
 # Check the test for H0 true
 set.seed(123456)
 x0 <- rgamma(n = 50, shape = 1, scale = 1)
@@ -577,7 +581,7 @@ wilcox.test(x = x1, y = y1, paired = TRUE, alternative = "greater")
 wilcox.test(x = x1, y = y1, paired = TRUE, alternative = "less")
 # H1: P[X <= Y] > 0.5
 
-## ----comp-perm-1------------------------------------------------------------------------------------
+## ----comp-perm-1--------------------------------------------------------------------
 # A homogeneity test using the Anderson-Darling statistic
 perm_comp_test <- function(x, y, B = 1e3, plot_boot = TRUE) {
 
@@ -629,7 +633,9 @@ perm_comp_test <- function(x, y, B = 1e3, plot_boot = TRUE) {
          main = paste("p-value:", result$p.value), 
          xlab = latex2exp::TeX("$T_{n,m}^*$"))
     rug(result$statistic_perm)
-    abline(v = result$statistic, col = 2)
+    abline(v = result$statistic, col = 2, lwd = 2)
+    text(x = result$statistic, y = 1.5 * mean(par()$usr[3:4]),
+         labels = latex2exp::TeX("$T_{n,m}$"), col = 2, pos = 4)
 
   }
 
@@ -651,7 +657,7 @@ y1 <- rpois(n = 75, lambda = 5)
 comp1 <- perm_comp_test(x = x1, y = y1, B = 1e3)
 comp1
 
-## ----indep-assoc-1----------------------------------------------------------------------------------
+## ----indep-assoc-1------------------------------------------------------------------
 # Outliers fool correlation, but do not fool concordance
 set.seed(123456)
 n <- 200
@@ -672,7 +678,7 @@ cor.test(x, y, method = "pearson", alternative = "greater") # Change of sign!
 cor.test(x, y, method = "kendall", alternative = "greater") # Fine
 cor.test(x, y, method = "spearman", alternative = "greater") # Fine
 
-## ----indep-assoc-2----------------------------------------------------------------------------------
+## ----indep-assoc-2------------------------------------------------------------------
 # Non-monotone dependence fools concordance
 set.seed(123456)
 n <- 200
@@ -687,7 +693,7 @@ y <- rnorm(n, sd = abs(x))
 cor.test(x, y, method = "kendall")
 cor.test(x, y, method = "spearman")
 
-## ----indep-dcor-2-----------------------------------------------------------------------------------
+## ----indep-dcor-2-------------------------------------------------------------------
 # Distance correlation detects non-monotone dependence
 set.seed(123456)
 n <- 200
@@ -707,7 +713,7 @@ y <- rnorm(n, sd = abs(x))
 energy::dcov.test(x, y, R = 1e3)
 energy::dcor.test(x, y, R = 1e3)
 
-## ----indep-dcor-3-----------------------------------------------------------------------------------
+## ----indep-dcor-3-------------------------------------------------------------------
 # A multivariate case with independence
 set.seed(123456)
 n <- 200
@@ -723,7 +729,7 @@ y <- matrix(0.2 * rnorm(n = n * p, mean = c(x)) +
 energy::dcov.test(x, y, R = 1e3)
 energy::dcor.test(x, y, R = 1e3)
 
-## ----ind-perm-1-------------------------------------------------------------------------------------
+## ----ind-perm-1---------------------------------------------------------------------
 # A no-association test using the absolute value of Spearman's rho statistic
 perm_ind_test <- function(x, B = 1e3, plot_boot = TRUE) {
 
@@ -766,7 +772,9 @@ perm_ind_test <- function(x, B = 1e3, plot_boot = TRUE) {
          main = paste("p-value:", result$p.value),
          xlab = latex2exp::TeX("$T_n^*$"))
     rug(result$statistic_perm)
-    abline(v = result$statistic, col = 2)
+    abline(v = result$statistic, col = 2, lwd = 2)
+    text(x = result$statistic, y = 1.5 * mean(par()$usr[3:4]),
+         labels = latex2exp::TeX("$T_n$"), col = 2, pos = 4)
 
   }
 
