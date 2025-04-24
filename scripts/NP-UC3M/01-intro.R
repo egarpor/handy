@@ -5,7 +5,7 @@
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.11.1
+## Version: 6.12.0
 ## ----------------------------------------------------------------------------
 
 ## ----ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'h!'----
@@ -90,7 +90,7 @@ bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 2)
 An <- cbind(a7n, a8n, a9n)
 bigO_plot(An, ylim1 = c(0, 0.5), ylim2 = c(0, 2), kind = 3)
 
-## ----ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE-----
+## ----ohpsfig, echo = FALSE, fig.cap = '(ref:ohpsfig-title)', fig.margin = FALSE, purl = TRUE----
 # Simulate sequence of random variables
 set.seed(42)
 n <- 1:500
@@ -118,13 +118,13 @@ bigOP_plot <- function(an, ylim, ylab, main) {
 par(mfrow = c(2, 2))
 ylim <- c(-1, 1) * 2
 an <- 1
-bigOP_plot(an = an, ylim = ylim, ylab = expression(1 %.% X[n]), 
+bigOP_plot(an = an, ylim = ylim, ylab = expression(1 %.% X[n]),
            main = expression(list(X[n] == o[P](1),
                                   X[n] == O[P](1))))
 
 # Xn = o_P(n^{-1/3}), since n^{1/3} * Xn converges to 0 in probability
 an <- n^(-1/3)
-bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/3} %.% X[n]), 
+bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/3} %.% X[n]),
            main = expression(list(X[n] == o[P](n^{-1/3}),
                                   X[n] == O[P](n^{-1/3}))))
 
@@ -132,7 +132,7 @@ bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/3} %.% X[n]),
 # n^{1/2} * Xn converges to another variable that is not degenerate at 0!
 # Xn = O_P(n^{-1/2}) and the rate n^{1/2} stabilizes the limit behavior of Xn
 an <- n^(-1/2)
-bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/2} %.% X[n]), 
+bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/2} %.% X[n]),
            main = expression(list(X[n] != o[P](n^{-1/2}),
                                   X[n] == O[P](n^{-1/2}))))
 
@@ -142,7 +142,7 @@ bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{1/2} %.% X[n]),
 # n^{2/3} * Xn is unbounded in probability
 an <- n^(-2/3)
 ylim <- c(-7, 7)
-bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{2/3} %.% X[n]), 
+bigOP_plot(an = an, ylim = ylim, ylab = expression(n^{2/3} %.% X[n]),
            main = expression(list(X[n] != o[P](n^{-2/3}),
                                   X[n] != O[P](n^{-2/3}))))
 
