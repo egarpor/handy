@@ -5,7 +5,7 @@
 ## Link: https://bookdown.org/egarpor/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.12.0
+## Version: 6.12.5
 ## ----------------------------------------------------------------------------
 
 ## ----ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'h!'----
