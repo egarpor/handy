@@ -2,13 +2,13 @@
 ## ----------------------------------------------------------------------------
 ## Name: 01-preliminaries.R
 ## Description: Script for Chapter 1 of "A First Course on Statistical Inference"
-## Link: https://bookdown.org/egarpor/inference/
+## Link: https://egarpor.github.io/SI-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Isabel Molina Peralta and Eduardo García-Portugués
 ## Version: 2.4.3
 ## ----------------------------------------------------------------------------
 
-## ----toss-coin-freq-1, echo = FALSE--------------------------------------------------------
+## ----toss-coin-freq-1, echo = FALSE-----------------------------------------------------------------------------------
 set.seed(123456)
 n <- c(10, 20, 30, 100, 1000)
 toss <- sample(c("heads", "tails"), size = max(n), replace = TRUE)
@@ -19,7 +19,7 @@ knitr::kable(x = cbind(n, p[n], 1 - p[n]),
                              "\"tails\" for $n$ random experiments."),
              digits = 3, align = c("lcc"), escape = FALSE)
 
-## ----car-accidents-1, echo = FALSE, cache = TRUE-------------------------------------------
+## ----car-accidents-1, echo = FALSE, cache = TRUE----------------------------------------------------------------------
 set.seed(123456)
 lambda <- 4
 n <- c(10, 20, 30, 100, 1000, 10000)
@@ -33,7 +33,7 @@ knitr::kable(x = cbind(n, rel_freq_accidents[n, ]),
              booktabs = TRUE, digits = 3, align = c("lccccccccc"),
              escape = FALSE)
 
-## ----pedestrian-1, echo = FALSE, cache = TRUE----------------------------------------------
+## ----pedestrian-1, echo = FALSE, cache = TRUE-------------------------------------------------------------------------
 set.seed(123456)
 n <- c(10, 20, 30, 100, 1000, 5000)
 weights <- rnorm(max(n), mean = 49, sd = 5)

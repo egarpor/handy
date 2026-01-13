@@ -2,13 +2,13 @@
 ## ----------------------------------------------------------------------------
 ## Name: 04-kre-i.R
 ## Description: Script for Chapter 4 of "Notes for Nonparametric Statistics"
-## Link: https://bookdown.org/egarpor/NP-UC3M/
+## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.12.9
+## Version: 6.13.0
 ## ----------------------------------------------------------------------------
 
-## ----nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE-------------------
+## ----nw-1, fig.cap = '(ref:nw-1title)', fig.margin = FALSE------------------------------------------------------------
 # A naive implementation of the Nadaraya-Watson estimator
 nw <- function(x, X, Y, h, K = dnorm) {
 
@@ -53,7 +53,7 @@ lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
-## ----nw-2, eval = FALSE------------------------------------------------------
+## ----nw-2, eval = FALSE-----------------------------------------------------------------------------------------------
 # # Effect of h on Nadaraya-Watson fits
 # manipulate::manipulate({
 # 
@@ -68,7 +68,7 @@ legend("top", legend = c("True regression", "Nadaraya-Watson"),
 # 
 # }, h = manipulate::slider(min = 0.01, max = 10, initial = 0.5, step = 0.01))
 
-## ----lp-1--------------------------------------------------------------------
+## ----lp-1-------------------------------------------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 100
@@ -117,7 +117,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
                             "Local linear (loess)"),
        lwd = 2, col = c(1:3, 2:3), lty = c(rep(1, 3), rep(2, 2)))
 
-## ----lp-2, eval = FALSE------------------------------------------------------
+## ----lp-2, eval = FALSE-----------------------------------------------------------------------------------------------
 # # Effect of h on local polynomial fits
 # manipulate::manipulate({
 # 
@@ -135,7 +135,7 @@ legend("bottom", legend = c("True regression", "Local constant (locpoly)",
 # }, p = manipulate::slider(min = 0, max = 4, initial = 0, step = 1),
 # h = manipulate::slider(min = 0.01, max = 10, initial = 0.5, step = 0.01))
 
-## ----bwd-1, fig.cap = '(ref:bwd-1-title)'------------------------------------
+## ----bwd-1, fig.cap = '(ref:bwd-1-title)'-----------------------------------------------------------------------------
 # Evaluation grid
 x_grid <- seq(0, 5, l = 500)
 
@@ -201,7 +201,7 @@ legend("topright", legend = c("True regression", "Local linear (RT)",
                               "Quartic fit"),
        lwd = 2, col = 1:3)
 
-## ----bwd-2-------------------------------------------------------------------
+## ----bwd-2------------------------------------------------------------------------------------------------------------
 # Generate some data
 set.seed(123456)
 n <- 250
@@ -232,7 +232,7 @@ lines(lp1_RT$x, lp1_RT$y, col = 3)
 legend("topleft", legend = c("True regression", "Local linear (DPI)",
                              "Local linear (RT)"), lwd = 2, col = 1:3)
 
-## ----bwd-3-------------------------------------------------------------------
+## ----bwd-3------------------------------------------------------------------------------------------------------------
 # Grid for representing (4.22)
 h_grid <- seq(0.1, 1, l = 200)^2
 error <- sapply(h_grid, function(h) {
@@ -244,7 +244,7 @@ plot(h_grid, error, type = "l")
 rug(h_grid)
 abline(v = h_grid[which.min(error)], col = 2)
 
-## ----bw-4--------------------------------------------------------------------
+## ----bw-4-------------------------------------------------------------------------------------------------------------
 # Generate some data to test the implementation
 set.seed(12345)
 n <- 200
@@ -298,7 +298,7 @@ lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 legend("top", legend = c("True regression", "Nadaraya-Watson"),
        lwd = 2, col = 1:2)
 
-## ----bw-5--------------------------------------------------------------------
+## ----bw-5-------------------------------------------------------------------------------------------------------------
 # Slow objective function
 cv_nw_slow <- function(X, Y, h, K = dnorm) {
 
@@ -340,7 +340,7 @@ h
 #                                bw_cv_grid_slow(X = X, Y = Y),
 #                                times = 10)
 
-## ----bw-6--------------------------------------------------------------------
+## ----bw-6-------------------------------------------------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -358,7 +358,7 @@ rug(X, side = 1)
 rug(Y, side = 2)
 lines(x_grid, nw(x = x_grid, X = X, Y = Y, h = h), col = 2)
 
-## ----np-1a-------------------------------------------------------------------
+## ----np-1a------------------------------------------------------------------------------------------------------------
 # Data -- nonlinear trend
 data(Auto, package = "ISLR")
 X <- Auto$weight
@@ -397,7 +397,7 @@ rug(X, side = 1)
 rug(Y, side = 2)
 # lines(kre0$eval$X, kre0$mean, col = 3) # Not a good idea!
 
-## ----np-2--------------------------------------------------------------------
+## ----np-2-------------------------------------------------------------------------------------------------------------
 # Local linear fit -- find first the CV bandwidth
 bw1 <- np::npregbw(formula = Y ~ X, regtype = "ll")
 
@@ -410,7 +410,7 @@ points(X, Y)
 rug(X, side = 1)
 rug(Y, side = 2)
 
-## ----np-3--------------------------------------------------------------------
+## ----np-3-------------------------------------------------------------------------------------------------------------
 # Summary of the npregression object
 summary(kre0)
 
@@ -437,7 +437,7 @@ rug(Y, side = 2)
 legend("top", legend = c("Nadaraya-Watson", "Local linear"),
        lwd = 2, col = 2:3)
 
-## ----np-4--------------------------------------------------------------------
+## ----np-4-------------------------------------------------------------------------------------------------------------
 # Generate some data with bimodal density
 set.seed(12345)
 n <- 100

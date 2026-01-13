@@ -2,13 +2,13 @@
 ## ----------------------------------------------------------------------------
 ## Name: 04-lm-iii.R
 ## Description: Script for Chapter 4 of "Notes for Predictive Modeling"
-## Link: https://bookdown.org/egarpor/PM-UC3M/
+## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.1
+## Version: 5.12.2
 ## ----------------------------------------------------------------------------
 
-## ----norms-3, echo = FALSE, eval = knitr:::is_html_output()----------
+## ----norms-3, echo = FALSE, eval = knitr:::is_html_output()-----------------------------------------------------------
 # Graphing function
 M <- plot3D::mesh(x = seq(0, 1, l = 20), y = seq(-pi, pi, l = 4 * 4 + 1))
 x <- M$x
@@ -35,7 +35,7 @@ rgl::par3d(userMatrix = matrix(c(0.30811620, -0.95120299, -0.01665032, 0,
                                nrow = 4, ncol = 4, byrow = TRUE))
 rgl::rglwidget()
 
-## ----shrinkage-------------------------------------------------------
+## ----shrinkage--------------------------------------------------------------------------------------------------------
 # Load data -- baseball players statistics
 data(Hitters, package = "ISLR")
 
@@ -59,7 +59,7 @@ head(x[, 14:19])
 # We also need the vector of responses
 y <- Hitters$Salary
 
-## ----modelmatrix-----------------------------------------------------
+## ----modelmatrix------------------------------------------------------------------------------------------------------
 # Data with NA in the first observation
 data_na <- data.frame("x1" = rnorm(3), "x2" = rnorm(3), "y" = rnorm(3))
 data_na$x1[1] <- NA
@@ -73,7 +73,7 @@ model.matrix(y ~ 0 + ., data = data_na, na.action = "na.pass")
 # Does not ignore NA's
 model.matrix.lm(y ~ 0 + ., data = data_na, na.action = "na.pass")
 
-## ----ridge-1---------------------------------------------------------
+## ----ridge-1----------------------------------------------------------------------------------------------------------
 # Call to the main function -- use alpha = 0 for ridge regression
 library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0)
@@ -133,7 +133,7 @@ points(rep(log(ridgeMod$lambda[50]), nrow(ridgeMod$beta)), ridgeMod$beta[, 50],
 plot(log(ridgeMod$lambda), sqrt(colSums(ridgeMod$beta^2)), type = "l",
      xlab = "log(lambda)", ylab = "l2 norm")
 
-## ----ridge-2---------------------------------------------------------
+## ----ridge-2----------------------------------------------------------------------------------------------------------
 # If we want, we can choose manually the grid of penalty parameters to explore
 # The grid should be descending
 ridgeMod2 <- glmnet(x = x, y = y, alpha = 0, lambda = 100:1)
@@ -194,7 +194,7 @@ ncvRidge <- cv.glmnet(x = x, y = y, alpha = 0, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvRidge)
 
-## ----ridge-3---------------------------------------------------------
+## ----ridge-3----------------------------------------------------------------------------------------------------------
 # Inspect the best models (the glmnet fit is inside the output of cv.glmnet)
 plot(kcvRidge2$glmnet.fit, label = TRUE, xvar = "lambda")
 abline(v = log(c(kcvRidge2$lambda.min, kcvRidge2$lambda.1se)))
@@ -217,7 +217,7 @@ plot(log(kcvRidge2$lambda),
              s = kcvRidge2$lambda),
      type = "l", xlab = "log(lambda)", ylab = " Prediction")
 
-## ----ridge-4---------------------------------------------------------
+## ----ridge-4----------------------------------------------------------------------------------------------------------
 # Random data
 p <- 5
 n <- 200
@@ -255,7 +255,7 @@ betaLambdaHat
 # Analytical form with intercept
 solve(crossprod(X) + diag(c(0, rep(lambda, p)))) %*% t(X) %*% y
 
-## ----lasso-1---------------------------------------------------------
+## ----lasso-1----------------------------------------------------------------------------------------------------------
 # Get the Hitters data back
 x <- model.matrix(Salary ~ 0 + ., data = Hitters)
 y <- Hitters$Salary
@@ -305,7 +305,7 @@ ncvLasso <- cv.glmnet(x = x, y = y, alpha = 1, nfolds = nrow(Hitters),
 # Location of both optimal lambdas in the CV loss function
 plot(ncvLasso)
 
-## ----lasso-2---------------------------------------------------------
+## ----lasso-2----------------------------------------------------------------------------------------------------------
 # Inspect the best models
 plot(kcvLasso$glmnet.fit, label = TRUE, xvar = "lambda")
 abline(v = log(c(kcvLasso$lambda.min, kcvLasso$lambda.1se)))
@@ -320,7 +320,7 @@ predict(kcvLasso, type = "response",
         s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se),
         newx = x[1:2, ])
 
-## ----lasso-3---------------------------------------------------------
+## ----lasso-3----------------------------------------------------------------------------------------------------------
 # We can use lasso for model selection!
 selPreds <- predict(kcvLasso, type = "coefficients",
                     s = c(kcvLasso$lambda.min, kcvLasso$lambda.1se))[-1, ] != 0
@@ -360,7 +360,7 @@ summary(modBICFromLasso)
 # Comparison in terms of BIC, slight improvement with modBICFromLasso
 BIC(modLassoSel1, modLassoSel2, modBICFromLasso, modBIC)
 
-## ----lasso-4, fig.cap = '(ref:lasso-4-title)'------------------------
+## ----lasso-4, fig.cap = '(ref:lasso-4-title)'-------------------------------------------------------------------------
 # Random data with predictors unrelated with the response
 p <- 100
 n <- 300
@@ -372,7 +372,7 @@ y <- 1 + rnorm(n)
 lambdaGrid <- exp(seq(-10, 3, l = 200))
 plot(cv.glmnet(x = x, y = y, alpha = 1, nfolds = n, lambda = lambdaGrid))
 
-## ----constr-1--------------------------------------------------------
+## ----constr-1---------------------------------------------------------------------------------------------------------
 # Simulate data
 set.seed(123456)
 n <- 50
@@ -412,7 +412,7 @@ beta_hat_A
 beta_hat_A_0 <- mean(y) - c(mean(x1), mean(x2), mean(x3)) %*% beta_hat_A
 beta_hat_A_0
 
-## ----multr-1---------------------------------------------------------
+## ----multr-1----------------------------------------------------------------------------------------------------------
 # Dimensions and sample size
 p <- 3
 q <- 2
@@ -446,7 +446,7 @@ summary(mod)
 summary(lm(Y[, 1] ~ X))
 summary(lm(Y[, 2] ~ X))
 
-## ----multr-2---------------------------------------------------------
+## ----multr-2----------------------------------------------------------------------------------------------------------
 # When we want to add several variables of a dataset as responses through a
 # formula interface, we have to use cbind() in the response. Doing
 # "Petal.Width + Petal.Length ~ ..." is INCORRECT, as lm will understand
@@ -467,7 +467,7 @@ modIris2 <- lm(Petal.Length ~Sepal.Length + Sepal.Width + Species, data = iris)
 summary(modIris1)
 summary(modIris2)
 
-## ----multr-3---------------------------------------------------------
+## ----multr-3----------------------------------------------------------------------------------------------------------
 # Confidence intervals for the parameters
 confint(modIris)
 # Warning! Do not confuse Petal.Width:Sepal.Length with an interaction term!
@@ -489,7 +489,7 @@ anova(modIris2)
 # is by default conducted with the Pillai statistic (an extension of the F-test)
 anova(modIris)
 
-## ----multr-4---------------------------------------------------------
+## ----multr-4----------------------------------------------------------------------------------------------------------
 # Simulate data
 n <- 500
 p <- 50
@@ -532,38 +532,38 @@ preds <- predict(kcvLassoM, type = "response",
                  newx = X[1:2, ])
 preds
 
-## ----multr-5, eval = FALSE-------------------------------------------
-## manipulate::manipulate({
-## 
-##   # Color
-##   col <- viridisLite::viridis(20)
-## 
-##   # Common zlim
-##   zlim <- range(B) + c(-0.25, 0.25)
-## 
-##   # Plot true B
-##   par(mfrow = c(1, 2))
-##   image(1:q, 1:p, t(B), col = col, xlab = "q", ylab = "p", zlim = zlim,
-##         main = "B")
-## 
-##   # Extract B_hat from the lasso fit, a p x q matrix
-##   B_hat <- sapply(seq_along(mfit$beta), function(i) mfit$beta[i][[1]][, j])
-## 
-##   # Put as black rows the predictors included
-##   not_zero <- abs(B_hat) > 0
-##   image(1:q, 1:p, t(not_zero), breaks = c(0.5, 1),
-##         col = rgb(1, 1, 1, alpha = 0.1), add = TRUE)
-## 
-##   # For B_hat
-##   image(1:q, 1:p, t(B_hat), col = col, xlab = "q", ylab = "p", zlim = zlim,
-##         main = "Bhat")
-##   image(1:q, 1:p, t(not_zero), breaks = c(0.5, 1),
-##         col = rgb(1, 1, 1, alpha = 0.1), add = TRUE)
-## 
-## }, j = manipulate::slider(min = 1, max = ncol(mfit$beta$y1), step = 1,
-##                           label = "j in lambda(j)"))
+## ----multr-5, eval = FALSE--------------------------------------------------------------------------------------------
+# manipulate::manipulate({
+# 
+#   # Color
+#   col <- viridisLite::viridis(20)
+# 
+#   # Common zlim
+#   zlim <- range(B) + c(-0.25, 0.25)
+# 
+#   # Plot true B
+#   par(mfrow = c(1, 2))
+#   image(1:q, 1:p, t(B), col = col, xlab = "q", ylab = "p", zlim = zlim,
+#         main = "B")
+# 
+#   # Extract B_hat from the lasso fit, a p x q matrix
+#   B_hat <- sapply(seq_along(mfit$beta), function(i) mfit$beta[i][[1]][, j])
+# 
+#   # Put as black rows the predictors included
+#   not_zero <- abs(B_hat) > 0
+#   image(1:q, 1:p, t(not_zero), breaks = c(0.5, 1),
+#         col = rgb(1, 1, 1, alpha = 0.1), add = TRUE)
+# 
+#   # For B_hat
+#   image(1:q, 1:p, t(B_hat), col = col, xlab = "q", ylab = "p", zlim = zlim,
+#         main = "Bhat")
+#   image(1:q, 1:p, t(not_zero), breaks = c(0.5, 1),
+#         col = rgb(1, 1, 1, alpha = 0.1), add = TRUE)
+# 
+# }, j = manipulate::slider(min = 1, max = ncol(mfit$beta$y1), step = 1,
+#                           label = "j in lambda(j)"))
 
-## ----biglm-1---------------------------------------------------------
+## ----biglm-1----------------------------------------------------------------------------------------------------------
 # Not really "big data", but for the sake of illustration
 set.seed(12345)
 n <- 1e6
@@ -629,7 +629,7 @@ AIC(biglmMod, k = log(n))
 (s1$nullrss * (1 - s1$rsq)) / s1$obj$df.resid
 s2$sigma^2
 
-## ----biglm-2, fig.cap = '(ref:biglm-2-title)', fig.margin = FALSE----
+## ----biglm-2, fig.cap = '(ref:biglm-2-title)', fig.margin = FALSE-----------------------------------------------------
 # Model selection adapted to big data models
 reg <- leaps::regsubsets(biglmMod, nvmax = p, method = "exhaustive")
 plot(reg) # Plot best model (top row) to worst model (bottom row)
@@ -661,14 +661,14 @@ subs$which[which.min(subs$bic), ]
 MASS::stepAIC(lm(resp ~ ., data = bigData1), trace = 0,
               direction = "backward", k = log(n))
 
-## ----biglm-3---------------------------------------------------------
+## ----biglm-3----------------------------------------------------------------------------------------------------------
 # Size of the response
 print(object.size(rnorm(1e6)) * 1e2, units = "GB")
 
 # Size of the predictors
 print(object.size(rnorm(1e6)) * 1e2 * 10, units = "GB")
 
-## ----biglm-4---------------------------------------------------------
+## ----biglm-4----------------------------------------------------------------------------------------------------------
 # Linear regression with n = 10^8 and p = 10
 n <- 10^8
 p <- 10
