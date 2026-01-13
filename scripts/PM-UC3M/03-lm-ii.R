@@ -5,7 +5,7 @@
 ## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.2
+## Version: 5.12.3
 ## ----------------------------------------------------------------------------
 
 ## ----case2-2, eval = FALSE--------------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ mod1 <- lm(y ~ x, data = nonLinear)
 mod2 <- lm(y ~ x2, data = nonLinear)
 summary(mod1)
 summary(mod2)
-# mod2 has a larger R^2. Also notice the intercept is not significative
+# mod2 has a larger R^2. Also notice the intercept is not significant
 
 ## ----pol-1-1, fig.cap = '(ref:pol-1-1-title)'-------------------------------------------------------------------------
 x1 <- seq(-1, 1, l = 4)
@@ -555,7 +555,7 @@ Y <- 1 + X + e
 plot(lm(Y ~ X), 3) # Very heteroscedastic
 
 # Transformed
-plot(lm(I(log(abs(Y))) ~ X), 3) # Much less hereroskedastic, but at the price
+plot(lm(I(log(abs(Y))) ~ X), 3) # Much less heteroscedastic, but at the price
 # of losing the signs in Y...
 
 # Shifted and transformed
@@ -571,7 +571,7 @@ YJ <- car::powerTransform(lm(Y ~ X), family = "yjPower")
 
 # Yeo-Johnson transformation
 YTransf <- car::yjPower(U = Y, lambda = lambdaYJ)
-plot(lm(YTransf ~ X), 3) # Slightly less hereroskedastic
+plot(lm(YTransf ~ X), 3) # Slightly less heteroscedastic
 
 ## ----diag-9, fig.cap = '(ref:diag-9-title)'---------------------------------------------------------------------------
 plot(mod$residuals, type = "o")
@@ -812,7 +812,7 @@ laligaPCA <- data.frame("Points" = laliga$Points, pcaLaligaRed$scores)
 
 # Regression on all the principal components
 modPCA <- lm(Points ~ ., data = laligaPCA)
-summary(modPCA) # Predictors clearly significative -- same R^2 as mod
+summary(modPCA) # Predictors clearly significant -- same R^2 as mod
 car::vif(modPCA) # No problems at all
 
 # Using the first three components
@@ -979,6 +979,6 @@ laligaPLS <- data.frame("Points" = laliga$Points, cbind(modPlsr$scores))
 
 # Regression on the first two PLS
 modPlsr <- lm(Points ~ Comp.1 + Comp.2, data = laligaPLS)
-summary(modPlsr) # Predictors clearly significative -- same R^2 as in modPlsr2
+summary(modPlsr) # Predictors clearly significant -- same R^2 as in modPlsr2
 car::vif(modPlsr) # No problems at all
 

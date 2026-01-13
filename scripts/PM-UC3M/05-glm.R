@@ -5,7 +5,7 @@
 ## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.2
+## Version: 5.12.3
 ## ----------------------------------------------------------------------------
 
 ## ----challenger-load, eval = FALSE------------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ anova(nasa1, test = "F")
 
 # Incremental comparisons of nested models
 anova(nasa1, nasa2, nasa3, test = "Chisq")
-# Quadratic effects are not significative
+# Quadratic effects are not significant
 
 # Cubic vs. linear
 anova(nasa1, nasa3, test = "Chisq")

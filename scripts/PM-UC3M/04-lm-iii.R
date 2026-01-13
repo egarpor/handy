@@ -5,7 +5,7 @@
 ## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.2
+## Version: 5.12.3
 ## ----------------------------------------------------------------------------
 
 ## ----norms-3, echo = FALSE, eval = knitr:::is_html_output()-----------------------------------------------------------
