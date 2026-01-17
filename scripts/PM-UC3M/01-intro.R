@@ -1,12 +1,12 @@
 
-## ----------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 01-intro.R
 ## Description: Script for Chapter 1 of "Notes for Predictive Modeling"
 ## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.4
-## ----------------------------------------------------------------------------
+## Version: 5.12.5
+## -----------------------------------------------------------------------------
 
 ## ----install, eval = FALSE----------------------------------------------------
 # # Installation of required packages

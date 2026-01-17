@@ -1,12 +1,12 @@
 
-## ----------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 03-kde-ii.R
 ## Description: Script for Chapter 3 of "Notes for Nonparametric Statistics"
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.13.2
-## ----------------------------------------------------------------------------
+## Version: 6.13.3
+## -----------------------------------------------------------------------------
 
 ## ----kde-2d-1-----------------------------------------------------------------
 # Simulated data from a bivariate normal

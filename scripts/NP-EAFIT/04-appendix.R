@@ -1,11 +1,11 @@
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 04-appendix.R
 ## Description: Script for Chapter 4 of "A Short Course on Nonparametric Curve Estimation"
 ## Link: https://egarpor.github.io/NP-EAFIT
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 
 ## ----r-0, cache = FALSE, echo = FALSE, eval = TRUE----------------------------
 rm(list = ls())

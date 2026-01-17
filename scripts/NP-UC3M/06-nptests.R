@@ -1,12 +1,12 @@
 
-## ----------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 06-nptests.R
 ## Description: Script for Chapter 6 of "Notes for Nonparametric Statistics"
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.13.2
-## ----------------------------------------------------------------------------
+## Version: 6.13.3
+## -----------------------------------------------------------------------------
 
 ## ----ks-1, fig.cap = '(ref:ks-1-title)'---------------------------------------
 # Sample data

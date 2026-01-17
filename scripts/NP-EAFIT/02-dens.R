@@ -1,11 +1,11 @@
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 02-dens.R
 ## Description: Script for Chapter 2 of "A Short Course on Nonparametric Curve Estimation"
 ## Link: https://egarpor.github.io/NP-EAFIT
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 
 ## ----hist-1-------------------------------------------------------------------
 # The faithful dataset is included in R

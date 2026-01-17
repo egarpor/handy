@@ -1,12 +1,12 @@
 
-## ----------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Name: 02-lm-i.R
 ## Description: Script for Chapter 2 of "Notes for Predictive Modeling"
 ## Link: https://egarpor.github.io/PM-UC3M//
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.4
-## ----------------------------------------------------------------------------
+## Version: 5.12.5
+## -----------------------------------------------------------------------------
 
 ## ----lscheck-1----------------------------------------------------------------
 # Generates 50 points from a N(0, 1): predictor and error
