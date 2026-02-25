@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 07-appendix.R
-## Description: Script for Chapter 7 of "Notes for Predictive Modeling"
-## Link: https://egarpor.github.io/PM-UC3M//
+## Description: Script for Chapter 7 of "Predictive Modeling"
+## Link: https://egarpor.github.io/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.5
+## Version: 6.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----ht, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ht-title)'----

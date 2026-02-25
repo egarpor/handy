@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 03-lm-ii.R
-## Description: Script for Chapter 3 of "Notes for Predictive Modeling"
-## Link: https://egarpor.github.io/PM-UC3M//
+## Description: Script for Chapter 3 of "Predictive Modeling"
+## Link: https://egarpor.github.io/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.5
+## Version: 6.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----case2-2, eval = FALSE----------------------------------------------------

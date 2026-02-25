@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 07-appendix.R
-## Description: Script for Chapter 7 of "Notes for Nonparametric Statistics"
+## Description: Script for Chapter 7 of "Nonparametric Statistics"
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.13.3
+## Version: 7.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----ci-1, fig.cap = '(ref:ci-1-title)', fig.margin = FALSE-------------------

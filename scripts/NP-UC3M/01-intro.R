@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 01-intro.R
-## Description: Script for Chapter 1 of "Notes for Nonparametric Statistics"
+## Description: Script for Chapter 1 of "Nonparametric Statistics"
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.13.3
+## Version: 7.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----ohsfig, echo = FALSE, fig.cap = '(ref:ohsfig-title)', fig.margin = FALSE, purl = TRUE, fig.asp = 3/2, fig.pos = 'h!'----

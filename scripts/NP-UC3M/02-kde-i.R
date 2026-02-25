@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 02-kde-i.R
-## Description: Script for Chapter 2 of "Notes for Nonparametric Statistics"
+## Description: Script for Chapter 2 of "Nonparametric Statistics"
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.13.3
+## Version: 7.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----hist-1-------------------------------------------------------------------

@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 04-lm-iii.R
-## Description: Script for Chapter 4 of "Notes for Predictive Modeling"
-## Link: https://egarpor.github.io/PM-UC3M//
+## Description: Script for Chapter 4 of "Predictive Modeling"
+## Link: https://egarpor.github.io/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.5
+## Version: 6.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----norms-3, echo = FALSE, eval = knitr:::is_html_output()-------------------

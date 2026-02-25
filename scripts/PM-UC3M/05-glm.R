@@ -1,11 +1,11 @@
 
 ## -----------------------------------------------------------------------------
 ## Name: 05-glm.R
-## Description: Script for Chapter 5 of "Notes for Predictive Modeling"
-## Link: https://egarpor.github.io/PM-UC3M//
+## Description: Script for Chapter 5 of "Predictive Modeling"
+## Link: https://egarpor.github.io/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 5.12.5
+## Version: 6.0.0
 ## -----------------------------------------------------------------------------
 
 ## ----challenger-load, eval = FALSE--------------------------------------------
