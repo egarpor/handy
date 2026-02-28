@@ -633,7 +633,7 @@ ks::kde(x = samp, H = H, eval.points = new_points)$estimate > c
 #   geometry::inhulln(ch = C, p = new_points),
 #   ks::kde(x = samp, H = H, eval.points = new_points)$estimate > c)
 
-## ----ref:level-set-11---------------------------------------------------------
+## ----level-set-11-------------------------------------------------------------
 alpha <- 0.4
 p <- 2
 c_alpha <- exp(-0.5 * qchisq(p = 1 - alpha, df = p)) /
@@ -1195,7 +1195,7 @@ paths <- kdr_oval_1$path
 points(kdr_oval_1$y, col = 4, pch = 19, cex = 0.5)
 for (i in seq_along(paths)) {
 
-  lines(paths[[i]], col = 4, cex = 0.5)
+  lines(paths[[i]], col = 4, lwd = 0.5)
 
 }
 points(kdr_oval_1$end.points, col = 2, pch = 19)
@@ -1261,7 +1261,7 @@ paths <- kdr_oval_2$path
 points(kdr_oval_2$y, col = 4, pch = 19, cex = 0.5)
 for (i in seq_along(paths)) {
 
-  lines(paths[[i]], col = 4, cex = 0.5)
+  lines(paths[[i]], col = 4, lwd = 0.5)
 
 }
 

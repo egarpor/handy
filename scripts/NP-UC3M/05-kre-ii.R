@@ -77,7 +77,7 @@ apply(wine[c("Age", "WinterRain", "AGST", "HarvestRain")], 2, median)
 # Therefore, conditionally on the median values of the predictors:
 # - Age is positively related to Price (essentially linearly)
 # - WinterRain is positively related to Price (essentially linearly)
-# - AGST is positively related to Price with what it seems like a
+# - AGST is positively related to Price with what seems like a
 #   quadratic pattern
 # - HarvestRain is negatively related to Price (with a linear-like relation)
 

@@ -95,7 +95,7 @@ lo1 <- loess(Y ~ X, degree = 1, span = span)
 # account for performing the local fit about x and then uses a triweight kernel
 # (not a normal kernel) for weighting the contributions. Therefore, the final
 # estimate differs from the definition of local polynomial estimator, although
-# the principles in which are based are the same
+# the principles on which they are based are the same
 
 # Prediction at x = 2
 x <- 2

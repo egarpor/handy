@@ -494,7 +494,7 @@ predict(ncvLasso, type = "coefficients", s = ncvLasso$lambda.1se)
 summary(glm(League ~ HmRun, data = Hitters[!train, ], family = "binomial"))
 # HmRun is now not significant...
 # We can repeat the analysis for different partitions of the data and we will
-# obtain weak significances. Therefore, we can conclude that this is an spurious
+# obtain weak significances. Therefore, we can conclude that this is a spurious
 # finding and that HmRun is not significant as a single predictor
 
 # Prediction (obviously not trustable, but for illustration)

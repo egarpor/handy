@@ -79,7 +79,7 @@ library(glmnet)
 ridgeMod <- glmnet(x = x, y = y, alpha = 0)
 # By default, it computes the ridge solution over a set of lambdas
 # automatically chosen. It also standardizes the variables by default to make
-# the model fitting since the penalization is scale-sensitive. Importantly,
+# the model fitting, since the penalization is scale-sensitive. Importantly,
 # the coefficients are returned on the original scale of the predictors
 
 # Plot of the solution path -- gives the value of the coefficients for different

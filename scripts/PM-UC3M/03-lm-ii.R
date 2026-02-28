@@ -323,7 +323,7 @@ summary(lm(medv ~ lstat + lstat:age, data = Boston))
 # For a unit increment in age, the effect of lstat in the response
 # increases positively by 0.004103 units, shifting from -1.388161 to -1.384058
 
-# Thus, when age increases makes lstat affect less negatively medv.
+# Thus, when age increases, lstat affects medv less negatively.
 # Note that the same interpretation does NOT hold if we switch the roles
 # of age and lstat because age is not present as a sole predictor!
 
