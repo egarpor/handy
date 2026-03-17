@@ -5,7 +5,7 @@
 ## Link: https://egarpor.github.io/PM-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 6.0.0
+## Version: 6.0.1
 ## -----------------------------------------------------------------------------
 
 ## ----ht, fig.margin = FALSE, fig.fullwidth = TRUE, fig.asp = 1/2, fig.cap = '(ref:ht-title)'----
