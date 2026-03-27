@@ -5,7 +5,7 @@
 ## Link: https://egarpor.github.io/NP-UC3M/
 ## License: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ## Author: Eduardo García-Portugués
-## Version: 7.0.0
+## Version: 7.0.1
 ## -----------------------------------------------------------------------------
 
 ## ----ks-1, fig.cap = '(ref:ks-1-title)'---------------------------------------
